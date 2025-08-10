@@ -1,0 +1,1 @@
+export const valid_theme = ['light', 'dark']
