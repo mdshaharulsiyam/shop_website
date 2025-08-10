@@ -1,4 +1,5 @@
 import ContextProvider from '@/providers/ContextProvider';
+import LayoutProvider from '@/providers/LayoutProvider';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -30,7 +31,9 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ContextProvider>
-          {children}
+          <LayoutProvider>
+            {children}
+          </LayoutProvider>
         </ContextProvider>
       </body>
     </html>
