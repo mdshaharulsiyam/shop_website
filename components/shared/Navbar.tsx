@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
-import { ChevronDown, Heart, LogOut, Menu, Search, Settings, ShoppingCart, User, UserCircle, X } from "lucide-react"
+import { ChevronDown, Heart, ListCollapse, LogOut, Menu, Search, Settings, ShoppingCart, User, UserCircle, X } from "lucide-react"
 import { useState } from "react"
 
 interface NavbarProps {
@@ -53,8 +53,9 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
         <div className="flex items-center space-x-4">
           {/* Sidebar toggle */}
           <Button variant="ghost" size="icon" onClick={toggleSideBar}>
-            <motion.div animate={{ rotate: showSideBar ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              {showSideBar ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <motion.div animate={{ rotate: showSideBar ? 0 : 0 }} transition={{ duration: 0.2 }}>
+              {/* {showSideBar ? <ListFilterPlus className="h-5 w-5" /> : <Menu className="h-5 w-5" />} */}
+              <ListCollapse size={30} />
             </motion.div>
           </Button>
 
