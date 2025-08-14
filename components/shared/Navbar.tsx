@@ -49,7 +49,11 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   ]
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm rounded-[10px]">
+    <nav className=" border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm rounded-[10px]"
+      style={{
+        backgroundColor: themeColor.white
+      }}
+    >
       <div className="flex items-center justify-between">
         {/* Left section */}
         <div className="flex items-center space-x-4">

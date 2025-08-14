@@ -2,18 +2,24 @@
 
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
+import { hexToRGBA1 } from '@/utils/hexToRGBA'
 import { AnimatePresence, motion } from "framer-motion"
 import React from "react"
+import { useGlobalContext } from './ContextProvider'
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [showSideBar, setShowSideBar] = React.useState(true)
-
+  const { themeColor } = useGlobalContext()
   const toggleSideBar = () => {
     setShowSideBar(!showSideBar)
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen`}
+      style={{
+        backgroundColor: hexToRGBA1(themeColor.black)
+      }}
+    >
       {/* Sidebar */}
       <AnimatePresence>
         {showSideBar && (
@@ -34,7 +40,10 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
+              className="fixed inset-0 z-30 bg-opacity-50 lg:hidden"
+              style={{
+                backgroundColor: themeColor.black
+              }}
               onClick={toggleSideBar}
             />
           </>
@@ -50,7 +59,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         className="min-h-screen px-4"
       >
         <Navbar toggleSideBar={toggleSideBar} showSideBar={showSideBar} />
-        <main className="bg-gray-50">{children}</main>
+        <main className=" container mx-auto">{children}</main>
       </motion.div>
     </div>
   )
