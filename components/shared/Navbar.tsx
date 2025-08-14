@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { hexToRGBA2 } from '@/utils/hexToRGBA'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronDown, Heart, LogOut, Menu, PanelsTopLeft, Search, Settings, ShoppingCart, User, UserCircle, X } from "lucide-react"
 import { useState } from "react"
@@ -49,9 +50,10 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   ]
 
   return (
-    <nav className=" border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm rounded-[10px]"
+    <nav className=" border-b px-4 py-3 sticky top-0 z-50 shadow-sm rounded-[10px]"
       style={{
-        backgroundColor: themeColor.white
+        backgroundColor: themeColor.white,
+        borderColor: hexToRGBA2(themeColor.black)
       }}
     >
       <div className="flex items-center justify-between">
@@ -67,10 +69,16 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
 
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">S</span>
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center`}
+              style={{
+                backgroundImage: `linear-gradient(to right, ${themeColor.blue}, ${themeColor.green})`
+              }}
+            >
+              <span style={{
+                color: themeColor.white
+              }} className="font-bold text-sm">S</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Siyam</span>
+            <span className="text-xl font-bold ">Siyam</span>
           </div>
         </div>
 
@@ -79,8 +87,6 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
           <a href="#" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
             Home
           </a>
-
-          {/* Categories Mega Menu */}
           <div
             className="relative"
             onMouseEnter={() => setShowCategoriesMenu(true)}
