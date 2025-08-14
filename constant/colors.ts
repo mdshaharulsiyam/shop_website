@@ -1,4 +1,6 @@
-export const colors = {
+import { ITheme } from '@/types/dataTypes';
+
+export const colors: ITheme = {
   light: {
     gray: "#E1E5E9",
     black: "#000000",
