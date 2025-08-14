@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronDown, Heart, LogOut, Menu, PanelsTopLeft, Search, Settings, ShoppingCart, User, UserCircle, X } from "lucide-react"
 import { useState } from "react"
@@ -15,6 +16,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false)
   const [showPagesMenu, setShowPagesMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const { themeColor } = useGlobalContext()
 
   const categoriesData = [
     {
