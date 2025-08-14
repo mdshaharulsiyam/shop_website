@@ -29,7 +29,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
               animate={{ x: 0 }}
               exit={{ x: -300 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="fixed left-0 top-0 z-40 h-full py-10"
+              className="fixed left-0 top-0 z-40 h-full py-10 pt-16 sm:pt-10"
             >
               <Sidebar />
             </motion.div>
