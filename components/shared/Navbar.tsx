@@ -47,13 +47,14 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   ]
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm rounded-[10px]">
       <div className="flex items-center justify-between">
         {/* Left section */}
         <div className="flex items-center space-x-4">
           {/* Sidebar toggle */}
-          <Button variant="ghost" size="icon" onClick={toggleSideBar}>
+          <Button className='cursor-pointer' variant="ghost" size="icon" onClick={toggleSideBar}>
             <motion.div animate={{ rotate: showSideBar ? 0 : 0 }} transition={{ duration: 0.2 }}>
+              {/* {showSideBar ? <ListFilterPlus className="h-5 w-5" /> : <Menu className="h-5 w-5" />} */}
               <PanelsTopLeft size={24} color="currentColor" />
             </motion.div>
           </Button>
@@ -61,9 +62,9 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
+              <span className="text-white font-bold text-sm">S</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Mantu</span>
+            <span className="text-xl font-bold text-gray-900">Siyam</span>
           </div>
         </div>
 

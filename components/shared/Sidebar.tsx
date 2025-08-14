@@ -117,7 +117,7 @@ const Sidebar = () => {
   ]
 
   return (
-    <div className="w-64 h-full bg-slate-800 text-white overflow-y-auto shadow-xl">
+    <div className="w-64 h-full bg-slate-800 text-white overflow-y-auto shadow-xl rounded-r-2xl">
       <div className="p-4">
         {menuItems.map((section) => (
           <motion.div
@@ -126,6 +126,7 @@ const Sidebar = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
             className="mb-6"
+
           >
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{section.title}</h3>
             <ul className="space-y-1">
@@ -135,6 +136,7 @@ const Sidebar = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
+                  onClick={() => toggleExpanded(item.name)}
                 >
                   <div className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700 cursor-pointer transition-colors group">
                     <div className="flex items-center space-x-3">
@@ -143,7 +145,7 @@ const Sidebar = () => {
                     </div>
                     {item.hasSubmenu && (
                       <motion.button
-                        onClick={() => toggleExpanded(item.name)}
+
                         className="p-1 hover:bg-slate-600 rounded"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}

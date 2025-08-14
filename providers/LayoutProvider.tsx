@@ -23,7 +23,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
               animate={{ x: 0 }}
               exit={{ x: -300 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="fixed left-0 top-0 z-40 h-full"
+              className="fixed left-0 top-0 z-40 h-full py-10"
             >
               <Sidebar />
             </motion.div>
@@ -47,7 +47,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           marginLeft: showSideBar ? (typeof window !== "undefined" && window.innerWidth >= 1024 ? 256 : 0) : 0,
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="min-h-screen"
+        className="min-h-screen px-4"
       >
         <Navbar toggleSideBar={toggleSideBar} showSideBar={showSideBar} />
         <main className="bg-gray-50">{children}</main>
