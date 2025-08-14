@@ -1,0 +1,257 @@
+"use client"
+
+import { Eye, Heart, RotateCcw, ShoppingCart } from "lucide-react"
+import { useEffect, useState } from "react"
+
+const NewArrival = () => {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  const productSets = [
+    [
+      {
+        id: 1,
+        image: "/colorful-t-shirt-man.png",
+        badge: { text: "TRENDING", color: "bg-blue-500" },
+        category: "T-SHIRT",
+        sizes: ["S", "M", "XL"],
+        name: "Cotton fabric T-shirt",
+        originalPrice: 130,
+        salePrice: 120,
+        colors: ["#f3f4f6", "#3b82f6", "#ef4444", "#10b981"],
+        rating: 4.5,
+      },
+      {
+        id: 2,
+        image: "/placeholder-b4nck.png",
+        category: "SHOES",
+        sizes: ["7", "8", "10"],
+        name: "Special sport shoes",
+        originalPrice: 55,
+        salePrice: 55,
+        colors: ["#1f2937", "#ef4444"],
+        rating: 4.8,
+      },
+      {
+        id: 3,
+        image: "/woman-white-cotton-top.png",
+        badge: { text: "NEW", color: "bg-red-500" },
+        category: "TOP",
+        sizes: ["S", "M"],
+        name: "Cotton fabric Top",
+        originalPrice: 130,
+        salePrice: 120,
+        colors: ["#ffffff", "#e5e7eb", "#a855f7"],
+        rating: 4.3,
+      },
+      {
+        id: 4,
+        image: "/white-smartwatch.png",
+        badge: { text: "SALE", color: "bg-teal-500" },
+        category: "WATCHES",
+        name: "Mantu smart watch",
+        originalPrice: 999,
+        salePrice: 955,
+        colors: ["#ffffff", "#1f2937"],
+        rating: 4.7,
+      },
+      {
+        id: 5,
+        image: "/luxury-brown-leather-belt.png",
+        badge: { text: "20% OFF", color: "bg-gray-500" },
+        category: "BELT",
+        name: "Mantu leather belt",
+        originalPrice: 12,
+        salePrice: 10,
+        colors: ["#d97706", "#1f2937"],
+        rating: 4.2,
+      },
+    ],
+    [
+      {
+        id: 6,
+        image: "/luxury-designer-handbag.png",
+        badge: { text: "NEW", color: "bg-red-500" },
+        category: "BAGS",
+        name: "Designer handbag",
+        originalPrice: 299,
+        salePrice: 249,
+        colors: ["#1f2937", "#d97706", "#ef4444"],
+        rating: 4.6,
+      },
+      {
+        id: 7,
+        image: "/stylish-sunglasses.png",
+        badge: { text: "TRENDING", color: "bg-blue-500" },
+        category: "GLASSES",
+        name: "Fashion sunglasses",
+        originalPrice: 89,
+        salePrice: 69,
+        colors: ["#1f2937", "#d97706"],
+        rating: 4.4,
+      },
+      {
+        id: 8,
+        image: "/placeholder-77hxu.png",
+        badge: { text: "SALE", color: "bg-teal-500" },
+        category: "MAKEUP",
+        name: "Professional makeup kit",
+        originalPrice: 159,
+        salePrice: 119,
+        colors: ["#ec4899", "#f59e0b", "#ef4444"],
+        rating: 4.9,
+      },
+      {
+        id: 9,
+        image: "/winter-hat-beanie-fashion.png",
+        category: "HAT",
+        name: "Winter beanie hat",
+        originalPrice: 25,
+        salePrice: 25,
+        colors: ["#1f2937", "#6b7280", "#ef4444"],
+        rating: 4.1,
+      },
+      {
+        id: 10,
+        image: "/gold-necklace.png",
+        badge: { text: "15% OFF", color: "bg-yellow-500" },
+        category: "JEWELRY",
+        name: "Gold chain necklace",
+        originalPrice: 199,
+        salePrice: 169,
+        colors: ["#f59e0b", "#6b7280"],
+        rating: 4.8,
+      },
+    ],
+  ]
+
+  const currentProducts = productSets[currentSlide]
+
+  return (
+    <div className="w-full px-4 py-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-gray-900">New Arrivals</h2>
+
+          {/* Pagination Dots */}
+          <div className="flex items-center gap-2">
+            {productSets.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-blue-500 w-8" : "bg-gray-300 hover:bg-gray-400"
+                  }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        <div className="relative overflow-hidden">
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {productSets.map((products, setIndex) => (
+              <div key={setIndex} className="w-full flex-shrink-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                  {products.map((product: any, index) => (
+                    <div
+                      key={product.id}
+                      className={`bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-500 group ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                        }`}
+                      style={{
+                        transitionDelay: `${index * 100}ms`,
+                      }}
+                    >
+                      {/* Product Image */}
+                      <div className="relative mb-4 overflow-hidden rounded-xl bg-gray-100">
+                        {product.badge && (
+                          <div
+                            className={`absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium text-white z-10 ${product.badge.color}`}
+                          >
+                            {product.badge.text}
+                          </div>
+                        )}
+
+                        <img
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+
+                        {/* Action Buttons */}
+                        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+                          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                            <Heart className="w-4 h-4 text-gray-600" />
+                          </button>
+                          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                            <Eye className="w-4 h-4 text-gray-600" />
+                          </button>
+                          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                            <RotateCcw className="w-4 h-4 text-gray-600" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                            {product.category}
+                          </span>
+                          {product?.sizes && (
+                            <div className="flex gap-1">
+                              {product?.sizes.map((size: any) => (
+                                <span key={size} className="text-xs text-gray-400">
+                                  {size}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <h3 className="font-medium text-gray-900 line-clamp-2">{product.name}</h3>
+
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-gray-900">${product.salePrice}</span>
+                          {product.originalPrice !== product.salePrice && (
+                            <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
+                          )}
+                        </div>
+
+                        {/* Color Options */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-1">
+                            {product?.colors.map((color: any, colorIndex: any) => (
+                              <button
+                                key={colorIndex}
+                                className="w-4 h-4 rounded-full border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                                style={{ backgroundColor: color }}
+                              />
+                            ))}
+                          </div>
+
+                          <button className="text-gray-400 hover:text-blue-500 transition-colors md:opacity-0 md:group-hover:opacity-100 opacity-100">
+                            <ShoppingCart className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default NewArrival
