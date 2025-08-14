@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
-import { ChevronDown, Heart, LogOut, Menu, Search, Settings, ShoppingCart, User, UserCircle, X } from "lucide-react"
+import { ChevronDown, Heart, LogOut, Menu, PanelsTopLeft, Search, Settings, ShoppingCart, User, UserCircle, X } from "lucide-react"
 import { useState } from "react"
 
 interface NavbarProps {
@@ -53,8 +53,8 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
         <div className="flex items-center space-x-4">
           {/* Sidebar toggle */}
           <Button variant="ghost" size="icon" onClick={toggleSideBar}>
-            <motion.div animate={{ rotate: showSideBar ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              {showSideBar ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <motion.div animate={{ rotate: showSideBar ? 0 : 0 }} transition={{ duration: 0.2 }}>
+              <PanelsTopLeft size={24} color="currentColor" />
             </motion.div>
           </Button>
 
@@ -170,12 +170,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
 
         {/* Right section */}
         <div className="flex items-center space-x-3">
-          {/* Mobile menu button */}
-          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
-            <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </motion.div>
-          </Button>
+
 
           <Button variant="ghost" size="icon" className="hidden sm:flex">
             <Search className="h-5 w-5" />
@@ -249,6 +244,12 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
             >
               2
             </motion.span>
+          </Button>
+          {/* Mobile menu button */}
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+            <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
+              {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </motion.div>
           </Button>
         </div>
       </div>
