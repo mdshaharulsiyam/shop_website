@@ -1,9 +1,11 @@
 "use client"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useGlobalContext } from '@/providers/ContextProvider'
+import { ChevronRight } from "lucide-react"
 import { useEffect, useState } from "react"
-
+import NextPrevButton from '../buttons/NextPrevButton'
 const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const { themeColor } = useGlobalContext()
 
   const slides = [
     {
@@ -60,18 +62,22 @@ const Banner = () => {
       <div className="absolute bottom-8 right-8 text-white/20 text-2xl font-bold">{"⚡".repeat(8)}</div>
       <div className="absolute top-1/2 right-16 text-white/30 text-6xl font-bold transform -translate-y-1/2">7</div>
 
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors z-10"
+      <div
+        style={{
+          backgroundColor: themeColor.white
+        }}
+        className="absolute -left-4 top-1/2 transform -translate-y-1/2  rounded-full transition-colors z-10 cursor-pointer"
       >
-        <ChevronLeft className="w-6 h-6 text-white" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors z-10"
+        <NextPrevButton handler={prevSlide} />
+      </div>
+      <div
+        style={{
+          backgroundColor: themeColor.white
+        }}
+        className="absolute -right-4 top-1/2 transform -translate-y-1/2  rounded-full transition-colors z-10 cursor-pointer"
       >
-        <ChevronRight className="w-6 h-6 text-white" />
-      </button>
+        <NextPrevButton handler={nextSlide} icon={<ChevronRight style={{ color: themeColor.black }} className="w-6 h-6" />} />
+      </div>
 
       <div className="flex flex-col md:flex-row items-center justify-between h-full px-8 md:px-16 py-12">
         {/* Left content */}
