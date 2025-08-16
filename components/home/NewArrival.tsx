@@ -1,10 +1,12 @@
 "use client"
 
+import { AnimatePresence, motion } from "framer-motion"
 import { Eye, Heart, RotateCcw, ShoppingCart } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const NewArrival = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [direction, setDirection] = useState(0) // 🔹 track slide direction
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -131,6 +133,39 @@ const NewArrival = () => {
 
   const currentProducts = productSets[currentSlide]
 
+  // 🔹 Animation variants for sliding
+  const variants = {
+    enter: (direction: number) => ({
+      opacity: 0,
+      x: direction > 0 ? 40 : -40,
+      scale: 0.98
+    }),
+    center: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    },
+    exit: (direction: number) => ({
+      opacity: 0,
+      x: direction < 0 ? 40 : -40,
+      scale: 0.98,
+      transition: {
+        duration: 0.4,
+        ease: "easeIn"
+      }
+    })
+  }
+
+
+  const goToSlide = (index: number) => {
+    setDirection(index > currentSlide ? 1 : -1)
+    setCurrentSlide(index)
+  }
+
   return (
     <div className="w-full px-4 py-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
@@ -143,7 +178,7 @@ const NewArrival = () => {
             {productSets.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentSlide(index)}
+                onClick={() => goToSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-blue-500 w-8" : "bg-gray-300 hover:bg-gray-400"
                   }`}
               />
@@ -151,103 +186,108 @@ const NewArrival = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
-        <div className="relative overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-          >
-            {productSets.map((products, setIndex) => (
-              <div key={setIndex} className="w-full flex-shrink-0">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                  {products.map((product: any, index) => (
-                    <div
-                      key={product.id}
-                      className={`bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-500 group ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                        }`}
-                      style={{
-                        transitionDelay: `${index * 100}ms`,
-                      }}
-                    >
-                      {/* Product Image */}
-                      <div className="relative mb-4 overflow-hidden rounded-xl bg-gray-100">
-                        {product.badge && (
-                          <div
-                            className={`absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium text-white z-10 ${product.badge.color}`}
-                          >
-                            {product.badge.text}
-                          </div>
-                        )}
-
-                        <img
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-
-                        {/* Action Buttons */}
-                        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
-                            <Heart className="w-4 h-4 text-gray-600" />
-                          </button>
-                          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
-                            <Eye className="w-4 h-4 text-gray-600" />
-                          </button>
-                          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
-                            <RotateCcw className="w-4 h-4 text-gray-600" />
-                          </button>
+        {/* Products Grid with animation */}
+        <div className="relative overflow-hidden min-h-[400px]">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={currentSlide}
+              custom={direction}
+              variants={variants as any}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                {currentProducts.map((product: any, index: number) => (
+                  <div
+                    key={product.id}
+                    className={`bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-500 group ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                      }`}
+                    style={{
+                      transitionDelay: `${index * 100}ms`,
+                    }}
+                  >
+                    {/* Product Image */}
+                    <div className="relative mb-4 overflow-hidden rounded-xl bg-gray-100">
+                      {product.badge && (
+                        <div
+                          className={`absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium text-white z-10 ${product.badge.color}`}
+                        >
+                          {product.badge.text}
                         </div>
-                      </div>
+                      )}
 
-                      {/* Product Info */}
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                            {product.category}
-                          </span>
-                          {product?.sizes && (
-                            <div className="flex gap-1">
-                              {product?.sizes.map((size: any) => (
-                                <span key={size} className="text-xs text-gray-400">
-                                  {size}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                      <img
+                        src={product.image || "/placeholder.svg"}
+                        alt={product.name}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
 
-                        <h3 className="font-medium text-gray-900 line-clamp-2">{product.name}</h3>
-
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-gray-900">${product.salePrice}</span>
-                          {product.originalPrice !== product.salePrice && (
-                            <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
-                          )}
-                        </div>
-
-                        {/* Color Options */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex gap-1">
-                            {product?.colors.map((color: any, colorIndex: any) => (
-                              <button
-                                key={colorIndex}
-                                className="w-4 h-4 rounded-full border-2 border-gray-200 hover:border-gray-400 transition-colors"
-                                style={{ backgroundColor: color }}
-                              />
-                            ))}
-                          </div>
-
-                          <button className="text-gray-400 hover:text-blue-500 transition-colors md:opacity-0 md:group-hover:opacity-100 opacity-100">
-                            <ShoppingCart className="w-4 h-4" />
-                          </button>
-                        </div>
+                      {/* Action Buttons */}
+                      <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+                        <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                          <Heart className="w-4 h-4 text-gray-600" />
+                        </button>
+                        <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                          <Eye className="w-4 h-4 text-gray-600" />
+                        </button>
+                        <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+                          <RotateCcw className="w-4 h-4 text-gray-600" />
+                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
+
+                    {/* Product Info */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          {product.category}
+                        </span>
+                        {product?.sizes && (
+                          <div className="flex gap-1">
+                            {product?.sizes.map((size: any) => (
+                              <span key={size} className="text-xs text-gray-400">
+                                {size}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <h3 className="font-medium text-gray-900 line-clamp-2">{product.name}</h3>
+
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-gray-900">${product.salePrice}</span>
+                        {product.originalPrice !== product.salePrice && (
+                          <span className="text-sm text-gray-400 line-through">
+                            ${product.originalPrice}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Color Options */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-1">
+                          {product?.colors.map((color: any, colorIndex: number) => (
+                            <button
+                              key={colorIndex}
+                              className="w-4 h-4 rounded-full border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
+
+                        <button className="text-gray-400 hover:text-blue-500 transition-colors md:opacity-0 md:group-hover:opacity-100 opacity-100">
+                          <ShoppingCart className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>
