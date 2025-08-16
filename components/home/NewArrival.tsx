@@ -17,7 +17,7 @@ const NewArrival = () => {
     [
       {
         id: 1,
-        image: "/colorful-t-shirt-man.png",
+        image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
         badge: { text: "TRENDING", color: "bg-blue-500" },
         category: "T-SHIRT",
         sizes: ["S", "M", "XL"],
@@ -29,7 +29,7 @@ const NewArrival = () => {
       },
       {
         id: 2,
-        image: "/placeholder-b4nck.png",
+        image: "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
         category: "SHOES",
         sizes: ["7", "8", "10"],
         name: "Special sport shoes",
@@ -40,7 +40,7 @@ const NewArrival = () => {
       },
       {
         id: 3,
-        image: "/woman-white-cotton-top.png",
+        image: "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
         badge: { text: "NEW", color: "bg-red-500" },
         category: "TOP",
         sizes: ["S", "M"],
@@ -52,7 +52,7 @@ const NewArrival = () => {
       },
       {
         id: 4,
-        image: "/white-smartwatch.png",
+        image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
         badge: { text: "SALE", color: "bg-teal-500" },
         category: "WATCHES",
         name: "Mantu smart watch",
@@ -63,7 +63,7 @@ const NewArrival = () => {
       },
       {
         id: 5,
-        image: "/luxury-brown-leather-belt.png",
+        image: "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
         badge: { text: "20% OFF", color: "bg-gray-500" },
         category: "BELT",
         name: "Mantu leather belt",
@@ -76,7 +76,7 @@ const NewArrival = () => {
     [
       {
         id: 6,
-        image: "/luxury-designer-handbag.png",
+        image: "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
         badge: { text: "NEW", color: "bg-red-500" },
         category: "BAGS",
         name: "Designer handbag",
@@ -87,7 +87,7 @@ const NewArrival = () => {
       },
       {
         id: 7,
-        image: "/stylish-sunglasses.png",
+        image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
         badge: { text: "TRENDING", color: "bg-blue-500" },
         category: "GLASSES",
         name: "Fashion sunglasses",
@@ -98,7 +98,7 @@ const NewArrival = () => {
       },
       {
         id: 8,
-        image: "/placeholder-77hxu.png",
+        image: "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
         badge: { text: "SALE", color: "bg-teal-500" },
         category: "MAKEUP",
         name: "Professional makeup kit",
@@ -109,7 +109,7 @@ const NewArrival = () => {
       },
       {
         id: 9,
-        image: "/winter-hat-beanie-fashion.png",
+        image: "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
         category: "HAT",
         name: "Winter beanie hat",
         originalPrice: 25,
@@ -119,7 +119,7 @@ const NewArrival = () => {
       },
       {
         id: 10,
-        image: "/gold-necklace.png",
+        image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
         badge: { text: "15% OFF", color: "bg-yellow-500" },
         category: "JEWELRY",
         name: "Gold chain necklace",
