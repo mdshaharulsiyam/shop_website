@@ -1,10 +1,10 @@
 "use client"
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 import Image from 'next/image'
 import { useEffect, useState } from "react"
 import NextPrevButton from '../buttons/NextPrevButton'
-import { motion, AnimatePresence } from "framer-motion"
 
 const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -12,9 +12,9 @@ const Banner = () => {
   const [direction, setDirection] = useState(0)
 
   const slides = [
-    "https://placehold.co/600x400",
-    "https://placehold.co/600x400/000/fff",
-    "https://placehold.co/600x400/333/fff"
+    "https://i.ibb.co.com/ymLng86B/ec1eb042.jpg",
+    "https://i.ibb.co.com/gLcKFMLt/product-banner-jpg.webp",
+    "https://i.ibb.co.com/1tGrzQmH/3d-black-friday-big-sale-discount-template-banner-with-blank-space-3d-podium-for-product-sale-with-a.jpg"
   ]
 
   const nextSlide = () => {
@@ -63,7 +63,7 @@ const Banner = () => {
   }
 
   return (
-    <div className="relative bg-blend-multiply rounded-2xl overflow-hidden min-h-[400px] md:min-h-[500px] transition-colors duration-500">
+    <div className="relative bg-blend-multiply rounded-2xl overflow-hidden min-h-[400px] md:min-h-[500px] transition-colors duration-500 mb-6">
       {/* Prev Button */}
       <NextPrevButton handler={prevSlide} />
 
