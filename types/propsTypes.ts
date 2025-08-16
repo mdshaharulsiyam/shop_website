@@ -14,3 +14,7 @@ export interface INextPrevButtonProps extends IIconButton {
   parentStyle?: React.CSSProperties,
   parentClassNames?: string
 }
+
+export interface IDiscountBadge {
+  discount: string
+}

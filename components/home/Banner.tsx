@@ -3,6 +3,7 @@ import { useGlobalContext } from '@/providers/ContextProvider'
 import { ChevronRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import NextPrevButton from '../buttons/NextPrevButton'
+import DiscountBadge from './Banner/DiscountBadge'
 const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const { themeColor } = useGlobalContext()
@@ -67,18 +68,8 @@ const Banner = () => {
 
       <div className="flex flex-col md:flex-row items-center justify-between h-full px-8 md:px-16 py-12">
         {/* Left content */}
-        <div className="flex-1 text-white mb-8 md:mb-0">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-yellow-400 text-slate-800 rounded-full mb-8 relative">
-            <div className="text-center">
-              <div className="text-lg font-bold">{currentSlideData.discount}</div>
-              <div className="text-sm font-medium">Off</div>
-            </div>
-            {/* Badge decorative points */}
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full"></div>
-            <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-yellow-400 rounded-full"></div>
-            <div className="absolute top-1/2 -left-2 w-2 h-2 bg-yellow-400 rounded-full transform -translate-y-1/2"></div>
-            <div className="absolute top-1/2 -right-2 w-2 h-2 bg-yellow-400 rounded-full transform -translate-y-1/2"></div>
-          </div>
+        <div className="flex-1 flex-col text-white mb-8 md:mb-0 justify-center items-center">
+          <DiscountBadge discount={currentSlideData?.discount} />
 
           <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight transition-all duration-500">
             {currentSlideData.title}
@@ -96,7 +87,6 @@ const Banner = () => {
           </button>
 
           {/* Decorative plus */}
-          <div className="absolute bottom-16 left-16 text-white/30 text-4xl font-light">+</div>
         </div>
 
         {/* Right content - Circular image */}
