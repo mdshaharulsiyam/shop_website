@@ -61,23 +61,9 @@ const Banner = () => {
       <div className="absolute top-8 left-8 text-white/20 text-2xl font-bold">{"⚡".repeat(8)}</div>
       <div className="absolute bottom-8 right-8 text-white/20 text-2xl font-bold">{"⚡".repeat(8)}</div>
       <div className="absolute top-1/2 right-16 text-white/30 text-6xl font-bold transform -translate-y-1/2">7</div>
+      <NextPrevButton handler={prevSlide} />
 
-      <div
-        style={{
-          backgroundColor: themeColor.white
-        }}
-        className="absolute -left-4 top-1/2 transform -translate-y-1/2  rounded-full transition-colors z-10 cursor-pointer"
-      >
-        <NextPrevButton handler={prevSlide} />
-      </div>
-      <div
-        style={{
-          backgroundColor: themeColor.white
-        }}
-        className="absolute -right-4 top-1/2 transform -translate-y-1/2  rounded-full transition-colors z-10 cursor-pointer"
-      >
-        <NextPrevButton handler={nextSlide} icon={<ChevronRight style={{ color: themeColor.black }} className="w-6 h-6" />} />
-      </div>
+      <NextPrevButton parentClassNames='-right-4 left-auto' handler={nextSlide} icon={<ChevronRight style={{ color: themeColor.black }} className="w-6 h-6" />} />
 
       <div className="flex flex-col md:flex-row items-center justify-between h-full px-8 md:px-16 py-12">
         {/* Left content */}
