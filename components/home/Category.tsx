@@ -4,6 +4,7 @@ import { nextSlide, prevSlide } from '@/handler/bannerHandler'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState } from "react"
+import Badges from '../badges/Badges'
 
 const Category = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -102,10 +103,7 @@ const Category = () => {
                 >
                   {/* Discount Badge */}
                   <div className="relative mb-4">
-                    <div className="absolute -top-2 -left-2 bg-gray-800 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      {category.discount}
-                      <div className="absolute right-0 top-0 w-0 h-0 border-l-4 border-l-gray-800 border-t-4 border-t-transparent border-b-4 border-b-transparent transform translate-x-full"></div>
-                    </div>
+                    <Badges title={category?.discount} />
                   </div>
 
                   {/* Info */}

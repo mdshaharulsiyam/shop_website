@@ -21,3 +21,9 @@ export interface IDiscountBadge {
 export interface ICircleImage {
   image: string
 }
+
+export interface IBadge {
+  title: string,
+  classnames?: string,
+  styles?: React.CSSProperties
+}
