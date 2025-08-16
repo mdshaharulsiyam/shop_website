@@ -18,3 +18,6 @@ export interface INextPrevButtonProps extends IIconButton {
 export interface IDiscountBadge {
   discount: string
 }
+export interface ICircleImage {
+  image: string
+}
