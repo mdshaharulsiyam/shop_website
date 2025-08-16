@@ -1,5 +1,6 @@
 "use client"
 
+import { nextSlide, prevSlide } from '@/handler/bannerHandler'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState } from "react"
@@ -59,15 +60,6 @@ const Category = () => {
   }
 
 
-  const nextSlide = () => {
-    setDirection(1)
-    setCurrentSlide((prev) => (prev + 1) % categorySlides.length)
-  }
-
-  const prevSlide = () => {
-    setDirection(-1)
-    setCurrentSlide((prev) => (prev - 1 + categorySlides.length) % categorySlides.length)
-  }
 
   return (
     <div className="w-full container mx-auto">
@@ -143,13 +135,13 @@ const Category = () => {
         {/* Mobile Arrows */}
         <div className="flex justify-center gap-4 mt-8 md:hidden">
           <button
-            onClick={prevSlide}
+            onClick={() => prevSlide(setDirection, setCurrentSlide, categorySlides as any)}
             className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
           >
             <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
           <button
-            onClick={nextSlide}
+            onClick={() => nextSlide(setDirection, setCurrentSlide, categorySlides as any)}
             className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
           >
             <ChevronRight className="w-5 h-5 text-gray-600" />

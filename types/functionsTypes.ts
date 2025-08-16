@@ -12,3 +12,12 @@ export type GoToSlideFn = (
   setCurrentSlide: SetState<number>,
   currentSlide: number
 ) => void;
+// 🔹 Reusable SetState type
+
+
+// 🔹 Type for next/prev slide functions
+export type SlideFn = (
+  setDirection: SetState<number>,
+  setCurrentSlide: SetState<number>,
+  categorySlides: string[]
+) => void;
