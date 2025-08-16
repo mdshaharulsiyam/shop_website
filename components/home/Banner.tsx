@@ -1,4 +1,5 @@
 "use client"
+import { goToSlide, nextSlide, prevSlide } from '@/handler/bannerHandler'
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
@@ -17,23 +18,10 @@ const Banner = () => {
     "https://i.ibb.co.com/1tGrzQmH/3d-black-friday-big-sale-discount-template-banner-with-blank-space-3d-podium-for-product-sale-with-a.jpg"
   ]
 
-  const nextSlide = () => {
-    setDirection(1)
-    setCurrentSlide((prev) => (prev + 1) % slides.length)
-  }
 
-  const prevSlide = () => {
-    setDirection(-1)
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
-  }
-
-  const goToSlide = (index: number) => {
-    setDirection(index > currentSlide ? 1 : -1)
-    setCurrentSlide(index)
-  }
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, 5000)
+    const interval = setInterval(() => nextSlide(setDirection, setCurrentSlide, slides), 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -65,12 +53,12 @@ const Banner = () => {
   return (
     <div className="relative bg-blend-multiply rounded-2xl overflow-hidden min-h-[400px] md:min-h-[500px] transition-colors duration-500 mb-6">
       {/* Prev Button */}
-      <NextPrevButton handler={prevSlide} />
+      <NextPrevButton handler={() => prevSlide(setDirection, setCurrentSlide, slides)} />
 
       {/* Next Button */}
       <NextPrevButton
         parentClassNames='-right-4 left-auto'
-        handler={nextSlide}
+        handler={() => nextSlide(setDirection, setCurrentSlide, slides)}
         icon={<ChevronRight style={{ color: themeColor.black }} className="w-6 h-6" />}
       />
 
@@ -101,7 +89,7 @@ const Banner = () => {
         {slides.map((_, index) => (
           <button
             key={index}
-            onClick={() => goToSlide(index)}
+            onClick={() => goToSlide(index, setDirection, setCurrentSlide, currentSlide)}
             className={`h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "w-8 bg-blue-500" : "w-3 bg-white/30 hover:bg-white/50"}`}
           />
         ))}
