@@ -1,10 +1,11 @@
 "use client"
 
-import { nextSlide, prevSlide } from '@/handler/bannerHandler'
+import { prevSlide } from '@/handler/bannerHandler'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState } from "react"
 import Badges from '../badges/Badges'
+import IconButton from '../buttons/IconButton'
 
 const Category = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -131,19 +132,17 @@ const Category = () => {
         </div>
 
         {/* Mobile Arrows */}
-        <div className="flex justify-center gap-4 mt-8 md:hidden">
-          <button
-            onClick={() => prevSlide(setDirection, setCurrentSlide, categorySlides as any)}
-            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <button
-            onClick={() => nextSlide(setDirection, setCurrentSlide, categorySlides as any)}
-            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
-          >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
-          </button>
+        <div className="flex justify-center gap-4 mt-6 mb-4 md:hidden">
+          <IconButton
+            icon={<ChevronLeft className="w-5 h-5" />}
+            handler={() => prevSlide(setDirection, setCurrentSlide, categorySlides as any)}
+          />
+
+          <IconButton
+            icon={<ChevronRight className="w-5 h-5" />}
+            handler={() => prevSlide(setDirection, setCurrentSlide, categorySlides as any)}
+          />
+
         </div>
       </div>
     </div>
