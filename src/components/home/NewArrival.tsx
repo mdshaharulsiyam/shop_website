@@ -132,7 +132,6 @@ const NewArrival = () => {
 
   const currentProducts = productSets[currentSlide]
 
-  // 🔹 Animation variants for sliding
   const variants = {
     enter: (direction: number) => ({
       opacity: 0,
