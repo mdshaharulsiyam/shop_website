@@ -1,14 +1,14 @@
 import { navbarData } from '@/constant/data'
 import { useGlobalContext } from '@/providers/ContextProvider'
 
-import { hexToRGBA2, hexToRGBA5 } from '@/utils/hexToRGBA'
-import { ChevronDown } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
-import MapTitleMenu from './MapTitleMenu'
-import MenuLink from '../Links/MenuLink'
 import type { IMobileMenu } from '@/types/propsTypes'
+import { hexToRGBA2, hexToRGBA5 } from '@/utils/hexToRGBA'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
+import MenuLink from '../Links/MenuLink'
+import MapTitleMenu from './MapTitleMenu'
 
-const MobileMenu = ({ showMobileMenu, setShowMobileMenu, setShowCategoriesMenu, showCategoriesMenu, setShowPagesMenu, showPagesMenu, data }: IMobileMenu) => {
+const MobileMenu = ({ showMobileMenu, setShowCategoriesMenu, showCategoriesMenu, setShowPagesMenu, showPagesMenu, data }: IMobileMenu) => {
   const { themeColor } = useGlobalContext()
   return (
     <AnimatePresence >
