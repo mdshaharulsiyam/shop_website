@@ -68,7 +68,7 @@ const Category = () => {
 
 
   return (
-    <div className="w-full container mx-auto  px-4">
+    <div className="w-full container mx-auto px-4">
       <div className="flex items-center justify-between mb-8">
         <h2 style={{
           color: hexToRGBA7(themeColor.black)
@@ -86,7 +86,7 @@ const Category = () => {
       </div>
 
       {/* Slider */}
-      <div className="relative overflow-hidden min-h-[300px]">
+      <div className="relative overflow-hidden mb-4">
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={currentSlide}
