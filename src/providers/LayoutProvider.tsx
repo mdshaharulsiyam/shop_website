@@ -9,8 +9,8 @@ import { Outlet } from 'react-router-dom'
 import { useGlobalContext } from './ContextProvider'
 
 const LayoutProvider = () => {
+  const { themeColor, } = useGlobalContext()
   const [showSideBar, setShowSideBar] = React.useState(false)
-  const { themeColor } = useGlobalContext()
   const toggleSideBar = () => {
     setShowSideBar(!showSideBar)
   }

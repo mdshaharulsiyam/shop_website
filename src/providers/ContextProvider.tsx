@@ -7,9 +7,10 @@ const globalContext = createContext<IContextData | null>(null)
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [values, setValues] = useState<IContextData>({
     theme: "",
-    themeColor: colors.light
+    themeColor: colors.light,
+    width: 0,
+    height: 0
   })
-
   useEffect(() => {
     if (typeof window != 'undefined') {
 
@@ -17,7 +18,9 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
 
       setValues((prev) => ({
         ...prev,
-        themeColor: colors[userTheme as keyof typeof colors]
+        themeColor: colors[userTheme as keyof typeof colors],
+        width: window.innerWidth,
+        height: window.innerHeight
       }))
 
     }
