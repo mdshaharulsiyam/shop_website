@@ -68,7 +68,7 @@ const Category = () => {
 
 
   return (
-    <div className="w-full container mx-auto px-4">
+    <div className="w-full container mx-auto ">
       <div className="flex items-center justify-between mb-8">
         <h2 style={{
           color: hexToRGBA7(themeColor.black)
