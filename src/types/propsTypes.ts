@@ -4,7 +4,9 @@ import type { SetState } from './functionsTypes'
 
 export interface IContextData {
   theme: string,
-  themeColor: IThemeColor
+  themeColor: IThemeColor,
+  width: number,
+  height: number
 }
 export interface IIconButton {
   handler: () => void,
