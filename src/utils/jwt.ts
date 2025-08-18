@@ -53,7 +53,8 @@ async function verifyJWT<T = Record<string, unknown>>(token: string, secret: str
 
   return JSON.parse(base64UrlDecode(payloadEncoded)) as T;
 }
-
+console.log("Decoded:", await verifyJWT("your_jwt_token", "my_secret_key"));
+console.log("Decoded:", await createJWT({}, "my_secret_key"));
 // // Example usage
 // (async () => {
 //   const secret = "my_secret_key"; // ⚠️ Don't expose in production!

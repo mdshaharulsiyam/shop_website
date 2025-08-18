@@ -1,4 +1,5 @@
-import { SlideFn } from '@/types/functionsTypes';
+import type { SlideFn } from '@/types/functionsTypes';
+
 
 
 // 🔹 Functions
