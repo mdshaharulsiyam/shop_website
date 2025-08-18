@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { Eye, Heart, RotateCcw, ShoppingCart } from "lucide-react"
 import { useEffect, useState } from "react"
+import PaginationDots from '../paginations_dots/PaginationDots'
 
 const NewArrival = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -158,12 +159,6 @@ const NewArrival = () => {
     })
   }
 
-
-  const goToSlide = (index: number) => {
-    setDirection(index > currentSlide ? 1 : -1)
-    setCurrentSlide(index)
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="">
@@ -173,14 +168,12 @@ const NewArrival = () => {
 
           {/* Pagination Dots */}
           <div className="flex items-center gap-2">
-            {productSets.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-blue-500 w-8" : "bg-gray-300 hover:bg-gray-400"
-                  }`}
-              />
-            ))}
+            <PaginationDots
+              setCurrentSlide={setCurrentSlide}
+              currentSlide={currentSlide}
+              slideNumber={productSets.length}
+              setDirection={setDirection}
+            />
           </div>
         </div>
 
