@@ -1,10 +1,11 @@
 
-import { goToSlide, nextSlide, prevSlide } from '@/handler/bannerHandler'
+import { nextSlide, prevSlide } from '@/handler/bannerHandler'
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import NextPrevButton from '../buttons/NextPrevButton'
+import PaginationDots from '../paginations_dots/PaginationDots'
 
 const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -26,7 +27,7 @@ const Banner = () => {
 
   const variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,  // slide from right if next, left if prev
+      x: direction > 0 ? 300 : -300,
       opacity: 0,
       position: "absolute"
     }),
@@ -39,7 +40,7 @@ const Banner = () => {
       }
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300, // slide out opposite direction
+      x: direction < 0 ? 300 : -300,
       opacity: 0,
       position: "absolute",
       transition: {
@@ -58,7 +59,6 @@ const Banner = () => {
         icon={<ChevronRight style={{ color: themeColor.black }} className="w-6 h-6" />}
       />
 
-      {/* Image with Framer Motion */}
       <div className="relative w-full h-[400px] md:h-[500px]">
         <AnimatePresence custom={direction} initial={false}>
           <motion.div
@@ -73,21 +73,18 @@ const Banner = () => {
             <img
               src={slides[currentSlide]}
               alt={`Slide ${currentSlide + 1}`}
-              className="rounded-2xl object-cover"
+              className="rounded-2xl object-cover w-full  min-h-[400px] md:min-h-[500px]"
             />
           </motion.div>
         </AnimatePresence>
       </div>
-
-      {/* Dots */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index, setDirection, setCurrentSlide, currentSlide)}
-            className={`h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "w-8 bg-blue-500" : "w-3 bg-white/30 hover:bg-white/50"}`}
-          />
-        ))}
+        <PaginationDots
+          setCurrentSlide={setCurrentSlide}
+          currentSlide={currentSlide}
+          setDirection={setDirection}
+          slideNumber={slides.length}
+        />
       </div>
     </div>
   )

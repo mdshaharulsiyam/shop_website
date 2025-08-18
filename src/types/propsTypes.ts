@@ -1,4 +1,5 @@
 import type { IThemeColor } from './dataTypes'
+import type { SetState } from './functionsTypes'
 
 
 export interface IContextData {
@@ -79,4 +80,10 @@ export interface IMapTitleMenu {
 export interface IProfilePopup {
   setShowProfileMenu: (show: boolean) => void,
   showProfileMenu: boolean
+}
+export interface IPaginationDots {
+  slideNumber: number,
+  setDirection: SetState<number>,
+  setCurrentSlide: SetState<number>,
+  currentSlide: number
 }
