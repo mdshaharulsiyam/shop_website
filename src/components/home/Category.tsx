@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState } from "react"
 import Badges from '../badges/Badges'
 import IconButton from '../buttons/IconButton'
+import PaginationDots from '../paginations_dots/PaginationDots'
 
 const Category = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -72,16 +73,12 @@ const Category = () => {
 
           {/* Pagination dots */}
           <div className="flex items-center gap-2">
-            {categorySlides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setDirection(index > currentSlide ? 1 : -1)
-                  setCurrentSlide(index)
-                }}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index ? "bg-blue-600 w-8" : "bg-gray-300 hover:bg-gray-400"}`}
-              />
-            ))}
+            <PaginationDots
+              setCurrentSlide={setCurrentSlide}
+              currentSlide={currentSlide}
+              setDirection={setDirection}
+              slideNumber={categorySlides.length}
+            />
           </div>
         </div>
 
