@@ -22,7 +22,6 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
         width: window.innerWidth,
         height: window.innerHeight
       }))
-
     }
   }, [])
 

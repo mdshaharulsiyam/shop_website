@@ -10,3 +10,9 @@ export interface IThemeColor {
 export interface ITheme {
   light: IThemeColor
 }
+export interface ICategory {
+  title: string,
+  discount: string,
+  items: number,
+  images: string[]
+}

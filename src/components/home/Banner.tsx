@@ -50,7 +50,7 @@ const Banner = () => {
   }
 
   return (
-    <div className="relative bg-blend-multiply rounded-2xl overflow-hidden min-h-[400px] md:min-h-[500px] transition-colors duration-500 mb-6">
+    <div className="relative bg-blend-multiply rounded-2xl overflow-hidden min-h-[400px] md:min-h-[500px] transition-colors duration-500 my-6">
       <NextPrevButton handler={() => prevSlide(setDirection, setCurrentSlide, slides)} />
 
       <NextPrevButton
