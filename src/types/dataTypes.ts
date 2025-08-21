@@ -16,3 +16,15 @@ export interface ICategory {
   items: number,
   images: string[]
 }
+export interface IProduct {
+  id: number,
+  image: string,
+  badge: { text: string, color: string },
+  category: string,
+  sizes: string[],
+  name: string,
+  originalPrice: number,
+  salePrice: number,
+  colors: string[],
+  rating: number,
+}

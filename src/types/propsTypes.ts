@@ -1,4 +1,4 @@
-import type { IThemeColor } from './dataTypes'
+import type { IProduct, IThemeColor } from './dataTypes'
 import type { SetState } from './functionsTypes'
 
 
@@ -88,4 +88,9 @@ export interface IPaginationDots {
   setDirection: SetState<number>,
   setCurrentSlide: SetState<number>,
   currentSlide: number
+}
+export interface IProductCard {
+  product: IProduct,
+  index: number,
+  isVisible: boolean
 }
