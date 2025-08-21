@@ -1,4 +1,6 @@
 
+import { useGlobalContext } from '@/providers/ContextProvider'
+import { hexToRGBA7 } from '@/utils/hexToRGBA'
 import { AnimatePresence, motion } from "framer-motion"
 import { Eye, Heart, RotateCcw, ShoppingCart } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -8,7 +10,7 @@ const NewArrival = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [direction, setDirection] = useState(0) // 🔹 track slide direction
   const [isVisible, setIsVisible] = useState(false)
-
+  const { themeColor } = useGlobalContext()
   useEffect(() => {
     setIsVisible(true)
   }, [])
@@ -164,7 +166,11 @@ const NewArrival = () => {
       <div className="">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">New Arrivals</h2>
+          <h2
+            style={{
+              color: hexToRGBA7(themeColor.black)
+            }}
+            className="text-2xl font-bold">New Arrivals</h2>
 
           {/* Pagination Dots */}
           <div className="flex items-center gap-2">
