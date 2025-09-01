@@ -30,14 +30,14 @@ const Benefit = () => {
   ]
 
   return (
-    <div className="flex flex-wrap justify-center gap-5">
+    <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-start items-center gap-5">
       {benefits.map((benefit) => (
         <div
           style={{
             backgroundColor: themeColor.white,
           }}
           key={benefit.title}
-          className="flex flex-col items-center flex-1 min-w-[200px] max-w-sm p-8 rounded-xl shadow-md text-center"
+          className="flex flex-col items-center flex-1 w-full max-w-sm p-8 rounded-xl shadow-md text-center"
         >
           {/* In a real-world scenario, you would use a smaller SVG or icon image here. */}
           <img src={benefit.image} alt={benefit.title} className="w-14 h-14 mb-5" />
