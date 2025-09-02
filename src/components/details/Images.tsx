@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const Images = () => {
   const [index, setIndex] = useState(0)
@@ -23,6 +23,18 @@ const Images = () => {
     "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
     "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
   ]
+  const thumbContainerRef = useRef<HTMLDivElement>(null)
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  useEffect(() => {
+    if (thumbRefs.current[index]) {
+      thumbRefs.current[index]?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      })
+    }
+  }, [index])
 
   useEffect(() => {
     if (!isAutoPlaying) return
@@ -132,19 +144,25 @@ const Images = () => {
       </div>
 
       <div className="mt-6">
-        <div style={{
-          overflowX: "auto"
-        }} className="flex justify-center items-center gap-3 overflow-x-auto pb-2">
+        {/* Thumbnail Scroll Area */}
+        <div
+          ref={thumbContainerRef}
+          className="flex gap-3 overflow-x-auto pb-2 w-full"
+          style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
+        >
           {imageList.map((image, i) => (
             <motion.button
               key={i}
+              ref={(el) => (thumbRefs.current[i] = el)}
               onClick={() => navigateToImage(i)}
-              className={`relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden transition-all duration-300 ${i === index
-                ? "ring-4 ring-blue-500 ring-offset-2 scale-110"
-                : "ring-2 ring-gray-200 hover:ring-gray-300 hover:scale-105"
+              className={`relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden transition-all duration-300 
+        ${i === index
+                  ? "ring-4 ring-blue-500 ring-offset-2 scale-110"
+                  : "ring-2 ring-gray-200 hover:ring-gray-300 hover:scale-105"
                 }`}
               whileHover={{ scale: i === index ? 1.1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
+              style={{ scrollSnapAlign: "center" }}
             >
               <img
                 className="w-full h-full object-cover"
@@ -152,30 +170,25 @@ const Images = () => {
                 alt={`Thumbnail ${i + 1}`}
                 loading="lazy"
               />
-              {i === index && (
-                <motion.div
-                  layoutId="activeIndicator"
-                  className="absolute inset-0 bg-blue-500/20"
-                  initial={false}
-                  transition={{ duration: 0.3 }}
-                />
-              )}
             </motion.button>
           ))}
         </div>
 
+
+        {/* Pagination Dots */}
         <div className="flex justify-center items-center gap-2 mt-4">
           {imageList.map((_, i) => (
             <button
               key={i}
               onClick={() => navigateToImage(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-8 bg-blue-500" : "w-2 bg-gray-300 hover:bg-gray-400"
-                }`}
+              className={`h-2 rounded-full transition-all duration-300 
+          ${i === index ? "w-8 bg-blue-500" : "w-2 bg-gray-300 hover:bg-gray-400"}`}
               aria-label={`Go to image ${i + 1}`}
             />
           ))}
         </div>
       </div>
+
     </div>
   )
 }
