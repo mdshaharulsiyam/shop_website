@@ -1,9 +1,21 @@
+import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 const Images = () => {
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(0)
-  const imageList = ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"]
+  const { themeColor } = useGlobalContext()
+  const imageList = [
+    "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
+    "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
+    "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
+    "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
+    "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
+    "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
+    "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
+    "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
+    "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
+  ]
 
 
 
@@ -22,9 +34,9 @@ const Images = () => {
       }
     },
     // exit: (direction: number) => ({
-    //   x: direction < 0 ? 300 : -300,
+    //   // x: direction < 0 ? 300 : -300,
     //   opacity: 0,
-    //   position: "absolute",
+    //   // position: "absolute",
     //   transition: {
     //     duration: 0.6
     //   }
@@ -32,7 +44,9 @@ const Images = () => {
   }
   return (
     <div className='w-full h-full'>
-      <div className='w-full overflow-hidden'>
+      <div style={{
+        backgroundColor: themeColor.white,
+      }} className='w-full overflow-hidden p-3 rounded-2xl'>
         <AnimatePresence>
           <motion.div
             key={index}
@@ -47,18 +61,20 @@ const Images = () => {
           </motion.div>
         </AnimatePresence>
       </div>
-      {
-        imageList.length > 1 && <div className='flex justify-center items-center gap-3 mt-3'>
-          {imageList.map((_, i) => (
-            <button key={i} onClick={() => {
-              setDirection(i > index ? 1 : -1)
-              setIndex(i)
-            }} className={`w-30 h-30`}>
-              <img className={`w-full h-full rounded-4xl object-cover border ${i === index ? 'border-black dark:border-white' : 'border-transparent'}`} src={imageList[i]} alt="" />
-            </button>
-          ))}
-        </div>
-      }
+      <div className='flex justify-center items-center w-full overflow-x-scroll'>
+        {
+          imageList.length > 1 && <div className='flex justify-center items-center gap-3 mt-3'>
+            {imageList.map((_, i) => (
+              <button key={i} onClick={() => {
+                setDirection(i > index ? 1 : -1)
+                setIndex(i)
+              }} className={`w-30 h-30`}>
+                <img className={`w-full h-full rounded-2xl object-cover border-2`} src={imageList[i]} alt="" />
+              </button>
+            ))}
+          </div>
+        }
+      </div>
     </div>
   )
 }
