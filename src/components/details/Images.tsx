@@ -1,6 +1,7 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel'
 const Images = () => {
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(0)
@@ -16,8 +17,6 @@ const Images = () => {
     "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
     "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
   ]
-
-
 
   const variants = {
     enter: (direction: number) => ({
@@ -35,7 +34,7 @@ const Images = () => {
     },
   }
   return (
-    <div className='w-full h-full overflow-hidden'>
+    <div className='w-full h-full '>
       <div style={{
         backgroundColor: themeColor.white,
       }} className='w-full overflow-hidden p-3 rounded-2xl'>
@@ -53,19 +52,33 @@ const Images = () => {
           </motion.div>
         </AnimatePresence>
       </div>
-      {
-        imageList.length > 1 && <div className='gap-3 mt-3 flex w-full overflow-x-scroll p-4'>
+      <Carousel className="w-full max-w-sm">
+        <CarouselContent className="-ml-1">
           {imageList.map((_, i) => (
-            <button key={i}
-              onClick={() => {
-                setDirection(i > index ? 1 : -1)
-                setIndex(i)
-              }} className={`w-[100px] h-[100px] flex-shrink-0 `}>
-              <img className={`rounded-2xl object-cover border-2 w-full h-full`} src={imageList[i]} alt="" />
-            </button>
+            <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
+              <div
+                key={i}
+                onClick={() => {
+                  setDirection(i > index ? 1 : -1);
+                  setIndex(i);
+                }}
+                className="w-[100px] h-[100px] flex-shrink-0"
+              >
+                <img
+                  className={`rounded-2xl object-cover border-2 w-[100px] h-[100px] ${i === index ? "border-blue-500" : "border-transparent"
+                    }`}
+                  src={imageList[i]}
+                  alt=""
+                />
+              </div>
+            </CarouselItem>
           ))}
-        </div>
-      }
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+
+
     </div>
 
   )
