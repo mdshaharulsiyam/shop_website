@@ -1,9 +1,10 @@
+import { handleCardClick } from '@/handler/productCardHandler'
 import type { IProductCard } from '@/types/propsTypes'
 import { Eye, Heart, RotateCcw, ShoppingCart } from 'lucide-react'
 
 const ProductCard = ({ product, index, isVisible }: IProductCard) => {
   return (
-    <div
+    <div onClick={() => handleCardClick(product.id?.toString())}
       key={product.id}
       className={`bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-500 group ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}

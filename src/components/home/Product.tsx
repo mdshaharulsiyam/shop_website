@@ -2,18 +2,14 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { hexToRGBA7 } from '@/utils/hexToRGBA'
 import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link } from 'react-router-dom'
 import PaginationDots from '../paginations_dots/PaginationDots'
 import ProductCard from '../shared/ProductCard'
 const Product = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [direction, setDirection] = useState(0) // 🔹 track slide direction
-  const [isVisible, setIsVisible] = useState(false)
   const { themeColor } = useGlobalContext()
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
 
   const productSets = [
     [
