@@ -1,6 +1,6 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import type { IDetailsDescType } from '@/types/propsTypes'
-import { hexToRGBA7 } from '@/utils/hexToRGBA'
+import { hexToRGBA5, hexToRGBA7 } from '@/utils/hexToRGBA'
 import { FaStar } from 'react-icons/fa'
 // import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 
@@ -42,7 +42,9 @@ const Description = ({ data }: IDetailsDescType) => {
       <h1 className="text-2xl md:text-3xl font-bold " style={{
         color: hexToRGBA7(themeColor.black)
       }}>{product_name}</h1>
-      <div className="flex items-center justify-between mt-2 text-sm text-gray-500">
+      <div style={{
+        color: themeColor.gray
+      }} className="flex items-center justify-between mt-2 text-sm ">
         <div className="flex items-center space-x-2">
           {renderStars()}
         </div>
@@ -58,14 +60,24 @@ const Description = ({ data }: IDetailsDescType) => {
 
       <div className="my-4">
         <div className="flex items-end space-x-2">
-          <span className="text-3xl font-bold text-gray-900">${current_price.toFixed(2)}</span>
-          <span className="text-xl text-gray-500 line-through">${original_price.toFixed(2)}</span>
-          <span className="text-xl text-red-500">-{discount_percentage?.toString()}%</span>
+          <span className="text-3xl font-bold " style={{
+            color: themeColor.black
+          }}>${current_price.toFixed(2)}</span>
+          <span style={{
+            color: themeColor.gray
+          }} className="line-through text-xl">${original_price.toFixed(2)}</span>
+          <span className="text-xl " style={{
+            color: themeColor.red
+          }}>-{discount_percentage?.toString()}%</span>
         </div>
-        <p className="mt-1 text-sm text-gray-500">M.R.P.: ${original_price.toFixed(2)}</p>
+        <p className="mt-1 text-sm " style={{
+          color: themeColor.gray
+        }}>M.R.P.: ${original_price.toFixed(2)}</p>
       </div>
 
-      <div className="text-gray-700 my-6">
+      <div style={{
+        color: themeColor.gray
+      }} className="my-6">
         <p>{product_description}</p>
         <ul className="mt-4 space-y-2 text-sm">
           {Object.entries(product_details).map(([key, value]) => (
@@ -82,7 +94,11 @@ const Description = ({ data }: IDetailsDescType) => {
           {available_sizes.map((size, index) => (
             <div
               key={index}
-              className="px-4 py-2 border rounded-full cursor-pointer hover:bg-gray-200 transition-colors"
+              style={{
+                backgroundColor: hexToRGBA5(themeColor.white),
+                borderColor: themeColor.blue
+              }}
+              className="w-10 h-10 border rounded-full cursor-pointer transition-colors flex items-center justify-center"
             >
               {size}
             </div>
@@ -96,8 +112,8 @@ const Description = ({ data }: IDetailsDescType) => {
           {available_colors.map((color, index) => (
             <div
               key={index}
-              className="w-8 h-8 rounded-full border border-gray-300 cursor-pointer"
-              style={{ backgroundColor: color as any }}
+              className="w-8 h-8 rounded-full border cursor-pointer"
+              style={{ backgroundColor: color as any, borderColor: themeColor.blue }}
             ></div>
           ))}
         </div>
