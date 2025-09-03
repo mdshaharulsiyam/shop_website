@@ -52,20 +52,19 @@ const Images = () => {
           </motion.div>
         </AnimatePresence>
       </div>
-      <Carousel className="w-full max-w-sm">
-        <CarouselContent className="-ml-1">
+      <Carousel className="w-full">
+        <CarouselContent className="">
           {imageList.map((_, i) => (
-            <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={i} className="py-1 basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
               <div
-                key={i}
                 onClick={() => {
                   setDirection(i > index ? 1 : -1);
                   setIndex(i);
                 }}
-                className="w-[100px] h-[100px] flex-shrink-0"
+                className="w-full h-[80px] flex-shrink-0"
               >
                 <img
-                  className={`rounded-2xl object-cover border-2 w-[100px] h-[100px] ${i === index ? "border-blue-500" : "border-transparent"
+                  className={`rounded-2xl object-cover border-2 w-full h-full ${i === index ? "border-blue-500" : "border-transparent"
                     }`}
                   src={imageList[i]}
                   alt=""
@@ -74,8 +73,8 @@ const Images = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className='absolute -left-[14px] z-10' />
+        <CarouselNext className='absolute -right-[14px] z-10' />
       </Carousel>
 
 

@@ -7,7 +7,7 @@ const Details = () => {
     <Description />
   ]
   return (
-    <div className='flex justify-between items-start flex-col md:flex-row p-3 gap-6'>
+    <div className='flex justify-between items-start flex-col md:flex-row p-3 gap-6 '>
       {
         element?.map((el, i) => (
           <div className='w-full lg:w-[calc(50%-24px)]' key={i}>
