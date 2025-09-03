@@ -1,7 +1,7 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel'
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 const Images = () => {
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(0)
@@ -75,8 +75,8 @@ const Images = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className='absolute -left-[14px] z-10 cursor-pointer' />
-        <CarouselNext className='absolute -right-[14px] z-10 cursor-pointer' />
+        {/* <CarouselPrevious className='absolute -left-[14px] z-10 cursor-pointer' />
+        <CarouselNext className='absolute -right-[14px] z-10 cursor-pointer' /> */}
       </Carousel>
 
 
