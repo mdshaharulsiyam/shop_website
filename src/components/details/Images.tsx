@@ -64,8 +64,10 @@ const Images = () => {
                 className="w-full h-[80px] flex-shrink-0"
               >
                 <img
-                  className={`rounded-2xl object-cover border-2 w-full h-full ${i === index ? "border-blue-500" : "border-transparent"
-                    }`}
+                  style={{
+                    borderColor: i === index ? themeColor.blue : 'transparent',
+                  }}
+                  className={`rounded-2xl object-cover border-2 w-full h-full `}
                   src={imageList[i]}
                   alt=""
                 />

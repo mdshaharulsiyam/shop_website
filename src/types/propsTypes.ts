@@ -94,3 +94,36 @@ export interface IProductCard {
   index: number,
   isVisible: boolean
 }
+
+export interface DetailsDescType {
+  data: {
+    "product_name": String,
+    "sku": String,
+    "in_stock": Boolean,
+    "images": Array<String>,
+    "current_price": Number,
+    "discount_percentage": Number,
+    "original_price": Number,
+    "ratings": {
+      "average_rating": Number,
+      "number_of_ratings": Number
+    },
+    "real_time_visitors": Number,
+    "sale_timer": {
+      "days": Number,
+      "hours": Number,
+      "minutes": Number,
+      "seconds": Number
+    },
+    "product_description": String,
+    "product_details": {
+      "closure": String,
+      "sole": String,
+      "width": String,
+      "outer_material": String
+    },
+    "available_sizes": Array<String>,
+    "available_colors": Array<String>
+  }
+
+}
