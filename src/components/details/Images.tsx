@@ -75,8 +75,8 @@ const Images = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className='absolute -left-[14px] z-10' />
-        <CarouselNext className='absolute -right-[14px] z-10' />
+        <CarouselPrevious className='absolute -left-[14px] z-10 cursor-pointer' />
+        <CarouselNext className='absolute -right-[14px] z-10 cursor-pointer' />
       </Carousel>
 
 

@@ -1,5 +1,6 @@
 import Description from '@/components/details/Description'
 import Images from '@/components/details/Images'
+import SimilarProduct from '@/components/details/SimilarProduct'
 export const dummyData = {
   "product_name": "Mantu Women's Solid Slim Fit Classic Round Neck Cotton Fabric T-Shirt.",
   "sku": 562,
@@ -50,15 +51,18 @@ const Details = () => {
     <Description data={dummyData} />
   ]
   return (
-    <div className='flex justify-between items-start flex-col md:flex-row p-3 gap-6 '>
-      {
-        element?.map((el, i) => (
-          <div className='w-full lg:w-[calc(50%-24px)]' key={i}>
-            {el}
-          </div>
-        ))
-      }
-    </div>
+    <>
+      <div className='flex justify-between items-start flex-col md:flex-row p-3 gap-6 '>
+        {
+          element?.map((el, i) => (
+            <div className='w-full lg:w-[calc(50%-24px)]' key={i}>
+              {el}
+            </div>
+          ))
+        }
+      </div>
+      <SimilarProduct />
+    </>
   )
 }
 
