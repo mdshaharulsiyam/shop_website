@@ -1,7 +1,8 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import type { IDetailsDescType } from '@/types/propsTypes'
-import { hexToRGBA5, hexToRGBA7 } from '@/utils/hexToRGBA'
+import { hexToRGBA5, hexToRGBA6, hexToRGBA7 } from '@/utils/hexToRGBA'
 import { FaStar } from 'react-icons/fa'
+import IconButton from '../buttons/IconButton'
 // import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 
 const Description = ({ data }: IDetailsDescType) => {
@@ -117,6 +118,28 @@ const Description = ({ data }: IDetailsDescType) => {
             ></div>
           ))}
         </div>
+      </div>
+      <div className='flex justify-start items-center gap-2'>
+        <IconButton handler={() => console.log(available_colors)}
+          style={{
+            backgroundColor: hexToRGBA6(themeColor.blue),
+            padding: '8px 20px',
+          }}
+          icon={<div>
+            <p style={{
+              color: themeColor.white
+            }}>Add To Cart</p>
+          </div>} />
+        <IconButton handler={() => console.log(available_colors)}
+          style={{
+            backgroundColor: hexToRGBA6(themeColor.green),
+            padding: '8px 20px',
+          }}
+          icon={<div>
+            <p style={{
+              color: themeColor.white
+            }}>Order Now</p>
+          </div>} />
       </div>
     </div>
   )
