@@ -95,10 +95,10 @@ export interface IProductCard {
   isVisible: boolean
 }
 
-export interface DetailsDescType {
+export interface IDetailsDescType {
   data: {
     "product_name": String,
-    "sku": String,
+    "sku": Number,
     "in_stock": Boolean,
     "images": Array<String>,
     "current_price": Number,

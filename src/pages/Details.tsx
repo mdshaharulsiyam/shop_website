@@ -2,7 +2,7 @@ import Description from '@/components/details/Description'
 import Images from '@/components/details/Images'
 export const dummyData = {
   "product_name": "Mantu Women's Solid Slim Fit Classic Round Neck Cotton Fabric T-Shirt.",
-  "sku": "WH12",
+  "sku": 562,
   "in_stock": true,
   "images": [
     "grey_tshirt.jpg",

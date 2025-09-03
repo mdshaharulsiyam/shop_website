@@ -7,12 +7,20 @@ export const colors: ITheme = {
     black: "#000000",
     white: "#FFFFFF",
     red: "#FF0000",
-    green: "#00FF00",
+    green: "#008000",
     blue: "#0000FF",
-    yellow: "#FFFF00",
+    yellow: "#F6BE00",
   },
 };
-
+// light: {
+//   gray: "#808080",
+//     black: "#000000",
+//       white: "#FFFFFF",
+//         red: "#FF0000",
+//           green: "#00FF00",
+//             blue: "#0000FF",
+//               yellow: "#FFFF00",
+//   },
 // gray: "#E1E5E9",
 // black: "#000000",
 // white: "#FFFFFF",

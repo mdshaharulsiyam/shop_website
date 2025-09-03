@@ -1,8 +1,11 @@
-import type { DetailsDescType } from '@/types/propsTypes'
-import { Star } from 'lucide-react'
+import { useGlobalContext } from '@/providers/ContextProvider'
+import type { IDetailsDescType } from '@/types/propsTypes'
+import { hexToRGBA7 } from '@/utils/hexToRGBA'
+import { FaStar } from 'react-icons/fa'
 // import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 
-const Description = ({ data }: DetailsDescType) => {
+const Description = ({ data }: IDetailsDescType) => {
+  const { themeColor } = useGlobalContext()
   const {
     product_name,
     sku,
@@ -11,8 +14,6 @@ const Description = ({ data }: DetailsDescType) => {
     discount_percentage,
     original_price,
     ratings,
-    real_time_visitors,
-    sale_timer,
     product_description,
     product_details,
     available_sizes,
@@ -20,17 +21,14 @@ const Description = ({ data }: DetailsDescType) => {
   } = data
 
   const renderStars = () => {
-    const filledStars = ratings?.average_rating || 0
-    const emptyStars = 5 - Number(filledStars)
     return (
-      <div className="flex text-yellow-400">
-        {Array(filledStars).fill(0).map((_, i) => (
-          <Star key={i} />
-        ))}
-        {Array(emptyStars).fill(0).map((_, i) => (
-          <Star key={i} className="opacity-50" />
-        ))}
-        <span className="ml-2 text-gray-500">{ratings?.number_of_ratings?.toString()} Ratings</span>
+      <div className="flex" >
+        <FaStar style={{
+          color: themeColor.yellow,
+        }} size={24} />
+        <span className="ml-2" style={{
+          color: themeColor.gray
+        }}>{ratings?.number_of_ratings + ""} Ratings</span>
       </div>
     )
   }
@@ -41,14 +39,18 @@ const Description = ({ data }: DetailsDescType) => {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{product_name}</h1>
+      <h1 className="text-2xl md:text-3xl font-bold " style={{
+        color: hexToRGBA7(themeColor.black)
+      }}>{product_name}</h1>
       <div className="flex items-center justify-between mt-2 text-sm text-gray-500">
         <div className="flex items-center space-x-2">
           {renderStars()}
         </div>
         <div className="flex items-center space-x-4">
-          <span className="font-medium">SKU#: {sku}</span>
-          <span className={`font-semibold ${in_stock ? 'text-green-500' : 'text-red-500'}`}>
+          <span className="font-medium">{sku + ""}</span>
+          <span style={{
+            color: in_stock ? themeColor.green : hexToRGBA7(themeColor.red)
+          }} className={`font-semibold `}>
             {in_stock ? 'IN STOCK' : 'OUT OF STOCK'}
           </span>
         </div>
