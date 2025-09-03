@@ -28,7 +28,7 @@ const SimilarProduct = () => {
   const { themeColor } = useGlobalContext()
   return (
     <div>
-      <Carousel className="w-full">
+      <Carousel className="w-full my-4">
         <CarouselContent className="">
           {
             data.map((item, i) => (

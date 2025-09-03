@@ -1,13 +1,17 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 const TabButton = () => {
   return (
-    <Tabs defaultValue="account" className="w-full">
+    <Tabs defaultValue="account" className="w-full my-4 mb-0 pb-4">
       <TabsList>
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
+        <TabsTrigger value="descriptions">Descriptions</TabsTrigger>
+        <TabsTrigger value="specifications">Specifications</TabsTrigger>
+        <TabsTrigger value="reviews">Reviews</TabsTrigger>
+        <TabsTrigger value="shop">Shop</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">Make changes to your account here.</TabsContent>
-      <TabsContent value="password">Change your password here.</TabsContent>
+      <TabsContent value="descriptions">Make changes to your account here.</TabsContent>
+      <TabsContent value="specifications">Change your password here.</TabsContent>
+      <TabsContent value="reviews">View your reviews here.</TabsContent>
+      <TabsContent value="shop">Browse our shop here.</TabsContent>
     </Tabs>
   )
 }

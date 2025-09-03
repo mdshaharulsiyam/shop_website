@@ -52,7 +52,7 @@ const Details = () => {
     <Description data={dummyData} />
   ]
   return (
-    <div className='flex flex-col gap-6 justify-start items-start w-full'>
+    <>
       <div className='flex justify-between items-start flex-col md:flex-row p-3 gap-6 '>
         {
           element?.map((el, i) => (
@@ -64,7 +64,7 @@ const Details = () => {
       </div>
       <SimilarProduct />
       <TabButton />
-    </div>
+    </>
   )
 }
 
