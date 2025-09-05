@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ShopInfo from './tabContent/ShopInfo'
 import Specifications from './tabContent/Specifications'
 const TabButton = () => {
   return (
@@ -14,7 +15,9 @@ const TabButton = () => {
         <Specifications />
       </TabsContent>
       {/* <TabsContent value="reviews">View your reviews here.</TabsContent> */}
-      <TabsContent value="shop">Browse our shop here.</TabsContent>
+      <TabsContent value="shop">
+        <ShopInfo />
+      </TabsContent>
     </Tabs>
   )
 }
