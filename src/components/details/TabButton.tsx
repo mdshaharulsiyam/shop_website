@@ -3,7 +3,7 @@ import ShopInfo from './tabContent/ShopInfo'
 import Specifications from './tabContent/Specifications'
 const TabButton = () => {
   return (
-    <Tabs defaultValue="account" className="w-full my-4 mb-0 pb-4">
+    <Tabs defaultValue="account" className="w-full my-4 mb-0 pb-10">
       <TabsList>
         <TabsTrigger value="descriptions">Descriptions</TabsTrigger>
         <TabsTrigger value="specifications">Specifications</TabsTrigger>
