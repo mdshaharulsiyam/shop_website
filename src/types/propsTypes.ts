@@ -127,3 +127,11 @@ export interface IDetailsDescType {
   }
 
 }
+
+export interface ICartCard {
+  item: {
+    name: string,
+    price: number,
+    image: string
+  }
+}

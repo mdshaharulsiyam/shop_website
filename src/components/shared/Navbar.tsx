@@ -5,13 +5,13 @@ import { navbarData } from '@/constant/data'
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { hexToRGBA2 } from '@/utils/hexToRGBA'
 import { motion } from "framer-motion"
-import { Heart, Menu, PanelsTopLeft, ShoppingCart, X } from "lucide-react"
+import { Menu, PanelsTopLeft, X } from "lucide-react"
 import { useState } from "react"
-import BadgesButton from '../buttons/BadgesButton'
 import DropdownMenu from '../dropdown/DropdownMenu'
 import DropdownMenuTitle from '../dropdown/DropdownMenuTitle'
 import MenuLink from '../Links/MenuLink'
 import MobileMenu from './MobileMenu'
+import CartButton from './navbar/CartButton'
 import ProfilePopup from './navbar/ProfilePopup'
 import SearchIcon from './navbar/SearchIcon'
 interface NavbarProps {
@@ -136,16 +136,12 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
             setShowProfileMenu={setShowProfileMenu}
             showProfileMenu={showProfileMenu}
           />
-          <BadgesButton
+          {/* <BadgesButton
             count={3}
             icon={<Heart className="h-5 w-5" />}
             handler={() => console.log('Heart button clicked')}
-          />
-          <BadgesButton
-            count={3}
-            icon={<ShoppingCart className="h-5 w-5" />}
-            handler={() => console.log('Heart button clicked')}
-          />
+          /> */}
+          <CartButton />
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
             <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
               {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
