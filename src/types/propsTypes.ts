@@ -136,5 +136,8 @@ export interface ICartCard {
   }
 }
 export interface IOrderTable {
-  data: IOrder
+  status: string
+}
+export interface IOrderCard {
+  item: IOrder
 }

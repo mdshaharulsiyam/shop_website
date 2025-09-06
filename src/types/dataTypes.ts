@@ -29,7 +29,6 @@ export interface IProduct {
   rating: number,
 }
 export interface IOrder {
-
   "name": string,
   "image": string,
   "quantity": number,
