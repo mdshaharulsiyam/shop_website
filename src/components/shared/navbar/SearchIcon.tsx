@@ -14,10 +14,15 @@ const SearchIcon = () => {
           <Search className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className=''>
+      <PopoverContent style={{
+        backgroundColor: themeColor.white,
+      }} className='flex justify-between items-center p-2 rounded-md gap-2'>
         <Input style={{
           backgroundColor: themeColor.white,
         }} type="text" placeholder="Search..." required />
+        <Button variant="ghost" size="icon" className="hidden sm:flex cursor-pointer">
+          <Search className="h-5 w-5" />
+        </Button>
       </PopoverContent>
     </Popover>
 
