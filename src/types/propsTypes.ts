@@ -1,4 +1,4 @@
-import type { IProduct, IThemeColor } from './dataTypes'
+import type { IOrder, IProduct, IThemeColor } from './dataTypes'
 import type { SetState } from './functionsTypes'
 
 
@@ -134,4 +134,7 @@ export interface ICartCard {
     price: number,
     image: string
   }
+}
+export interface IOrderTable {
+  data: IOrder
 }

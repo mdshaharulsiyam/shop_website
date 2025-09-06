@@ -28,3 +28,13 @@ export interface IProduct {
   colors: string[],
   rating: number,
 }
+export interface IOrder {
+
+  "name": string,
+  "image": string,
+  "quantity": number,
+  "price": number,
+  "total_price": number
+  "payment_by": string,
+  "isPaid": boolean
+}
