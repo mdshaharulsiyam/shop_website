@@ -40,6 +40,7 @@ const data = [
   }
 ]
 const OrderTable = ({ status }: IOrderTable) => {
+  console.log(status)
   return (
     <div className='w-full flex justify-start items-center gap-[1%] lg:gap-[.5%]'>
       {
