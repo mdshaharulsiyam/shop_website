@@ -1,12 +1,18 @@
 import Search from '@/components/product/Search'
+import { Filter } from 'lucide-react'
 
 const Product = () => {
   return (
     <div className=''>
-      <Search />
-      <div className='flex md:flex-row flex-col-reverse justify-between items-center'>
-
+      <div className='flex justify-between items-center gap-3'>
+        <Search />
+        <Filter />
       </div>
+      {/* <div className='lg:flex lg:flex-row justify-between items-start'>
+        <div className='w-full lg:w-[70%]'>
+
+        </div>
+      </div> */}
     </div>
   )
 }
