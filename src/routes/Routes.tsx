@@ -1,3 +1,4 @@
+import Checkout from '@/pages/Checkout';
 import Contact from '@/pages/Contact';
 import Details from '@/pages/Details';
 import Home from '@/pages/Home';
@@ -40,7 +41,11 @@ export const router = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />
-      }
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />
+      },
     ]
   },
 

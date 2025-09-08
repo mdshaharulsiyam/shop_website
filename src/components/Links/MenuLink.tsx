@@ -1,9 +1,10 @@
-import { useGlobalContext } from '@/providers/ContextProvider'
+import { useGlobalContext } from '@/providers/ContextProvider';
 import type { INavLink } from '@/types/propsTypes'; //
-import { motion } from "framer-motion"
-import { NavLink } from 'react-router-dom'
+import { motion } from "framer-motion";
+import { NavLink } from 'react-router-dom';
 const MenuLink = ({ href, title, children, className, style }: INavLink) => {
-  const { themeColor } = useGlobalContext()
+  const { themeColor } = useGlobalContext();
+  console.log(href)
   return (
     <motion.div
       style={{
@@ -20,7 +21,9 @@ const MenuLink = ({ href, title, children, className, style }: INavLink) => {
       </NavLink> : <p
 
       >{title}</p>}
-      {children}
+      {href ? <NavLink to={href}>
+        {children}
+      </NavLink> : children}
     </motion.div>
   )
 }
