@@ -2,9 +2,10 @@ import { useGlobalContext } from '@/providers/ContextProvider'
 import type { ICartCard } from '@/types/propsTypes'
 import { hexToRGBA4, hexToRGBA6 } from '@/utils/hexToRGBA'
 import { X } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import IconButton from '../buttons/IconButton'
 
-const CartCard = ({ item }: ICartCard) => {
+const CartCard = ({ item, setOpen }: ICartCard) => {
   const { themeColor } = useGlobalContext()
   return (
     <div style={{
@@ -28,11 +29,11 @@ const CartCard = ({ item }: ICartCard) => {
           backgroundColor: hexToRGBA6(themeColor.green),
           padding: '4px 10px',
         }}
-        icon={<div>
+        icon={<Link onClick={() => setOpen(false)} to={`/checkout`}>
           <p style={{
             color: themeColor.white
           }}>Order Now</p>
-        </div>} />
+        </Link>} />
     </div>
   )
 }

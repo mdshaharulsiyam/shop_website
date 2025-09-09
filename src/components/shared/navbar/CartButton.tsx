@@ -52,7 +52,7 @@ const CartButton = () => {
         style={{ padding: 0, backgroundColor: themeColor.white }}
       >
         {
-          data.map((item, i) => (<CartCard key={i} item={item} />))
+          data.map((item, i) => (<CartCard key={i} item={item} setOpen={setOpen} />))
         }
         <div style={{
           borderColor: hexToRGBA4(themeColor.gray)

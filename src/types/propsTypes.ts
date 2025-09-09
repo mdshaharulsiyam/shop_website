@@ -1,3 +1,4 @@
+import type React from 'react'
 import type { IOrder, IProduct, IThemeColor } from './dataTypes'
 import type { SetState } from './functionsTypes'
 
@@ -133,7 +134,8 @@ export interface ICartCard {
     name: string,
     price: number,
     image: string
-  }
+  },
+  setOpen: (arg: boolean) => void
 }
 export interface IOrderTable {
   status: string

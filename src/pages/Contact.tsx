@@ -13,7 +13,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-6">
+    <div className="flex justify-center items-center  p-6">
       <Card className="w-full max-w-lg shadow-lg rounded-2xl">
         <div className="text-center mb-6">
           <Title level={2}>Contact Us</Title>
