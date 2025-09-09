@@ -1,6 +1,5 @@
 import OrderCard from '@/components/order/OrderCard'
 import { handlerRemove, handleUpdateQuantity } from '@/handler/checkoutHandler'
-import { useGlobalContext } from '@/providers/ContextProvider'
 import type { IOrder } from '@/types/dataTypes'
 const data = [
   {
@@ -41,7 +40,6 @@ const data = [
   }
 ]
 const Checkout = () => {
-  const { themeColor } = useGlobalContext()
 
   return (
     <div className='py-6 container mx-auto'>
