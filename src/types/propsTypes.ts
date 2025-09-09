@@ -141,5 +141,8 @@ export interface IOrderTable {
   status: string
 }
 export interface IOrderCard {
-  item: IOrder
+  item: IOrder,
+  type?: "order" | "checkout",
+  handler?: (id: string, count: number) => void,
+  removeHandler?: (id: string) => void
 }

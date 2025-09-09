@@ -6,7 +6,7 @@ import { Filter } from 'lucide-react'
 const Product = () => {
   const { themeColor } = useGlobalContext()
   return (
-    <div className=''>
+    <div className='container mx-auto'>
       <div className='flex justify-between items-center gap-3 mt-3'>
         <Search />
         <button

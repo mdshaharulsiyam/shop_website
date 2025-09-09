@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 const Order = () => {
   const orderStatus = ['pending', 'shipped', 'delivered', 'canceled']
   return (
-    <Tabs defaultValue={orderStatus[0]} className="w-full my-4 mb-0 pb-10">
+    <Tabs defaultValue={orderStatus[0]} className="w-full my-4 mb-0 pb-10 container mx-auto">
       <TabsList>
         {
           orderStatus?.map((item: string) => <TabsTrigger className='capitalize' key={item} value={item}>{item}</TabsTrigger>)
