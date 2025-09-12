@@ -44,7 +44,7 @@ const Checkout = () => {
   return (
     <div className='py-6 container mx-auto'>
       <div style={{
-      }} className='w-full flex justify-start items-center gap-[1%] lg:gap-[.5%]'>
+      }} className='w-full flex justify-start items-center flex-col md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[1%] lg:gap-[.5%]'>
         {
           data?.map((item: IOrder, i: number) => <OrderCard key={i} item={item} type='checkout' removeHandler={handlerRemove} handler={handleUpdateQuantity} />)
         }

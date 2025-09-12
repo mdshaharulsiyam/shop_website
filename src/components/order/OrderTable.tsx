@@ -42,7 +42,7 @@ const data = [
 const OrderTable = ({ status }: IOrderTable) => {
   console.log(status)
   return (
-    <div className='w-full flex justify-start items-center gap-[1%] lg:gap-[.5%]'>
+    <div className='w-full flex justify-start items-center flex-col md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[1%] lg:gap-[.5%]'>
       {
         data?.map((item: IOrder, i: number) => <OrderCard key={i} item={item} />)
       }

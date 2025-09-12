@@ -7,7 +7,7 @@ import IconButton from '../buttons/IconButton'
 const OrderCard = ({ item, type = "order", handler, removeHandler }: IOrderCard) => {
   const { themeColor } = useGlobalContext()
   return (
-    <div className='p-2 rounded-md mb-2 flex justify-between items-center gap-2 w-full md:w-[49.5%] xl:w-[33%] relative' style={{
+    <div className='p-2 rounded-md mb-2 flex justify-between items-center gap-2 w-full relative' style={{
       background: themeColor.white,
       borderColor: hexToRGBA4(themeColor.black),
       color: hexToRGBA7(themeColor.black)
