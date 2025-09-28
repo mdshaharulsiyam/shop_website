@@ -37,19 +37,19 @@ export interface IBadge {
   classnames?: string,
   styles?: React.CSSProperties
 }
-
+export interface ICategorySub {
+  name: string,
+  _id: string,
+  subCategories: {
+    name: string,
+    _id: string
+  }[]
+}
 export interface IDropdownMenuTitle {
   setShowMenu: (show: boolean) => void,
   showMenu: boolean,
   title: string,
-  data: Array<{
-    name: string,
-    _id: string,
-    subCategories: {
-      name: string,
-      _id: string
-    }[]
-  }>
+  data: ICategorySub[]
 }
 export interface IDropdownMenu {
   setShowMenu: (show: boolean) => void,
@@ -72,14 +72,7 @@ export interface IMobileMenu {
   showCategoriesMenu: boolean,
   setShowPagesMenu: (show: boolean) => void,
   showPagesMenu: boolean,
-  data: Array<{
-    name: string,
-    _id: string,
-    subCategories: {
-      name: string,
-      _id: string
-    }[]
-  }>
+  data: ICategorySub[]
 
 }
 export interface IMapTitleMenu {
