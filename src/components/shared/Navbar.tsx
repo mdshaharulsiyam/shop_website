@@ -3,6 +3,7 @@ import logo from '@/assets/logo.png'
 import { Button } from "@/components/ui/button"
 import { navbarData } from '@/constant/data'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { useGetCategoriesWithSubQuery } from '@/Redux/apis/categorySlice'
 import { hexToRGBA2 } from '@/utils/hexToRGBA'
 import { motion } from "framer-motion"
 import { Menu, PanelsTopLeft, X } from "lucide-react"
@@ -25,25 +26,33 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   const [showPagesMenu, setShowPagesMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const { themeColor } = useGlobalContext()
-
-  const categoriesData = [
-    {
-      title: "Fashion",
-      items: ["Clothes", "Shoes", "Accessories", "Bags", "Jewelry"],
-    },
-    {
-      title: "Beauty",
-      items: ["Makeup", "Skincare", "Perfumes", "Hair Care", "Nail Care"],
-    },
-    {
-      title: "Electronics",
-      items: ["Phones", "Laptops", "Headphones", "Cameras", "Gaming"],
-    },
-    {
-      title: "Home & Living",
-      items: ["Furniture", "Decor", "Kitchen", "Bedding", "Storage"],
-    },
-  ]
+  const { data } = useGetCategoriesWithSubQuery(undefined)
+  // const categoriesData = data?.data?.map((item: any) => ({
+  //   title: item.name,
+  //   _id: item._id,
+  //   items: item.subCategories.map((sub: any) => ({
+  //     title: sub.name,
+  //     _id: sub._id,
+  //   })),
+  // }))
+  // const categoriesData = [
+  //   {
+  //     title: "Fashion",
+  //     items: ["Clothes", "Shoes", "Accessories", "Bags", "Jewelry"],
+  //   },
+  //   {
+  //     title: "Beauty",
+  //     items: ["Makeup", "Skincare", "Perfumes", "Hair Care", "Nail Care"],
+  //   },
+  //   {
+  //     title: "Electronics",
+  //     items: ["Phones", "Laptops", "Headphones", "Cameras", "Gaming"],
+  //   },
+  //   {
+  //     title: "Home & Living",
+  //     items: ["Furniture", "Decor", "Kitchen", "Bedding", "Storage"],
+  //   },
+  // ]
 
 
   return (
@@ -96,7 +105,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
                   <DropdownMenuTitle
                     setShowMenu={setShowCategoriesMenu}
                     showMenu={showCategoriesMenu}
-                    data={categoriesData}
+                    data={data?.data}
                     title="Categories"
                   />
                 )
@@ -106,7 +115,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
                   <DropdownMenuTitle
                     setShowMenu={setShowCategoriesMenu}
                     showMenu={showCategoriesMenu}
-                    data={categoriesData}
+                    data={data?.data}
                     title={item?.title}
                   />
                 )
@@ -157,7 +166,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
         showCategoriesMenu={showCategoriesMenu}
         setShowPagesMenu={setShowPagesMenu}
         showPagesMenu={showPagesMenu}
-        data={categoriesData}
+        data={data?.data}
       />
     </nav>
   )

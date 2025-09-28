@@ -43,8 +43,12 @@ export interface IDropdownMenuTitle {
   showMenu: boolean,
   title: string,
   data: Array<{
-    title: string,
-    items: string[]
+    name: string,
+    _id: string,
+    subCategories: {
+      name: string,
+      _id: string
+    }[]
   }>
 }
 export interface IDropdownMenu {
@@ -69,15 +73,23 @@ export interface IMobileMenu {
   setShowPagesMenu: (show: boolean) => void,
   showPagesMenu: boolean,
   data: Array<{
-    title: string,
-    items: string[]
+    name: string,
+    _id: string,
+    subCategories: {
+      name: string,
+      _id: string
+    }[]
   }>
 
 }
 export interface IMapTitleMenu {
   data: Array<{
-    title: string,
-    items: string[]
+    name: string,
+    _id: string,
+    subCategories: {
+      name: string,
+      _id: string
+    }[]
   }>
 }
 export interface IProfilePopup {

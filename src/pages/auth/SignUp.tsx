@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Define types for the form data and errors
 interface FormData {
   name: string;
   email: string;
-  phoneNumber: string;
+  phone_number: string;
   password: string;
   confirmPassword: string;
 }
@@ -12,7 +13,7 @@ interface FormData {
 interface FormErrors {
   name?: string;
   email?: string;
-  phoneNumber?: string;
+  phone_number?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -21,7 +22,7 @@ const SignUp = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
-    phoneNumber: '',
+    phone_number: '',
     password: '',
     confirmPassword: ''
   });
@@ -49,7 +50,7 @@ const SignUp = () => {
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!emailRegex.test(formData.email)) newErrors.email = 'Invalid email format';
-    if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    if (!formData.phone_number) newErrors.phone_number = 'Phone number is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm password is required';
     if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
@@ -104,15 +105,15 @@ const SignUp = () => {
             />
           </div>
           <div>
-            <label className='block text-sm font-medium text-gray-700' htmlFor='phoneNumber'>Phone Number</label>
+            <label className='block text-sm font-medium text-gray-700' htmlFor='phone_number'>Phone Number</label>
             <input
               type='tel'
-              id='phoneNumber'
-              name='phoneNumber'
-              value={formData.phoneNumber}
+              id='phone_number'
+              name='phone_number'
+              value={formData.phone_number}
               onChange={handleChange}
               placeholder='Enter your phone number'
-              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${getInputBorderClass('phoneNumber')} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${getInputBorderClass('phone_number')} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
           </div>
           <div className='relative'>
@@ -167,13 +168,13 @@ const SignUp = () => {
           </div>
           <button
             type='submit'
-            className='w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200'
+            className='cursor-pointer w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200'
           >
             Submit
           </button>
         </form>
         <div className='text-center text-sm mt-4'>
-          ALready have an account? <a href='#' className='text-blue-600 hover:underline'>Login</a>
+          ALready have an account? <Link to={`/login`} className='text-blue-600 hover:underline'>Login</Link>
         </div>
         <div className='flex items-center justify-center my-4'>
           <hr className='flex-grow border-gray-300' />

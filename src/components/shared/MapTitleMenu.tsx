@@ -8,19 +8,19 @@ const MapTitleMenu = ({ data }: IMapTitleMenu) => {
     <>
       {data.map((category, index) => (
         <motion.div
-          key={category.title}
+          key={category?.name}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
         >
           <h3 style={{
             color: themeColor.black
-          }} className="font-semibold mb-3">{category.title}</h3>
+          }} className="font-semibold mb-3">{category?.name}</h3>
           <ul className="space-y-2">
-            {category.items.map((item) => (
-              <MenuLink key={item}
+            {category.subCategories.map((subCategory) => (
+              <MenuLink key={subCategory?.name}
                 href="#"
-                title={item}
+                title={subCategory?.name}
                 className='text-sm font-normal'
               >
               </MenuLink>

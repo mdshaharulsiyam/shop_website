@@ -2,6 +2,7 @@
 
 import { prevSlide } from '@/handler/bannerHandler'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { useGetCategoriesWithSubQuery } from '@/Redux/apis/categorySlice'
 import { hexToRGBA7 } from '@/utils/hexToRGBA'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -14,7 +15,7 @@ const Category = () => {
   const { themeColor } = useGlobalContext()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [direction, setDirection] = useState(0)
-
+  const { data } = useGetCategoriesWithSubQuery(undefined)
   const categorySlides = [
     [
       { title: "Fashion Clothes", discount: "35%", items: 16, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },

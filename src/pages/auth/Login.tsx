@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Define types for the form data and errors for a login screen
 interface FormData {
@@ -116,7 +117,7 @@ const Login = () => {
           </button>
         </form>
         <div className='text-center text-sm mt-4'>
-          Don't have an account? <a href='#' className='text-blue-600 hover:underline'>Sign up</a>
+          Don't have an account? <Link to={`/sign-up`} className='text-blue-600 hover:underline'>Sign up</Link>
         </div>
         <div className='flex items-center justify-center my-4'>
           <hr className='flex-grow border-gray-300' />

@@ -1,12 +1,13 @@
 "use client"
 
+import { useGetCategoriesWithSubQuery } from '@/Redux/apis/categorySlice'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 import { useState } from "react"
 
 const Sidebar = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>(["clothes"])
-
+  const { data } = useGetCategoriesWithSubQuery(undefined)
   const toggleExpanded = (item: string) => {
     setExpandedItems((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
   }
