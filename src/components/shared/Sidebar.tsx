@@ -1,12 +1,13 @@
 "use client"
 
 import { useGetCategoryGroupQuery } from '@/Redux/apis/categorySlice'
+import { imageUrl } from '@/Redux/baseApi'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 import { useState } from "react"
 interface ILabel {
   label: string;
-  categories: ICategory[];
+  category: ICategory[];
 }
 
 interface ICategory {
@@ -23,120 +24,15 @@ interface ISubCategory {
 }
 const Sidebar = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>(["clothes"])
-  const { data } = useGetCategoryGroupQuery(undefined)
+  const { data } = useGetCategoryGroupQuery({})
   const toggleExpanded = (item: string) => {
     setExpandedItems((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
   }
-
-  const menuItems = [
-    {
-      id: "fashion",
-      title: "FASHION",
-      items: [
-        {
-          name: "Clothes",
-          icon: "👕",
-          hasSubmenu: true,
-          subItems: ["T-Shirts", "Jeans", "Dresses", "Jackets", "Sweaters"],
-        },
-        {
-          name: "Shoes",
-          icon: "👠",
-          hasSubmenu: true,
-          subItems: ["Sneakers", "Boots", "Sandals", "Heels"],
-        },
-        {
-          name: "Glasses",
-          icon: "🕶️",
-          hasSubmenu: true,
-          subItems: ["Sunglasses", "Reading Glasses", "Blue Light Glasses"],
-        },
-        {
-          name: "Bags",
-          icon: "👜",
-          hasSubmenu: true,
-          subItems: ["Handbags", "Backpacks", "Wallets", "Travel Bags"],
-        },
-        {
-          name: "Hat",
-          icon: "🎩",
-          hasSubmenu: true,
-          subItems: ["Baseball Caps", "Beanies", "Sun Hats"],
-        },
-      ],
-    },
-    {
-      id: "beauty",
-      title: "BEAUTY",
-      items: [
-        {
-          name: "Makeup",
-          icon: "💄",
-          hasSubmenu: true,
-          subItems: ["Lipstick", "Foundation", "Mascara", "Eyeshadow"],
-        },
-        {
-          name: "Cosmetics",
-          icon: "💅",
-          hasSubmenu: true,
-          subItems: ["Skincare", "Nail Polish", "Perfume", "Face Masks"],
-        },
-      ],
-    },
-    {
-      id: "bakery",
-      title: "BAKERY",
-      items: [
-        {
-          name: "Cake",
-          icon: "🍰",
-          hasSubmenu: true,
-          subItems: ["Birthday Cakes", "Cupcakes", "Cheesecakes", "Wedding Cakes"],
-        },
-        {
-          name: "Bread",
-          icon: "🍞",
-          hasSubmenu: true,
-          subItems: ["White Bread", "Whole Wheat", "Sourdough", "Bagels"],
-        },
-      ],
-    },
-    {
-      id: "vegetables",
-      title: "VEGETABLES",
-      items: [
-        {
-          name: "Tuber Root",
-          icon: "🥔",
-          hasSubmenu: true,
-          subItems: ["Potatoes", "Sweet Potatoes", "Carrots", "Radishes"],
-        },
-        {
-          name: "Tomato",
-          icon: "🍅",
-          hasSubmenu: true,
-          subItems: ["Cherry Tomatoes", "Roma Tomatoes", "Beefsteak"],
-        },
-      ],
-    },
-    {
-      id: "fruits",
-      title: "FRUITS",
-      items: [
-        {
-          name: "Lemon",
-          icon: "🍋",
-          hasSubmenu: true,
-          subItems: ["Fresh Lemons", "Lemon Juice", "Dried Lemons"],
-        },
-      ],
-    },
-  ]
-
+  console.log({ data })
   return (
     <div className="w-64 h-full bg-slate-800 text-white overflow-y-auto shadow-xl rounded-r-2xl">
       <div className="p-4">
-        {data.map((section: ILabel) => (
+        {data?.data?.map((section: ILabel) => (
           <motion.div
             key={section?.label}
             initial={{ opacity: 0, x: -20 }}
@@ -147,9 +43,9 @@ const Sidebar = () => {
           >
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{section?.label}</h3>
             <ul className="space-y-1">
-              {section.categories.map((item, index) => (
+              {section?.category?.map((item, index) => (
                 <motion.li
-                  key={item.name}
+                  key={item?.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -158,9 +54,10 @@ const Sidebar = () => {
                   <div className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700 cursor-pointer transition-colors group">
                     <div className="flex items-center space-x-3">
                       {/* <span className="text-lg">{item.icon}</span> */}
+                      <img className='h-5 w-5' src={imageUrl(item?.img?.[0] + "")} />
                       <span className="text-sm font-medium">{item.name}</span>
                     </div>
-                    {item.subCategories?.length > 0 && (
+                    {item?.subCategories?.length > 0 && (
                       <motion.button
 
                         className="p-1 hover:bg-slate-600 rounded"

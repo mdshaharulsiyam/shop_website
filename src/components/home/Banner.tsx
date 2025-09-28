@@ -1,6 +1,8 @@
 
 import { nextSlide, prevSlide } from '@/handler/bannerHandler'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { useGetBannerQuery } from '@/Redux/apis/bannerSlice'
+import { imageUrl } from '@/Redux/baseApi'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -11,17 +13,11 @@ const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const { themeColor } = useGlobalContext()
   const [direction, setDirection] = useState(0)
+  const { data } = useGetBannerQuery(undefined)
 
-  const slides = [
-    "https://i.ibb.co.com/ymLng86B/ec1eb042.jpg",
-    "https://i.ibb.co.com/gLcKFMLt/product-banner-jpg.webp",
-    "https://i.ibb.co.com/1tGrzQmH/3d-black-friday-big-sale-discount-template-banner-with-blank-space-3d-podium-for-product-sale-with-a.jpg"
-  ]
-
-
-
+  const images = data?.data || []
   useEffect(() => {
-    const interval = setInterval(() => nextSlide(setDirection, setCurrentSlide, slides), 5000)
+    const interval = setInterval(() => nextSlide(setDirection, setCurrentSlide, images), 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -51,11 +47,11 @@ const Banner = () => {
 
   return (
     <div className="relative bg-blend-multiply rounded-2xl overflow-hidden min-h-[400px] md:min-h-[500px] transition-colors duration-500 my-6">
-      <NextPrevButton handler={() => prevSlide(setDirection, setCurrentSlide, slides)} />
+      <NextPrevButton handler={() => prevSlide(setDirection, setCurrentSlide, images)} />
 
       <NextPrevButton
         parentClassNames='-right-4 left-auto'
-        handler={() => nextSlide(setDirection, setCurrentSlide, slides)}
+        handler={() => nextSlide(setDirection, setCurrentSlide, images)}
         icon={<ChevronRight style={{ color: themeColor.black }} className="w-6 h-6" />}
       />
 
@@ -71,7 +67,7 @@ const Banner = () => {
             className="w-full h-full"
           >
             <img
-              src={slides[currentSlide]}
+              src={imageUrl(images[currentSlide]?.img)}
               alt={`Slide ${currentSlide + 1}`}
               className="rounded-2xl object-cover w-full  min-h-[400px] md:min-h-[500px]"
             />
@@ -83,7 +79,7 @@ const Banner = () => {
           setCurrentSlide={setCurrentSlide}
           currentSlide={currentSlide}
           setDirection={setDirection}
-          slideNumber={slides.length}
+          slideNumber={images.length}
         />
       </div>
     </div>
