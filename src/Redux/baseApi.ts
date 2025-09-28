@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-const url = "http://192.168.1.108:5004/"
+const server = "http://192.168.1.108:5004"
 
 const baseApis = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: url,
+    baseUrl: server,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('accessToken');
 
@@ -19,5 +19,7 @@ const baseApis = createApi({
   ],
   endpoints: () => ({}),
 });
-
+export const imageUrl = (url: string) => {
+  return url?.includes("http") ? url : url?.startsWith("/") ? `${server}${url}` : `${server}/${url}`
+}
 export default baseApis
