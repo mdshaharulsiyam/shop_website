@@ -37,3 +37,16 @@ export interface IOrder {
   "payment_by": string,
   "isPaid": boolean
 }
+
+export interface IProductFromApi {
+  _id: string;
+  name: string;
+  price: number;
+  discount: number;
+  img: string[];
+}
+
+export interface IGroup {
+  label: string;
+  products: IProductFromApi[];
+}

@@ -1,7 +1,6 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import type { ICategory } from '@/types/dataTypes'
 import { hexToRGBA2, hexToRGBA5, hexToRGBA7 } from '@/utils/hexToRGBA'
-import Badges from '../badges/Badges'
 
 const CategoryTable = ({ category }: { category: ICategory }) => {
   const { themeColor } = useGlobalContext()
@@ -14,7 +13,7 @@ const CategoryTable = ({ category }: { category: ICategory }) => {
     >
       {/* Discount Badge */}
       <div className="relative mb-4">
-        <Badges title={category?.discount} />
+        {/* <Badges title={category?.discount} /> */}
       </div>
 
       {/* Info */}

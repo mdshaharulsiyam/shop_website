@@ -1,44 +1,37 @@
 "use client"
 
-import { prevSlide } from '@/handler/bannerHandler'
-import { useGlobalContext } from '@/providers/ContextProvider'
-import { useGetCategoriesWithSubQuery } from '@/Redux/apis/categorySlice'
-import { hexToRGBA7 } from '@/utils/hexToRGBA'
-import { AnimatePresence, motion } from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useState } from "react"
-import IconButton from '../buttons/IconButton'
-import PaginationDots from '../paginations_dots/PaginationDots'
-import CategoryTable from '../shared/CategoryTable'
+import { prevSlide } from '@/handler/bannerHandler';
+import { useGlobalContext } from '@/providers/ContextProvider';
+import { useGetProductsGroupByLabelQuery } from '@/Redux/apis/productSlice';
+import { imageUrl } from '@/Redux/baseApi';
+import type { ICategory, IGroup, IProductFromApi } from '@/types/dataTypes';
+import { hexToRGBA7 } from '@/utils/hexToRGBA';
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import IconButton from '../buttons/IconButton';
+import PaginationDots from '../paginations_dots/PaginationDots';
+import CategoryTable from '../shared/CategoryTable';
 
 const Category = () => {
-  const { themeColor } = useGlobalContext()
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [direction, setDirection] = useState(0)
-  const { data } = useGetCategoriesWithSubQuery(undefined)
-  const categorySlides = [
-    [
-      { title: "Fashion Clothes", discount: "35%", items: 16, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Generic Cosmetics", discount: "22%", items: 45, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Stylish Shoes", discount: "65%", items: 58, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Digital Watches", discount: "45%", items: 64, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Leather Belts", discount: "63%", items: 75, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-    ],
-    [
-      { title: "Electronics", discount: "40%", items: 32, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Home Decor", discount: "30%", items: 28, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Sports Gear", discount: "50%", items: 41, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Books", discount: "25%", items: 89, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Jewelry", discount: "55%", items: 23, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-    ],
-    [
-      { title: "Electronics", discount: "40%", items: 32, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Home Decor", discount: "30%", items: 28, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Sports Gear", discount: "50%", items: 41, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Books", discount: "25%", items: 89, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-      { title: "Jewelry", discount: "55%", items: 23, images: ["https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg", "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg", "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg"] },
-    ],
-  ]
+  const { themeColor } = useGlobalContext();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const { data: categoryData } = useGetProductsGroupByLabelQuery(undefined);
+
+  const categorySlides: ICategory[][] = categoryData?.data.reduce((acc: ICategory[][], group: IGroup, index: number) => {
+    const slideIndex = Math.floor(index / 5);
+    if (!acc[slideIndex]) {
+      acc[slideIndex] = [];
+    }
+    acc[slideIndex].push({
+      title: group.label,
+      items: group.products.length,
+      images: group.products.slice(0, 3).map((p: IProductFromApi) => imageUrl(p.img[0])),
+      discount: '' // Added placeholder for discount
+    });
+    return acc;
+  }, [] as ICategory[][]) || [];
 
   const variants = {
     enter: (direction: number) => ({
@@ -64,9 +57,7 @@ const Category = () => {
         ease: "easeIn"
       }
     })
-  }
-
-
+  };
 
   return (
     <div className="w-full container mx-auto ">
@@ -98,7 +89,7 @@ const Category = () => {
             exit="exit"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
           >
-            {categorySlides[currentSlide].map((category, index) => (
+            {categorySlides.length > 0 && categorySlides[currentSlide] && categorySlides[currentSlide].map((category: ICategory, index: number) => (
               <CategoryTable key={index} category={category} />
             ))}
           </motion.div>
@@ -119,7 +110,7 @@ const Category = () => {
 
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Category
+export default Category;
