@@ -19,7 +19,7 @@ const Banner = () => {
   useEffect(() => {
     const interval = setInterval(() => nextSlide(setDirection, setCurrentSlide, images), 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [images])
 
   const variants = {
     enter: (direction: number) => ({
