@@ -1,124 +1,53 @@
-
 import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useMemo, useState } from "react"
 import ProductCard from '../shared/ProductCard'
+import { useGetAllProductQuery } from '@/Redux/apis/productSlice'
+import { imageUrl } from '@/Redux/baseApi'
+import { CloudCog } from 'lucide-react'
+import { Pagination } from 'antd'
 const Products = () => {
-  const productSets = [
+  // pagination state (no filters)
+  const [page, setPage] = useState(1)
+  const limit = 20
 
-    {
-      id: 1,
-      image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-      badge: { text: "TRENDING", color: "bg-blue-500" },
-      category: "T-SHIRT",
-      sizes: ["S", "M", "XL"],
-      name: "Cotton fabric T-shirt",
-      originalPrice: 130,
-      salePrice: 120,
-      colors: ["#f3f4f6", "#3b82f6", "#ef4444", "#10b981"],
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      image: "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
-      category: "SHOES",
-      sizes: ["7", "8", "10"],
-      name: "Special sport shoes",
-      originalPrice: 55,
-      salePrice: 55,
-      colors: ["#1f2937", "#ef4444"],
-      rating: 4.8,
-    },
-    {
-      id: 3,
-      image: "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
-      badge: { text: "NEW", color: "bg-red-500" },
-      category: "TOP",
-      sizes: ["S", "M"],
-      name: "Cotton fabric Top",
-      originalPrice: 130,
-      salePrice: 120,
-      colors: ["#ffffff", "#e5e7eb", "#a855f7"],
-      rating: 4.3,
-    },
-    {
-      id: 4,
-      image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-      badge: { text: "SALE", color: "bg-teal-500" },
-      category: "WATCHES",
-      name: "Mantu smart watch",
-      originalPrice: 999,
-      salePrice: 955,
-      colors: ["#ffffff", "#1f2937"],
-      rating: 4.7,
-    },
-    {
-      id: 5,
-      image: "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
-      badge: { text: "20% OFF", color: "bg-gray-500" },
-      category: "BELT",
-      name: "Mantu leather belt",
-      originalPrice: 12,
-      salePrice: 10,
-      colors: ["#d97706", "#1f2937"],
-      rating: 4.2,
-    },
+  // fetch products
+  const { data, isLoading, isError, refetch } = useGetAllProductQuery({ order: 'desc', sort: 'createdAt', page, limit })
 
-    {
-      id: 6,
-      image: "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
-      badge: { text: "NEW", color: "bg-red-500" },
-      category: "BAGS",
-      name: "Designer handbag",
-      originalPrice: 299,
-      salePrice: 249,
-      colors: ["#1f2937", "#d97706", "#ef4444"],
-      rating: 4.6,
-    },
-    {
-      id: 7,
-      image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-      badge: { text: "TRENDING", color: "bg-blue-500" },
-      category: "GLASSES",
-      name: "Fashion sunglasses",
-      originalPrice: 89,
-      salePrice: 69,
-      colors: ["#1f2937", "#d97706"],
-      rating: 4.4,
-    },
-    {
-      id: 8,
-      image: "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
-      badge: { text: "SALE", color: "bg-teal-500" },
-      category: "MAKEUP",
-      name: "Professional makeup kit",
-      originalPrice: 159,
-      salePrice: 119,
-      colors: ["#ec4899", "#f59e0b", "#ef4444"],
-      rating: 4.9,
-    },
-    {
-      id: 9,
-      image: "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
-      category: "HAT",
-      name: "Winter beanie hat",
-      originalPrice: 25,
-      salePrice: 25,
-      colors: ["#1f2937", "#6b7280", "#ef4444"],
-      rating: 4.1,
-    },
-    {
-      id: 10,
-      image: "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-      badge: { text: "15% OFF", color: "bg-yellow-500" },
-      category: "JEWELRY",
-      name: "Gold chain necklace",
-      originalPrice: 199,
-      salePrice: 169,
-      colors: ["#f59e0b", "#6b7280"],
-      rating: 4.8,
-    },
+  // map API to card shape with optional chaining
+  const products = useMemo(() => {
+    const list = data?.data ?? []
+    return list?.map((p: any) => {
+      const price = Number(p?.price ?? 0)
+      const discount = Number(p?.discount ?? 0)
+      const sale = Math.max(0, price - (price * discount) / 100)
+      return {
+        id: p?._id,
+        image: imageUrl(p?.img?.[0] ?? ''),
+        badge: discount ? { text: `${discount}% OFF`, color: 'bg-gray-500' } : undefined,
+        category: p?.category?.name ?? p?.sub_category?.name ?? '',
+        sizes: [],
+        name: p?.name ?? '',
+        originalPrice: price,
+        salePrice: sale,
+        colors: [],
+        rating: p?.rating ?? undefined,
+      }
+    }) ?? []
+  }, [data])
 
-  ]
+  // paging helpers
+  const canNext = (products?.length ?? 0) === limit
+  // Pragmatic total so Antd knows if there is a next page when we have a full page of results
+  const total = page * limit + (canNext ? 1 : 0)
 
+  useEffect(() => {
+    // refetch when page changes (RTK Query already does, but safe)
+    refetch()
+    // scroll to top of list on page change
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [page])
 
   const variants = {
     enter: () => ({
@@ -148,25 +77,50 @@ const Products = () => {
 
   return (
     <div className="container mx-auto py-10">
-
       {/* Products Grid with animation */}
       <div className="relative overflow-hidden min-h-[400px]">
+        {/* Loading / Error States */}
+        {isLoading && (
+          <div className="flex items-center justify-center h-60 text-gray-500 gap-2">
+            <CloudCog className="w-5 h-5 animate-spin" /> Loading products...
+          </div>
+        )}
+        {isError && !isLoading && (
+          <div className="flex items-center justify-center h-60 text-red-500">Failed to load products.</div>
+        )}
         <AnimatePresence mode="wait" custom={0}>
-          <motion.div
-            custom={0}
-            variants={variants as any}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="w-full"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-              {productSets.map((product: any, index: number) => (
-                <ProductCard key={product.id} product={product} index={index} isVisible={true} />
-              ))}
-            </div>
-          </motion.div>
+          {!isLoading && !isError && (
+            <motion.div
+              custom={0}
+              variants={variants as any}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                {products?.map((product: any, index: number) => (
+                  <ProductCard key={product?.id} product={product} index={index} isVisible={true} />
+                ))}
+              </div>
+              {!products?.length && (
+                <div className="flex items-center justify-center h-60 text-gray-500">No products found.</div>
+              )}
+            </motion.div>
+          )}
         </AnimatePresence>
+      </div>
+
+      {/* Ant Design Pagination */}
+      <div className="flex items-center justify-center mt-8">
+        <Pagination
+          current={page}
+          total={total}
+          pageSize={limit}
+          onChange={(p) => setPage(p)}
+          showSizeChanger={false}
+          disabled={isLoading}
+        />
       </div>
     </div>
   )
