@@ -8,9 +8,22 @@ const productSlice = baseApis.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getAllProduct: builder.query({
+      query: ({sort,order,page=1,limit}) => ({
+        url: 'product/get-all',
+        method: 'GET',
+        params:{
+          sort,
+          order,
+          page,
+          limit
+        }
+      }),
+    }),
   }),
 });
 
 export const {
   useGetProductsGroupByLabelQuery,
+  useGetAllProductQuery,
 } = productSlice;
