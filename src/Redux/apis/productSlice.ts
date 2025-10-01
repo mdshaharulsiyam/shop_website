@@ -8,16 +8,12 @@ const productSlice = baseApis.injectEndpoints({
         method: 'GET',
       }),
     }),
+    // Forward all provided args as query params to support filters (optional)
     getAllProduct: builder.query({
-      query: ({sort,order,page=1,limit}) => ({
+      query: (args) => ({
         url: 'product/get-all',
         method: 'GET',
-        params:{
-          sort,
-          order,
-          page,
-          limit
-        }
+        params: args
       }),
     }),
   }),

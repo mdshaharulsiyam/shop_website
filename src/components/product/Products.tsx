@@ -5,13 +5,30 @@ import { useGetAllProductQuery } from '@/Redux/apis/productSlice'
 import { imageUrl } from '@/Redux/baseApi'
 import { CloudCog } from 'lucide-react'
 import { Pagination } from 'antd'
-const Products = () => {
+type ProductsProps = {
+  sort?: string
+  category?: string
+  subCategory?: string
+  minPrice?: number
+  maxPrice?: number
+}
+
+const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsProps) => {
   // pagination state (no filters)
   const [page, setPage] = useState(1)
   const limit = 20
 
   // fetch products
-  const { data, isLoading, isError, refetch } = useGetAllProductQuery({ order: 'desc', sort: 'createdAt', page, limit })
+  const { data, isLoading, isError, refetch } = useGetAllProductQuery({
+    order: 'desc',
+    sort: sort ?? 'createdAt',
+    page,
+    limit,
+    category,
+    sub_category: subCategory,
+    // minPrice,
+    // maxPrice,
+  })
 
   // map API to card shape with optional chaining
   const products = useMemo(() => {
