@@ -26,8 +26,8 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
     limit,
     category,
     sub_category: subCategory,
-    // minPrice,
-    // maxPrice,
+    minPrice,
+    maxPrice,
   })
 
   // map API to card shape with optional chaining

@@ -39,7 +39,7 @@ const Product = () => {
   const handleReset = () => {
     setCategory(undefined)
     setSubCategory(undefined)
-    setPriceRange([0, 100000])
+    setPriceRange([0, 99999999])
     setSort(undefined)
   }
 
@@ -94,7 +94,7 @@ const Product = () => {
                 value={priceRange}
                 onChange={(v: any) => setPriceRange(v as [number, number])}
               />
-              <div className='text-sm text-gray-600'>${priceRange?.[0]} - ${priceRange?.[1]}</div>
+              <div className='text-sm text-gray-600'>{priceRange?.[0]} - {priceRange?.[1]}</div>
             </div>
           </div>
 
