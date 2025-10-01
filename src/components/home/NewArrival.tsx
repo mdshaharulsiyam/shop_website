@@ -15,7 +15,6 @@ const NewArrival = () => {
   const { themeColor } = useGlobalContext()
   const { data, isLoading, isError } = useGetAllProductQuery({ order: "desc", sort: "createdAt", page: 1, limit: 10 })
 
-  // Map API data to ProductCard shape (with optional chaining and safe defaults)
   const mappedProducts = useMemo(() => {
     const list = data?.data ?? []
     return list?.map((p: any) => {
@@ -37,31 +36,32 @@ const NewArrival = () => {
     }) ?? []
   }, [data])
 
-  // Determine columns by viewport (2 / 3 / 4)
+  // Responsive columns + mobile rule: mobile shows 4 items per slide
   const [cols, setCols] = useState(2)
+  const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
-    const computeCols = () => {
+    const compute = () => {
       const w = typeof window !== 'undefined' ? window?.innerWidth ?? 0 : 0
-      // 4 cols only on wide screens (1280px, Tailwind xl)
-      if (w >= 1280) setCols(4)
-      else if (w >= 768) setCols(3) // md
-      else if (w >= 640) setCols(2) // sm
+      setIsMobile(w < 640)
+      if (w >= 1280) setCols(4)      // xl
+      else if (w >= 768) setCols(3)  // md
+      else if (w >= 640) setCols(2)  // sm
       else setCols(1)
     }
-    computeCols()
-    window?.addEventListener('resize', computeCols)
-    return () => window?.removeEventListener('resize', computeCols)
+    compute()
+    window?.addEventListener('resize', compute)
+    return () => window?.removeEventListener('resize', compute)
   }, [])
 
-  // Chunk products into slides matching current column count
+  // Chunk products into slides: 4 on mobile, else equals current columns
   const productSets = useMemo(() => {
-    const chunkSize = Math.max(1, cols)
+    const chunkSize = isMobile ? 4 : Math.max(1, cols)
     const chunks: any[] = []
     for (let i = 0; i < (mappedProducts?.length ?? 0); i += chunkSize) {
       chunks.push(mappedProducts.slice(i, i + chunkSize))
     }
     return chunks
-  }, [mappedProducts, cols])
+  }, [mappedProducts, cols, isMobile])
 
   const currentProducts = productSets?.[currentSlide] ?? []
 
