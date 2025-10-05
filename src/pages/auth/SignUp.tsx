@@ -1,5 +1,7 @@
+import { usePostSignUpMutation } from '@/Redux/apis/authSlice';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Define types for the form data and errors
 interface FormData {
@@ -30,7 +32,8 @@ const SignUp = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const navigate=useNavigate()
+const [signUp,{isLoading}]=usePostSignUpMutation()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
@@ -64,8 +67,21 @@ const SignUp = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      console.log('Form submitted successfully:', formData);
-      // Here you would typically handle the form submission, e.g., API call
+      const promise = signUp(formData).unwrap();
+      toast.promise(
+        promise,
+        {
+          loading: 'Signing up...',
+          success: <b>Settings saved!</b>,
+          error: <b>Could not save.</b>,
+        }
+      );
+      promise.then((res) => {
+        localStorage.setItem("email",formData.email)
+        localStorage.setItem("from","signUp")
+        navigate("/otp")
+      })
+      // Here you would typically handle the login logic, e.g., API call to authenticate the user
     } else {
       console.log('Form validation failed.');
     }

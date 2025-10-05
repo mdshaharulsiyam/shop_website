@@ -9,6 +9,13 @@ const authSlice = baseApis.injectEndpoints({
         body: data
       }),
     }),
+    postSignUp: builder.mutation({
+      query: (data) => ({
+        url: "/auth/signup",
+        method: "POST",
+        body: data
+      }),
+    }),
     patchNewPassword: builder.mutation({
       query: (data) => (
         {
@@ -20,7 +27,6 @@ const authSlice = baseApis.injectEndpoints({
     }),
     forgetEmailPost: builder.mutation({
       query: (data) => {
-        console.log(data); // there i can get eamil
         return {
           url: '/auth/forgot-password',
           method: 'POST',
@@ -54,4 +60,7 @@ export const {
   usePatchNewPasswordMutation,
   useForgetEmailPostMutation,
   useVerifyOtpMutation,
-  useResetPasswordMutation } = authSlice;
+  useResetPasswordMutation,
+  usePostSignUpMutation
+
+} = authSlice;

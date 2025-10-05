@@ -1,4 +1,7 @@
+import { useResetPasswordMutation } from '@/Redux/apis/authSlice';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 // Define types for the form data and errors
 interface FormData {
@@ -6,7 +9,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-interface FormErrors {
+interface FormErrors {  
   password?: string;
   confirmPassword?: string;
 }
@@ -16,6 +19,8 @@ const Reset = () => {
     password: '',
     confirmPassword: ''
   });
+  const navigate=useNavigate()
+  const [resetPassword,{isLoading}]=useResetPasswordMutation()
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -54,8 +59,18 @@ const Reset = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      console.log('Password reset successfully:', { password: formData.password });
-      // Here you would typically handle the password reset logic, e.g., an API call
+      const promise=resetPassword(formData).unwrap()
+      toast.promise(
+        promise,
+        {
+          loading: 'Resetting password...',
+          success: (res) => res?.message || 'Password reset successfully!',
+          error: (err) => err?.data?.message || 'Failed to reset password!',
+        }
+      );
+      promise.then((res) => {
+        navigate("/login")
+      })
     } else {
       console.log('Form validation failed.');
     }

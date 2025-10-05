@@ -6,12 +6,16 @@ import './index.css'
 import ContextProvider from './providers/ContextProvider.tsx'
 import store from './Redux/store.ts'
 import { router } from './routes/Routes.tsx'
-
+import { Toaster } from 'react-hot-toast'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <ContextProvider>
         <RouterProvider router={router} />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+        />
       </ContextProvider>
     </Provider>
   </StrictMode>,

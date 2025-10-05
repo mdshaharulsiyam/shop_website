@@ -1,4 +1,7 @@
+import { useForgetEmailPostMutation } from '@/Redux/apis/authSlice';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 // Define types for the form data and errors
 interface FormData {
@@ -13,6 +16,8 @@ const Forget = () => {
   const [formData, setFormData] = useState<FormData>({
     email: ''
   });
+  const navigate=useNavigate()
+  const [forgetEmailPost,{isLoading}]=useForgetEmailPostMutation()
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -45,8 +50,20 @@ const Forget = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      console.log('Password reset request submitted for:', formData.email);
-      // Here you would typically handle the password reset logic, e.g., an API call
+      const promise=forgetEmailPost(formData).unwrap()
+      toast.promise(
+        promise,
+        {
+          loading: 'Sending email...',
+          success: (res) => res?.message || 'Email sent successfully!',
+          error: (err) => err?.data?.message || 'Failed to send email!',
+        }
+      );
+      promise.then((res) => {
+        localStorage.setItem("email",formData.email)
+        localStorage.setItem("from","forget")
+        navigate("/otp")
+      })
     } else {
       console.log('Form validation failed.');
     }

@@ -1,5 +1,7 @@
+import { usePostLoginInofMutation } from '@/Redux/apis/authSlice';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Define types for the form data and errors for a login screen
 interface FormData {
@@ -20,7 +22,8 @@ const Login = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+const [login,{isLoading}]=usePostLoginInofMutation()
+const navigate=useNavigate()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
@@ -53,8 +56,20 @@ const Login = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      console.log('Login submitted successfully:', formData);
-      // Here you would typically handle the login logic, e.g., API call to authenticate the user
+      const promise = login(formData).unwrap();
+      toast.promise(
+        promise,
+        {
+          loading: 'Logging in...',
+          success: (res) => res?.message || 'Login successful!',
+          error: (err) => err?.data?.message || 'Login failed!',
+        }
+      );
+      
+      promise.then((res) => {
+        localStorage.setItem("token",res?.data?.token)
+        navigate("/")
+      })
     } else {
       console.log('Form validation failed.');
     }

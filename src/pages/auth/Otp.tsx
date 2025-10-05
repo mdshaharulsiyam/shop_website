@@ -1,4 +1,7 @@
+import { useVerifyOtpMutation } from '@/Redux/apis/authSlice';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 // Define types for the form data and errors
 interface FormData {
@@ -10,12 +13,13 @@ interface FormErrors {
 }
 
 const Otp = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormData>({  
     otp: ''
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+const navigate=useNavigate()
+const [verify,{isLoading}]=useVerifyOtpMutation()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     // Restrict input to only 6 digits
@@ -47,8 +51,26 @@ const Otp = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      console.log('OTP submitted successfully:', formData.otp);
-      // Here you would typically handle the OTP verification logic, e.g., an API call
+      const promise=verify(formData).unwrap()
+      toast.promise(
+        promise,
+        {
+          loading: 'Verifying OTP...',
+          success: (res) => res?.message || 'OTP verified successfully!',
+          error: (err) => err?.data?.message || 'OTP verification failed!',
+        }
+      )
+      promise.then((res) => {
+        const from = localStorage.getItem("from")
+        if(from=="signUp"){
+          localStorage.setItem("token",res?.data?.token)
+          localStorage.removeItem("from")
+          localStorage.removeItem("email")
+          navigate("/")
+        }else{
+          navigate("/reset")
+        }
+      })
     } else {
       console.log('Form validation failed.');
     }
