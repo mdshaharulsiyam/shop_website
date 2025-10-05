@@ -108,6 +108,7 @@ export interface IProductDetails {
   _id: string;
   name: string;
   description: string;
+  sort_description: string;
   price: number;
   discount: number;
   img: string[];

@@ -67,7 +67,7 @@ const Details = () => {
         }
       </div>
       <SimilarProduct />
-      <TabButton />
+      <TabButton data={data?.data || {}} />
     </>
   )
 }
