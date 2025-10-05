@@ -3,10 +3,15 @@ import { Form, Input, Button, Upload, Card, Row, Col, Divider } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadFile } from "antd/es/upload/interface";
 import { useGlobalContext } from "@/providers/ContextProvider";
+import { usePatchNewPasswordMutation, usePatchProfileMutation } from "@/Redux/apis/authSlice";
+import toast from "react-hot-toast";
+import { imageUrl } from "@/Redux/baseApi";
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useGlobalContext();
+  const [update, { isLoading }] = usePatchProfileMutation()
+  const [updatePassword, { isLoading: isLoadingPassword }] = usePatchNewPasswordMutation()
   const [form] = Form.useForm();
 
   // 🧩 Manage uploaded image
@@ -27,13 +32,12 @@ const Profile = () => {
             uid: "-1",
             name: "profile.jpg",
             status: "done",
-            url: user.img,
+            url: imageUrl(user?.img),
           },
         ]);
       }
     }
   }, [user, form]);
-
   // 🧩 Handle file upload change
   const handleFileChange = ({ fileList }: { fileList: UploadFile[] }) => {
     setFileList(fileList);
@@ -47,16 +51,35 @@ const Profile = () => {
       ...values,
       img: fileList[0]?.originFileObj || user?.img || null,
     };
-
-    console.log("Profile Update Payload:", payload);
-    // TODO: Integrate with backend API (e.g., upload image, then update profile)
-    setTimeout(() => setLoading(false), 1000);
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      formData.append(key, value as string | Blob);
+    });
+    const promise = update(formData).unwrap();
+    toast.promise(
+      promise,
+      {
+        loading: 'Updating profile...',
+        success: (res) => res?.message || 'Profile updated successfully',
+        error: (err) => err?.data?.message || 'Profile update failed',
+      }
+    );
+    setLoading(false);
   };
 
   // 🧩 Handle password change
   const handlePasswordChange = (values: any) => {
-    console.log("Password Change Values:", values);
-    // TODO: integrate change password API
+   setLoading(true)
+    const promise = updatePassword(values).unwrap();
+    toast.promise(
+      promise,
+      {
+        loading: 'Updating password...',
+        success: (res) => res?.message || 'Password updated successfully',
+        error: (err) => err?.data?.message || 'Password update failed',
+      }
+    );
+    setLoading(false);
   };
 
   return (
@@ -144,7 +167,7 @@ const Profile = () => {
             <Form layout="vertical" onFinish={handlePasswordChange}>
               <Form.Item
                 label="Current Password"
-                name="currentPassword"
+                name="old_password"
                 rules={[
                   { required: true, message: "Please enter your current password" },
                 ]}
@@ -154,7 +177,7 @@ const Profile = () => {
 
               <Form.Item
                 label="New Password"
-                name="newPassword"
+                name="password"
                 rules={[
                   { required: true, message: "Please enter a new password" },
                   { min: 6, message: "Password must be at least 6 characters" },
@@ -166,12 +189,12 @@ const Profile = () => {
               <Form.Item
                 label="Confirm New Password"
                 name="confirmPassword"
-                dependencies={["newPassword"]}
+                dependencies={["password"]}
                 rules={[
                   { required: true, message: "Please confirm your new password" },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue("newPassword") === value) {
+                      if (!value || getFieldValue("password") === value) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error("Passwords do not match"));

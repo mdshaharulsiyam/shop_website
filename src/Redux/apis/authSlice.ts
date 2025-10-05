@@ -20,7 +20,7 @@ const authSlice = baseApis.injectEndpoints({
       query: (data) => (
         {
           url: '/auth/change-password',
-          method: 'PATCH',
+          method: 'POST',
           body: data
         }
       )
@@ -51,12 +51,21 @@ const authSlice = baseApis.injectEndpoints({
         }
       )
     }),
-getProfile:builder.query({
-  query:()=>({
-    url:"/auth/profile",
-    method:"GET"
-  })
-})
+    getProfile: builder.query({
+      query: () => ({
+        url: "/auth/profile",
+        method: "GET"
+      }),
+      providesTags: ['auth']
+    }),
+    patchProfile: builder.mutation({
+      query: (data) => ({
+        url: '/auth/update-profile',
+        method: 'PATCH',
+        body: data
+      }),
+      invalidatesTags: ['auth']
+    })
   }),
 });
 
@@ -67,6 +76,6 @@ export const {
   useVerifyOtpMutation,
   useResetPasswordMutation,
   usePostSignUpMutation,
-  useGetProfileQuery
-
+  useGetProfileQuery,
+  usePatchProfileMutation
 } = authSlice;
