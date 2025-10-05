@@ -16,10 +16,17 @@ const productSlice = baseApis.injectEndpoints({
         params: args
       }),
     }),
+    getProductDetails: builder.query({
+      query: (id) => ({
+        url: `product/get-details/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
 export const {
   useGetProductsGroupByLabelQuery,
   useGetAllProductQuery,
+  useGetProductDetailsQuery,
 } = productSlice;

@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { NavLink } from 'react-router-dom';
 const MenuLink = ({ href, title, children, className, style }: INavLink) => {
   const { themeColor } = useGlobalContext();
-  console.log(href)
   return (
     <motion.div
       style={{

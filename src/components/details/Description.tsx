@@ -8,17 +8,12 @@ import IconButton from '../buttons/IconButton'
 const Description = ({ data }: IDetailsDescType) => {
   const { themeColor } = useGlobalContext()
   const {
-    product_name,
-    sku,
-    in_stock,
-    current_price,
-    discount_percentage,
-    original_price,
-    ratings,
-    product_description,
-    product_details,
-    available_sizes,
-    available_colors
+    name,
+    sort_description,
+    price,
+    discount,
+    stock,
+    attributes
   } = data
 
   const renderStars = () => {
@@ -29,7 +24,7 @@ const Description = ({ data }: IDetailsDescType) => {
         }} size={24} />
         <span className="ml-2" style={{
           color: themeColor.gray
-        }}>{ratings?.number_of_ratings + ""} Ratings</span>
+        }}>{50 + ""} Ratings</span>
       </div>
     )
   }
@@ -42,7 +37,7 @@ const Description = ({ data }: IDetailsDescType) => {
     <div className="p-4 md:p-8">
       <h1 className="text-2xl md:text-3xl font-bold " style={{
         color: hexToRGBA7(themeColor.black)
-      }}>{product_name}</h1>
+      }}>{name}</h1>
       <div style={{
         color: themeColor.gray
       }} className="flex items-center justify-between mt-2 text-sm ">
@@ -50,11 +45,11 @@ const Description = ({ data }: IDetailsDescType) => {
           {renderStars()}
         </div>
         <div className="flex items-center space-x-4">
-          <span className="font-medium">{sku + ""}</span>
+          <span className="font-medium">{stock + ""}</span>
           <span style={{
-            color: in_stock ? themeColor.green : hexToRGBA7(themeColor.red)
+            color: stock>0 ? themeColor.green : hexToRGBA7(themeColor.red)
           }} className={`font-semibold `}>
-            {in_stock ? 'IN STOCK' : 'OUT OF STOCK'}
+            {stock>0 ? 'IN STOCK' : 'OUT OF STOCK'}
           </span>
         </div>
       </div>
@@ -63,36 +58,36 @@ const Description = ({ data }: IDetailsDescType) => {
         <div className="flex items-end space-x-2">
           <span className="text-3xl font-bold " style={{
             color: themeColor.black
-          }}>${current_price.toFixed(2)}</span>
+          }}>${price?.toFixed(2)}</span>
           <span style={{
             color: themeColor.gray
-          }} className="line-through text-xl">${original_price.toFixed(2)}</span>
+          }} className="line-through text-xl">${price?.toFixed(2)}</span>
           <span className="text-xl " style={{
             color: themeColor.red
-          }}>-{discount_percentage?.toString()}%</span>
+          }}>-{discount?.toString()}%</span>
         </div>
         <p className="mt-1 text-sm " style={{
           color: themeColor.gray
-        }}>M.R.P.: ${original_price.toFixed(2)}</p>
+        }}>M.R.P.: ${price?.toFixed(2)}</p>
       </div>
 
       <div style={{
         color: themeColor.gray
       }} className="my-6">
-        <p>{product_description}</p>
-        <ul className="mt-4 space-y-2 text-sm">
+        <p>{sort_description}</p>
+        {/* <ul className="mt-4 space-y-2 text-sm">
           {Object.entries(product_details).map(([key, value]) => (
             <li key={key}>
               <span className="font-semibold capitalize">{key.replace('_', ' ')}:</span> {value}
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
 
       <div className="my-6">
         <h3 className="text-lg font-semibold text-gray-800">SIZE</h3>
         <div className="flex space-x-2 mt-2">
-          {available_sizes.map((size, index) => (
+          {attributes?.filter((attr) => attr.name === 'size')?.[0]?.value?.map((size, index) => (
             <div
               key={index}
               style={{
@@ -110,7 +105,7 @@ const Description = ({ data }: IDetailsDescType) => {
       <div className="my-6">
         <h3 className="text-lg font-semibold text-gray-800">COLORS</h3>
         <div className="flex space-x-2 mt-2">
-          {available_colors.map((color, index) => (
+          {attributes?.filter((attr) => attr.name === 'colors')?.[0]?.value?.map((color, index) => (
             <div
               key={index}
               className="w-8 h-8 rounded-full border cursor-pointer"
@@ -120,7 +115,7 @@ const Description = ({ data }: IDetailsDescType) => {
         </div>
       </div>
       <div className='flex justify-start items-center gap-2'>
-        <IconButton handler={() => console.log(available_colors)}
+        <IconButton handler={() => console.log(attributes)}
           style={{
             backgroundColor: hexToRGBA6(themeColor.blue),
             padding: '8px 20px',
@@ -130,7 +125,7 @@ const Description = ({ data }: IDetailsDescType) => {
               color: themeColor.white
             }}>Add To Cart</p>
           </div>} />
-        <IconButton handler={() => console.log(available_colors)}
+        <IconButton handler={() => console.log(attributes)}
           style={{
             backgroundColor: hexToRGBA6(themeColor.green),
             padding: '8px 20px',

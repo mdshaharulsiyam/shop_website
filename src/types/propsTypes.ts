@@ -102,38 +102,78 @@ export interface IProductCard {
 }
 
 export interface IDetailsDescType {
-  data: {
-    "product_name": String,
-    "sku": Number,
-    "in_stock": Boolean,
-    "images": Array<String>,
-    "current_price": Number,
-    "discount_percentage": Number,
-    "original_price": Number,
-    "ratings": {
-      "average_rating": Number,
-      "number_of_ratings": Number
-    },
-    "real_time_visitors": Number,
-    "sale_timer": {
-      "days": Number,
-      "hours": Number,
-      "minutes": Number,
-      "seconds": Number
-    },
-    "product_description": String,
-    "product_details": {
-      "closure": String,
-      "sole": String,
-      "width": String,
-      "outer_material": String
-    },
-    "available_sizes": Array<String>,
-    "available_colors": Array<String>
-  }
-
+  data: IProductDetails
+}
+export interface IProductDetails {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  img: string[];
+  category: ICategory;
+  sub_category: ISubCategory;
+  is_approved: boolean;
+  is_featured: boolean;
+  stock: number;
+  user: IUser;
+  business: string | null;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  attributes: IProductAttribute[];
 }
 
+export interface ICategory {
+  _id: string;
+  name: string;
+  img: string[];
+  label: string;
+  parent_id: string | null;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface ISubCategory {
+  _id: string;
+  name: string;
+  img: string[];
+  parent_id: string;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  img: string | null;
+  password: string;
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'VENDOR' | 'CUSTOMER' | string;
+  block: boolean;
+  is_verified: boolean;
+  provider: 'CREDENTIAL' | 'GOOGLE' | 'FACEBOOK' | string;
+  accessToken: string;
+  use_type: 'BASIC' | 'PREMIUM' | string;
+  is_identity_verified: boolean;
+  documents: string[];
+  stripe: string | null;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface IProductAttribute {
+  _id: string;
+  name: string;
+  value: string[];
+  product_attribute_id: string;
+}
 export interface ICartCard {
   item: {
     name: string,

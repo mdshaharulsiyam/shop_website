@@ -2,6 +2,8 @@ import Description from '@/components/details/Description'
 import Images from '@/components/details/Images'
 import SimilarProduct from '@/components/details/SimilarProduct'
 import TabButton from '@/components/details/TabButton'
+import { useGetProductDetailsQuery } from '@/Redux/apis/productSlice'
+import { useParams } from 'react-router-dom'
 export const dummyData = {
   "product_name": "Mantu Women's Solid Slim Fit Classic Round Neck Cotton Fabric T-Shirt.",
   "sku": 562,
@@ -47,9 +49,11 @@ export const dummyData = {
   ]
 }
 const Details = () => {
+  const {id}=useParams()
+  const {data}=useGetProductDetailsQuery(id)
   const element = [
-    <Images />,
-    <Description data={dummyData} />
+    <Images imageList={data?.data?.img || []} />,
+    <Description data={data?.data || {}} />
   ]
   return (
     <>

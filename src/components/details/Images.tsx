@@ -2,21 +2,12 @@ import { useGlobalContext } from '@/providers/ContextProvider'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
-const Images = () => {
+import { imageUrl } from '@/Redux/baseApi'
+const Images = ({imageList=[]}: {imageList: string[]}) => {
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const { themeColor } = useGlobalContext()
-  const imageList = [
-    "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
-    "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
-    "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
-    "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
-    "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "https://i.ibb.co.com/wZpjDkmw/photo-1505740420928-5e560c06d30e.jpg",
-    "https://i.ibb.co.com/35Z016Xj/pexels-madebymath-90946.jpg",
-  ]
+
 
   const variants = {
     enter: (direction: number) => ({
@@ -48,7 +39,7 @@ const Images = () => {
             exit="exit"
             className="w-full h-full"
           >
-            <img className='w-full h-[400px] md:h-[500px] lg:h-[650px] object-contain' src={imageList[index]} alt="" />
+            <img className='w-full h-[400px] md:h-[500px] lg:h-[650px] object-contain' src={imageUrl(imageList[index])} alt="" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -68,7 +59,7 @@ const Images = () => {
                     borderColor: i === index ? themeColor.blue : 'transparent',
                   }}
                   className={`rounded-2xl object-cover border-2 w-full h-full `}
-                  src={imageList[i]}
+                  src={imageUrl(imageList[i])}
                   alt=""
                 />
               </div>
