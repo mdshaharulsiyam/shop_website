@@ -1,5 +1,5 @@
 import type React from 'react'
-import type { IOrder, IProduct, IThemeColor } from './dataTypes'
+import type { IOrder, IProduct, IProfile, IThemeColor } from './dataTypes'
 import type { SetState } from './functionsTypes'
 
 
@@ -7,7 +7,8 @@ export interface IContextData {
   theme: string,
   themeColor: IThemeColor,
   width: number,
-  height: number
+  height: number,
+  user:IProfile |undefined
 }
 export interface IIconButton {
   handler: () => void,

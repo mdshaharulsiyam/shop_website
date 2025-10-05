@@ -50,3 +50,18 @@ export interface IGroup {
   label: string;
   products: IProductFromApi[];
 }
+export interface IProfile {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  img: string | null;
+  role: "SUPER_ADMIN" | "ADMIN" | "USER" | string; // extendable
+  block: boolean;
+  is_verified: boolean;
+  provider: "CREDENTIAL" | "GOOGLE" | "FACEBOOK" | string;
+  accessToken: string;
+  use_type: "BASIC" | "PREMIUM" | "PRO" | string; // extendable
+  is_identity_verified: boolean;
+  documents: string[]; // assuming document IDs or URLs
+}

@@ -7,12 +7,12 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 const globalContext = createContext<IContextData | null>(null)
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
   const {data}=useGetProfileQuery(undefined)
-  console.log(data)
   const [values, setValues] = useState<IContextData>({
     theme: "",
     themeColor: colors.light,
     width: 0,
-    height: 0
+    height: 0,
+    user:data?.data
   })
   useEffect(() => {
     if (typeof window != 'undefined') {
