@@ -2,6 +2,7 @@ import About from '@/pages/About';
 import Forget from '@/pages/auth/Forget';
 import Login from '@/pages/auth/Login';
 import Otp from '@/pages/auth/Otp';
+import Profile from '@/pages/auth/Profile';
 import Reset from '@/pages/auth/Reset';
 import SignUp from '@/pages/auth/SignUp';
 import Checkout from '@/pages/Checkout';
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
       {
         path: "/otp",
         element: <Otp />
+      },
+      {
+        path: "/profile",
+        element: <Profile />
       },
     ]
   },

@@ -25,7 +25,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false)
   const [showPagesMenu, setShowPagesMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
-  const { themeColor } = useGlobalContext()
+  const { themeColor ,user} = useGlobalContext()
   const { data } = useGetCategoriesWithSubQuery(undefined)
   // const categoriesData = data?.data?.map((item: any) => ({
   //   title: item.name,
@@ -140,8 +140,11 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
 
           <SearchIcon />
 
-          {/* Profile dropdown */}
-          <ProfilePopup
+      {
+        user?._id && <>
+        
+            {/* Profile dropdown */}
+            <ProfilePopup
             setShowProfileMenu={setShowProfileMenu}
             showProfileMenu={showProfileMenu}
           />
@@ -156,6 +159,8 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
               {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </motion.div>
           </Button>
+        </>
+      }
         </div>
       </div>
 

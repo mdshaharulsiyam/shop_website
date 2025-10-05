@@ -27,7 +27,12 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
       }))
     }
   }, [])
-
+useEffect(()=>{
+  setValues((prev)=>({
+    ...prev,
+    user:data?.data
+  }))
+},[data])
   return (
     <globalContext.Provider value={values}>
       {children}

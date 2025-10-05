@@ -3,8 +3,9 @@ import type { IProfilePopup } from '@/types/propsTypes'
 import { AnimatePresence, motion } from 'framer-motion'
 import { LogOut, Settings, User, UserCircle } from 'lucide-react'
 import { FaShippingFast } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) => {
+  const navigate = useNavigate()
   return (
     <div className="relative cursor-pointer">
       <Button
@@ -27,13 +28,13 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
             onMouseEnter={() => setShowProfileMenu(true)}
             onMouseLeave={() => setShowProfileMenu(false)}
           >
-            <a
-              href="#"
+            <Link
+              to={`/profile`}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <UserCircle className="h-4 w-4 mr-3" />
               My Profile
-            </a>
+            </Link>
             <Link
               to={`/order`}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -41,21 +42,24 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
               <FaShippingFast className="h-4 w-4 mr-3" />
               My Order
             </Link>
-            <a
+            {/* <a
               href="#"
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <Settings className="h-4 w-4 mr-3" />
               Settings
-            </a>
+            </a> */}
             <hr className="my-1" />
-            <a
-              href="#"
+            <button
+              onClick={() => {
+                localStorage.removeItem('token')
+                navigate('/login')
+              }}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <LogOut className="h-4 w-4 mr-3" />
               Sign Out
-            </a>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
