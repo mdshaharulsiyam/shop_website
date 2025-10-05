@@ -3,6 +3,7 @@ import type { IProductCard } from '@/types/propsTypes'
 import { Eye, Heart, RotateCcw, ShoppingCart } from 'lucide-react'
 
 const ProductCard = ({ product, index, isVisible }: IProductCard) => {
+  console.log(product)
   return (
     <div onClick={() => handleCardClick(product.id?.toString())}
       key={product.id}
@@ -30,15 +31,15 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
 
         {/* Action Buttons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors cursor-pointer">
             <Heart className="w-4 h-4 text-gray-600" />
           </button>
-          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors cursor-pointer">
             <Eye className="w-4 h-4 text-gray-600" />
           </button>
-          <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
+          {/* <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors">
             <RotateCcw className="w-4 h-4 text-gray-600" />
-          </button>
+          </button> */}
         </div>
       </div>
 
