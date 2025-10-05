@@ -72,8 +72,8 @@ const [signUp,{isLoading}]=usePostSignUpMutation()
         promise,
         {
           loading: 'Signing up...',
-          success: <b>Settings saved!</b>,
-          error: <b>Could not save.</b>,
+          success: (res) => res?.message || 'Sign up successfully',
+          error: (err) => err?.data?.message || 'Sign up failed',
         }
       );
       promise.then((res) => {

@@ -11,7 +11,7 @@ const authSlice = baseApis.injectEndpoints({
     }),
     postSignUp: builder.mutation({
       query: (data) => ({
-        url: "/auth/signup",
+        url: "/auth/sign-up",
         method: "POST",
         body: data
       }),
@@ -36,7 +36,7 @@ const authSlice = baseApis.injectEndpoints({
     }),
     verifyOtp: builder.mutation({
       query: (data) => ({
-        url: '/auth/forget-pass-otp-verify',
+        url: '/verification/verify',
         method: 'POST',
         body: data
       })
@@ -50,8 +50,13 @@ const authSlice = baseApis.injectEndpoints({
           body: data
         }
       )
-    })
-
+    }),
+getProfile:builder.query({
+  query:()=>({
+    url:"/auth/profile",
+    method:"GET"
+  })
+})
   }),
 });
 
@@ -61,6 +66,7 @@ export const {
   useForgetEmailPostMutation,
   useVerifyOtpMutation,
   useResetPasswordMutation,
-  usePostSignUpMutation
+  usePostSignUpMutation,
+  useGetProfileQuery
 
 } = authSlice;

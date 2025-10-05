@@ -51,7 +51,7 @@ const [verify,{isLoading}]=useVerifyOtpMutation()
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      const promise=verify(formData).unwrap()
+      const promise=verify({code:formData.otp,email:localStorage.getItem("email")}).unwrap()
       toast.promise(
         promise,
         {

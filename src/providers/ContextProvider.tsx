@@ -1,10 +1,13 @@
 "use client"
 import { colors } from '@/constant/colors'
+import { useGetProfileQuery } from '@/Redux/apis/authSlice'
 import type { IContextData } from '@/types/propsTypes'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 const globalContext = createContext<IContextData | null>(null)
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const {data}=useGetProfileQuery(undefined)
+  console.log(data)
   const [values, setValues] = useState<IContextData>({
     theme: "",
     themeColor: colors.light,
