@@ -8,6 +8,7 @@ import { hexToRGBA2 } from '@/utils/hexToRGBA'
 import { motion } from "framer-motion"
 import { Menu, PanelsTopLeft, X } from "lucide-react"
 import { useState } from "react"
+import { Link } from 'react-router-dom'
 import DropdownMenu from '../dropdown/DropdownMenu'
 import DropdownMenuTitle from '../dropdown/DropdownMenuTitle'
 import MenuLink from '../Links/MenuLink'
@@ -25,7 +26,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(false)
   const [showPagesMenu, setShowPagesMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
-  const { themeColor ,user} = useGlobalContext()
+  const { themeColor, user } = useGlobalContext()
   const { data } = useGetCategoriesWithSubQuery(undefined)
   // const categoriesData = data?.data?.map((item: any) => ({
   //   title: item.name,
@@ -140,27 +141,33 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
 
           <SearchIcon />
 
-      {
-        user?._id && <>
-        
-            {/* Profile dropdown */}
-            <ProfilePopup
-            setShowProfileMenu={setShowProfileMenu}
-            showProfileMenu={showProfileMenu}
-          />
-          {/* <BadgesButton
+          {
+            user?._id ? <>
+
+              {/* Profile dropdown */}
+              <ProfilePopup
+                setShowProfileMenu={setShowProfileMenu}
+                showProfileMenu={showProfileMenu}
+              />
+              {/* <BadgesButton
             count={3}
             icon={<Heart className="h-5 w-5" />}
             handler={() => console.log('Heart button clicked')}
           /> */}
-          <CartButton />
-          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
-            <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </motion.div>
-          </Button>
-        </>
-      }
+              <CartButton />
+              <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+                <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                  {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </motion.div>
+              </Button>
+            </> : <Link
+              to={`/login`}
+            >
+              <Button className="cursor-pointer">
+                Login
+              </Button>
+            </Link>
+          }
         </div>
       </div>
 
