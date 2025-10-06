@@ -3,6 +3,7 @@ import Forget from '@/pages/auth/Forget';
 import Login from '@/pages/auth/Login';
 import Otp from '@/pages/auth/Otp';
 import Profile from '@/pages/auth/Profile';
+import RegisterSeller from '@/pages/auth/RegisterSeller';
 import Reset from '@/pages/auth/Reset';
 import SignUp from '@/pages/auth/SignUp';
 import Checkout from '@/pages/Checkout';
@@ -80,6 +81,10 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />
+      },
+      {
+        path: "/register-seller",
+        element: <RegisterSeller />
       },
     ]
   },
