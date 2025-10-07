@@ -1,3 +1,4 @@
+import { useCreateBusinessMutation } from "@/Redux/apis/businessApis";
 import { UploadOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -22,6 +23,8 @@ const RegisterSeller = () => {
   const [logoFile, setLogoFile] = useState<any[]>([]);
   const [bannerFile, setBannerFile] = useState<any[]>([]);
   const [documentFiles, setDocumentFiles] = useState<any[]>([]);
+  const [registerBusiness, { isLoading: isLoadingRegister }] = useCreateBusinessMutation();
+
 
   // 🧠 File change handler
   const handleFileChange =
@@ -34,14 +37,26 @@ const RegisterSeller = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const payload = {
-        ...values,
-        logo: logoFile[0]?.originFileObj || null,
-        banner: bannerFile[0]?.originFileObj || null,
-        business_documents: documentFiles.map((f) => f.originFileObj),
-      };
+      // Build multipart/form-data payload expected by backend `/business/create`
+      const formData = new FormData();
+      if (values?.name) formData.append("name", values.name);
+      if (values?.address) formData.append("address", values.address);
+      if (logoFile?.[0]?.originFileObj) {
+        formData.append("logo", logoFile[0].originFileObj);
+      }
+      if (bannerFile?.[0]?.originFileObj) {
+        formData.append("banner", bannerFile[0].originFileObj);
+      }
+      if (documentFiles?.length) {
+        documentFiles.forEach((f: any) => {
+          if (f?.originFileObj) {
+            formData.append("business_documents", f.originFileObj);
+          }
+        });
+      }
 
-      console.log("Submitting Seller Registration:", payload);
+      // Call API
+      await registerBusiness(formData).unwrap();
 
       message.success("Business registration submitted successfully!");
       form.resetFields();
@@ -174,7 +189,7 @@ const RegisterSeller = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={loading}
+                loading={loading || isLoadingRegister}
                 className="bg-blue-600 hover:bg-blue-700 px-10 py-5 rounded-lg"
               >
                 Submit Registration

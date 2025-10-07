@@ -8,6 +8,7 @@ const authSlice = baseApis.injectEndpoints({
         method: "POST",
         body: data
       }),
+      invalidatesTags: ['auth']
     }),
     postSignUp: builder.mutation({
       query: (data) => ({
@@ -15,6 +16,7 @@ const authSlice = baseApis.injectEndpoints({
         method: "POST",
         body: data
       }),
+      invalidatesTags: ['auth']
     }),
     patchNewPassword: builder.mutation({
       query: (data) => (
