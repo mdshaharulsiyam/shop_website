@@ -14,7 +14,7 @@ const Profile = () => {
   const [update, { isLoading }] = usePatchProfileMutation()
   const [updatePassword, { isLoading: isLoadingPassword }] = usePatchNewPasswordMutation()
   const [form] = Form.useForm();
-
+  console.log(user)
   // 🧩 Manage uploaded image
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [businessForm] = Form.useForm();
@@ -32,7 +32,7 @@ const Profile = () => {
         name: business.name || "",
         address: business.address || "",
       });
-      
+
       // Set logo file if exists
       if (business.logo) {
         setLogoFile([{
@@ -42,7 +42,7 @@ const Profile = () => {
           url: imageUrl(business.logo)
         }]);
       }
-      
+
       // Set banner file if exists
       if (business.banner) {
         setBannerFile([{
@@ -52,7 +52,7 @@ const Profile = () => {
           url: imageUrl(business.banner)
         }]);
       }
-      
+
       // Set document files if exist
       if (business.business_documents?.length) {
         setDocumentFiles(business.business_documents.map((doc: string, index: number) => ({
@@ -92,11 +92,11 @@ const Profile = () => {
   };
 
   // 🧩 Handle business file uploads
-  const handleBusinessFileChange = 
+  const handleBusinessFileChange =
     (setFile: React.Dispatch<React.SetStateAction<any[]>>) =>
-    ({ fileList }: { fileList: any[] }) => {
-      setFile(fileList);
-    };
+      ({ fileList }: { fileList: any[] }) => {
+        setFile(fileList);
+      };
 
   // 🧩 Handle business form submit
   const handleBusinessUpdate = async (values: any) => {
@@ -160,7 +160,7 @@ const Profile = () => {
 
   // 🧩 Handle password change
   const handlePasswordChange = (values: any) => {
-   setLoading(true)
+    setLoading(true)
     const promise = updatePassword(values).unwrap();
     toast.promise(
       promise,
@@ -311,7 +311,8 @@ const Profile = () => {
       </Row>
 
       {/* 🏢 Business Information Section */}
-      <Row gutter={[24, 24]} className="mt-6">
+      {
+        user?.business?._id && <Row gutter={[24, 24]} className="mt-6">
         <Col span={24}>
           <Card
             title="Business Information"
@@ -345,8 +346,9 @@ const Profile = () => {
                 </Col>
               </Row>
 
+              {/* Logo and Banner in one row */}
               <Row gutter={[24, 24]}>
-                <Col xs={24} md={8}>
+                <Col xs={24} md={12}>
                   <Form.Item label="Business Logo" name="logo">
                     <Upload
                       beforeUpload={() => false}
@@ -354,11 +356,12 @@ const Profile = () => {
                       fileList={logoFile}
                       maxCount={1}
                       onChange={handleBusinessFileChange(setLogoFile)}
+                      className="w-full"
                     >
                       {logoFile.length === 0 && (
-                        <div className="flex flex-col items-center">
-                          <UploadOutlined />
-                          <span className="text-xs mt-1 text-gray-500">
+                        <div className="flex flex-col items-center w-full">
+                          <UploadOutlined className="text-2xl" />
+                          <span className="text-sm mt-2 text-gray-500">
                             {businessData?.data?.logo ? 'Change Logo' : 'Upload Logo'}
                           </span>
                         </div>
@@ -367,22 +370,20 @@ const Profile = () => {
                   </Form.Item>
                 </Col>
 
-                <Col xs={24} md={8}>
-                  <Form.Item
-                    label="Business Banner"
-                    name="banner"
-                  >
+                <Col xs={24} md={12}>
+                  <Form.Item label="Business Banner" name="banner">
                     <Upload
                       beforeUpload={() => false}
                       listType="picture-card"
                       fileList={bannerFile}
                       maxCount={1}
                       onChange={handleBusinessFileChange(setBannerFile)}
+                      className="w-full"
                     >
                       {bannerFile.length === 0 && (
-                        <div className="flex flex-col items-center">
-                          <UploadOutlined />
-                          <span className="text-xs mt-1 text-gray-500">
+                        <div className="flex flex-col items-center w-full">
+                          <UploadOutlined className="text-2xl" />
+                          <span className="text-sm mt-2 text-gray-500">
                             {businessData?.data?.banner ? 'Change Banner' : 'Upload Banner'}
                           </span>
                         </div>
@@ -390,22 +391,36 @@ const Profile = () => {
                     </Upload>
                   </Form.Item>
                 </Col>
+              </Row>
 
-                <Col xs={24} md={8}>
+              {/* Business Documents in full width row */}
+              <Row>
+                <Col span={24}>
                   <Form.Item label="Business Documents" name="business_documents">
                     <Upload
                       beforeUpload={() => false}
-                      listType="picture-card"
+                      listType="text"
                       multiple
                       fileList={documentFiles}
                       onChange={handleBusinessFileChange(setDocumentFiles)}
+                      className="w-full"
+                      showUploadList={{
+                        showRemoveIcon: true,
+                        showPreviewIcon: true,
+                      }}
                     >
-                      <div className="flex flex-col items-center">
-                        <UploadOutlined />
-                        <span className="text-xs mt-1 text-gray-500">
-                          {businessData?.data?.business_documents?.length ? 'Update Documents' : 'Upload Documents'}
-                        </span>
-                      </div>
+                      {documentFiles.length === 0 ? (
+                        <div className="flex flex-col items-center w-full p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                          <UploadOutlined className="text-2xl" />
+                          <span className="text-sm mt-2 text-gray-500">
+                            {businessData?.data?.business_documents?.length ? 'Add More Documents' : 'Upload Documents'}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="p-2">
+                          <Button icon={<UploadOutlined />}>Add More Documents</Button>
+                        </div>
+                      )}
                     </Upload>
                   </Form.Item>
                 </Col>
@@ -425,6 +440,8 @@ const Profile = () => {
           </Card>
         </Col>
       </Row>
+      }
+     
     </div>
   );
 };

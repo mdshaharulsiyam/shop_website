@@ -64,4 +64,26 @@ export interface IProfile {
   use_type: "BASIC" | "PREMIUM" | "PRO" | string; // extendable
   is_identity_verified: boolean;
   documents: string[]; // assuming document IDs or URLs
+  "business": {
+    "_id": string,
+    "user": string,
+    "name": string,
+    "logo": string,
+    "banner": string,
+    "address": string,
+    "location": {
+        "type": string,
+        "coordinates": [
+            number,
+            number
+        ]
+    },
+    "block": boolean,
+    "is_approve": boolean,
+    "trade_license": string,
+    "business_category": string,
+    "business_sub_admins": string[],
+    "business_documents": string[],
+    "__v": number
+}
 }

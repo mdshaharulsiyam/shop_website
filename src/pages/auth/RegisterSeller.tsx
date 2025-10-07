@@ -117,9 +117,9 @@ const RegisterSeller = () => {
               </Col>
             </Row>
 
-            {/* Uploads in 3 columns */}
+            {/* Logo and Banner in one row */}
             <Row gutter={[24, 24]}>
-              <Col xs={24} md={8}>
+              <Col xs={24} md={12}>
                 <Form.Item label="Business Logo" name="logo">
                   <Upload
                     beforeUpload={() => false}
@@ -127,11 +127,12 @@ const RegisterSeller = () => {
                     fileList={logoFile}
                     maxCount={1}
                     onChange={handleFileChange(setLogoFile)}
+                    className="w-full"
                   >
                     {logoFile.length === 0 && (
-                      <div className="flex flex-col items-center">
-                        <UploadOutlined />
-                        <span className="text-xs mt-1 text-gray-500">
+                      <div className="flex flex-col items-center w-full">
+                        <UploadOutlined className="text-2xl" />
+                        <span className="text-sm mt-2 text-gray-500">
                           Upload Logo
                         </span>
                       </div>
@@ -140,7 +141,7 @@ const RegisterSeller = () => {
                 </Form.Item>
               </Col>
 
-              <Col xs={24} md={8}>
+              <Col xs={24} md={12}>
                 <Form.Item
                   label="Business Banner"
                   name="banner"
@@ -152,11 +153,12 @@ const RegisterSeller = () => {
                     fileList={bannerFile}
                     maxCount={1}
                     onChange={handleFileChange(setBannerFile)}
+                    className="w-full"
                   >
                     {bannerFile.length === 0 && (
-                      <div className="flex flex-col items-center">
-                        <UploadOutlined />
-                        <span className="text-xs mt-1 text-gray-500">
+                      <div className="flex flex-col items-center w-full">
+                        <UploadOutlined className="text-2xl" />
+                        <span className="text-sm mt-2 text-gray-500">
                           Upload Banner
                         </span>
                       </div>
@@ -164,33 +166,54 @@ const RegisterSeller = () => {
                   </Upload>
                 </Form.Item>
               </Col>
+            </Row>
 
-              <Col xs={24} md={8}>
-                <Form.Item label="Business Documents" name="business_documents">
+            {/* Business Documents in full width row */}
+            <Row>
+              <Col span={24}>
+                <Form.Item
+                  label="Business Documents"
+                  name="documents"
+                  rules={[
+                    { required: true, message: "Please upload at least one document" },
+                  ]}
+                >
                   <Upload
                     beforeUpload={() => false}
-                    listType="picture-card"
-                    multiple
+                    listType="text"
                     fileList={documentFiles}
                     onChange={handleFileChange(setDocumentFiles)}
+                    multiple
+                    className="w-full"
+                    showUploadList={{
+                      showRemoveIcon: true,
+                      showPreviewIcon: true,
+                    }}
                   >
-                    <div className="flex flex-col items-center">
-                      <UploadOutlined />
-                      <span className="text-xs mt-1 text-gray-500">
-                        Upload Docs
-                      </span>
-                    </div>
+                    {documentFiles.length === 0 ? (
+                      <div className="flex flex-col items-center w-full p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                        <UploadOutlined className="text-2xl" />
+                        <span className="text-sm mt-2 text-gray-500">
+                          Upload Documents
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="p-4">
+                        <Button icon={<UploadOutlined />}>Add More Documents</Button>
+                      </div>
+                    )}
                   </Upload>
                 </Form.Item>
               </Col>
             </Row>
-
-            <div className="text-center mt-6">
+            {/* Submit Button */}
+            <div className="text-center mt-8">
               <Button
                 type="primary"
                 htmlType="submit"
                 loading={loading || isLoadingRegister}
-                className="bg-blue-600 hover:bg-blue-700 px-10 py-5 rounded-lg"
+                className="bg-blue-600 hover:bg-blue-700 h-12 px-10 text-lg"
+                size="large"
               >
                 Submit Registration
               </Button>
