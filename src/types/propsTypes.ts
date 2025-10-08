@@ -10,6 +10,20 @@ export interface IContextData {
   height: number,
   user:IProfile |undefined
 }
+
+export interface IOrderCard {
+  item: {
+    id?: string,
+    _id?: string,
+    name: string,
+    image: string,
+    quantity: number,
+    price: number,
+  },
+  type?: 'order' | 'checkout',
+  handler?: (id: string, count: number) => void,
+  removeHandler?: (id: string) => void,
+}
 export interface IIconButton {
   handler: () => void,
   icon?: React.ReactNode,

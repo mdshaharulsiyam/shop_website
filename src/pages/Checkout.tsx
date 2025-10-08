@@ -1,64 +1,76 @@
 import OrderCard from '@/components/order/OrderCard'
 import { useGlobalContext } from '@/providers/ContextProvider'
-import type { IOrder } from '@/types/dataTypes'
-import { useState } from 'react'
-
-const data = [
-  {
-    "name": "Stylish Chair",
-    "image": "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "quantity": 2,
-    "price": 75.00,
-    "total_price": 150.00,
-    "payment_by": "Credit Card",
-    "isPaid": true
-  },
-  {
-    "name": "Modern Desk",
-    "image": "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "quantity": 1,
-    "price": 250.00,
-    "total_price": 250.00,
-    "payment_by": "PayPal",
-    "isPaid": true
-  },
-  {
-    "name": "Sleek Lamp",
-    "image": "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "quantity": 3,
-    "price": 45.50,
-    "total_price": 136.50,
-    "payment_by": "Cash",
-    "isPaid": false
-  },
-  {
-    "name": "Bookshelf",
-    "image": "https://i.ibb.co.com/LD07JNgc/Product-Showcase-1.jpg",
-    "quantity": 1,
-    "price": 120.00,
-    "total_price": 120.00,
-    "payment_by": "Credit Card",
-    "isPaid": true
-  }
-]
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { verifyJWT } from '@/utils/jwt'
+import { imageUrl } from '@/Redux/baseApi'
+import { usePatchProfileMutation } from '@/Redux/apis/authSlice'
+import { useCreateShippingAddressMutation, useGetAllShippingAddressesQuery } from '@/Redux/apis/shippingAddressApis'
+import toast from 'react-hot-toast'
+import { PlusCircle, Edit3 } from 'lucide-react'
 
 const Checkout = () => {
-  const { themeColor } = useGlobalContext()
+  const { themeColor ,user} = useGlobalContext()
+  const location = useLocation()
+  const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number }>>([])
+  const [decodeError, setDecodeError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const token = params.get('token')
+    if (!token) {
+      setDecodeError('No products selected')
+      return
+    }
+    const secret = (import.meta as any).env?.VITE_JWT_SECRET || 'cart_secret'
+    ;(async () => {
+      try {
+        const payload = await verifyJWT<any>(token, secret)
+        const mapped = (payload?.items || []).map((it: any) => ({
+          id: it?.id,
+          _id: it?.product_id,
+          name: it?.name,
+          image: Array.isArray(it?.img) && it.img[0] ? imageUrl(it.img[0]) : 'https://via.placeholder.co/80?text=No+Image',
+          quantity: Number(it?.quantity || 1),
+          price: Number(it?.price || 0),
+        }))
+        if (!mapped.length) setDecodeError('No products selected')
+        setItems(mapped)
+      } catch (e) {
+        setDecodeError('Invalid or expired checkout data')
+      }
+    })()
+  }, [location.search])
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [addresses, setAddresses] = useState([
-    "123 Main St, Dhaka, Bangladesh",
-    "456 Other Rd, Chittagong, Bangladesh"
-  ]);
+  const [addresses, setAddresses] = useState<string[]>([]);
   const [selectedAddress, setSelectedAddress] = useState(addresses[0]);
   const [newAddress, setNewAddress] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [paymentPhoneNumber, setPaymentPhoneNumber] = useState('');
+  const [patchProfile, { isLoading: isUpdatingPhone }] = usePatchProfileMutation();
+  const { data: addrRes } = useGetAllShippingAddressesQuery();
+  const [createAddress] = useCreateShippingAddressMutation();
+
+  useEffect(() => {
+    // Initialize phone number from user if available
+    if (user?.phone) setPhoneNumber(user.phone as any)
+  }, [user])
+
+  useEffect(() => {
+    // Load addresses from API once
+    const list = (addrRes?.result || addrRes?.data || []) as Array<{ address: string }>
+    if (Array.isArray(list) && list.length) {
+      const only = list.map((a) => a.address).filter(Boolean)
+      setAddresses(only)
+      if (!selectedAddress && only[0]) setSelectedAddress(only[0])
+    }
+  }, [addrRes])
 
   const userDetails = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: user?.name || 'Unknown User',
+    email: (user as any)?.email || 'Unknown',
     phoneNumber: phoneNumber,
     address: selectedAddress
   };
@@ -69,44 +81,81 @@ const Checkout = () => {
   const openAddressModal = () => setIsAddressModalOpen(true);
   const closeAddressModal = () => setIsAddressModalOpen(false);
 
-  const handlePhoneSave = () => {
-    // Add logic to save phone number to state or backend
-    console.log("Saving phone number:", phoneNumber);
-    closePhoneModal();
+  const handlePhoneSave = async () => {
+    if (!phoneNumber) {
+      toast.error('Please enter a phone number')
+      return
+    }
+    try {
+      await toast.promise(
+        patchProfile({ phone: phoneNumber }).unwrap(),
+        {
+          loading: 'Updating phone...',
+          success: 'Phone number updated',
+          error: (err) => err?.data?.message || 'Failed to update phone',
+        }
+      )
+      closePhoneModal();
+    } catch (e) {}
   };
 
-  const handleAddressSave = () => {
-    if (newAddress && !addresses.includes(newAddress)) {
-      setAddresses([...addresses, newAddress]);
-      setSelectedAddress(newAddress);
-      setNewAddress('');
+  const handleAddressSave = async () => {
+    if (!newAddress) return;
+    if (addresses.includes(newAddress)) {
+      toast.error('Address already added')
+      return;
     }
-    closeAddressModal();
+    // Optimistic insert
+    setAddresses((prev) => [...prev, newAddress])
+    setSelectedAddress(newAddress)
+    setNewAddress('')
+    closeAddressModal()
+    try {
+      const res = await createAddress({ address: newAddress }).unwrap()
+      if (!res?.success) {
+        // rollback
+        setAddresses((prev) => prev.filter((a) => a !== newAddress))
+        if (selectedAddress === newAddress) setSelectedAddress(prev => prev && prev !== newAddress ? prev : (addresses[0] || ''))
+        toast.error(res?.message || 'Failed to add address')
+      } else {
+        toast.success(res?.message || 'Address added')
+      }
+    } catch (e: any) {
+      // rollback immediately on failure
+      setAddresses((prev) => prev.filter((a) => a !== newAddress))
+      if (selectedAddress === newAddress) setSelectedAddress(addresses[0] || '')
+      toast.error(e?.data?.message || 'Failed to add address')
+    }
   };
 
   const handleConfirmOrder = () => {
     console.log("Order Confirmed with details:", { transactionId, paymentPhoneNumber });
   };
-  const handlerRemove = (item: any) => {
-    console.log('Removing:', item);
-  };
+  const handlerRemove = (id: string) => {
+    setItems(prev => prev.filter(x => (x.id || x._id) !== id))
+  }
 
-  const handleUpdateQuantity = (item: any) => {
-    console.log('Updating quantity for:', item);
-  };
+  const handleUpdateQuantity = (id: string, qty: number) => {
+    setItems(prev => prev.map(x => (x.id === id || x._id === id) ? { ...x, quantity: Math.max(1, qty) } : x))
+  }
+
+  const total = useMemo(() => items.reduce((s, it) => s + it.price * it.quantity, 0), [items])
 
   return (
     <div className='py-6 container mx-auto'>
       <p className='text-2xl mb-2'>Products</p>
+      {decodeError && (
+        <p className='mb-4 text-red-600'>{decodeError}</p>
+      )}
       <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {
-          data?.map((item: IOrder, i: number) => (
+          items?.map((item, i: number) => (
             <OrderCard
               key={i}
               item={item}
               type='checkout'
-              removeHandler={handlerRemove}
-              handler={handleUpdateQuantity}
+              removeHandler={(id) => handlerRemove(id)}
+              handler={(id, count) => handleUpdateQuantity(id, count)}
             />
           ))
         }
@@ -122,18 +171,16 @@ const Checkout = () => {
           </div>
           <div className='flex items-center justify-between'>
             <p className='text-lg'><span className='font-semibold'>Phone Number:</span> {userDetails.phoneNumber || 'Not added yet'}</p>
-            <button onClick={openPhoneModal} className='text-blue-500 hover:text-blue-700 transition-colors duration-200'>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path d="M21.731 2.269a2.684 2.684 0 00-3.784 0l-15 15a2.684 2.684 0 000 3.784l.266.266a2.684 2.684 0 003.784 0l15-15a2.684 2.684 0 000-3.784L21.731 2.27zM11.625 7.5L8.5 4.375 16.5 4.5l3.125 3.125L11.625 7.5zM2.875 15.375l.188.188L5.5 13.5l-2.625-2.625-.187.187zM4.375 17.5L7.5 14.375l2.625 2.625-3.125 3.125L4.375 17.5zM15 17.5l-2.625 2.625-3.125-3.125L11.875 14.375 15 17.5zM17.5 15L14.375 11.875l-2.625 2.625 3.125 3.125L17.5 15z" clipRule="evenodd" />
-              </svg>
-            </button>
+            {!userDetails.phoneNumber && (
+              <button onClick={openPhoneModal} className='text-blue-500 hover:text-blue-700 transition-colors duration-200 flex items-center gap-1'>
+                <PlusCircle className='w-5 h-5' /> Add phone
+              </button>
+            )}
           </div>
           <div className='flex items-start justify-between'>
             <p className='text-lg'><span className='font-semibold'>Delivery Address:</span> {userDetails.address || 'Not added yet'}</p>
-            <button onClick={openAddressModal} className='text-blue-500 hover:text-blue-700 transition-colors duration-200'>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path d="M21.731 2.269a2.684 2.684 0 00-3.784 0l-15 15a2.684 2.684 0 000 3.784l.266.266a2.684 2.684 0 003.784 0l15-15a2.684 2.684 0 000-3.784L21.731 2.27zM11.625 7.5L8.5 4.375 16.5 4.5l3.125 3.125L11.625 7.5zM2.875 15.375l.188.188L5.5 13.5l-2.625-2.625-.187.187zM4.375 17.5L7.5 14.375l2.625 2.625-3.125 3.125L4.375 17.5zM15 17.5l-2.625 2.625-3.125-3.125L11.875 14.375 15 17.5zM17.5 15L14.375 11.875l-2.625 2.625 3.125 3.125L17.5 15z" clipRule="evenodd" />
-              </svg>
+            <button onClick={openAddressModal} className='text-blue-500 hover:text-blue-700 transition-colors duration-200 flex items-center gap-1'>
+              <Edit3 className='w-5 h-5' /> Edit
             </button>
           </div>
         </div>
@@ -164,6 +211,10 @@ const Checkout = () => {
       <div className='mt-8 bg-white p-6 rounded-xl shadow-lg'>
         <p className='text-3xl font-bold mb-4'>Confirm Order</p>
         <div className='space-y-4'>
+          <div className='flex items-center justify-between text-xl'>
+            <span>Total</span>
+            <span className='font-bold'>${total.toFixed(2)}</span>
+          </div>
           <p className='text-gray-700'>
             Please send the delivery charge to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
           </p>

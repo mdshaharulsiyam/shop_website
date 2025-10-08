@@ -33,7 +33,7 @@ async function createHmacSHA256(message: string, secret: string): Promise<string
 }
 
 // Create JWT
-async function createJWT(payload: Record<string, unknown>, secret: string): Promise<string> {
+export async function createJWT(payload: Record<string, unknown>, secret: string): Promise<string> {
   const header = { alg: 'HS256', typ: 'JWT' };
   const headerEncoded = base64UrlEncode(JSON.stringify(header));
   const payloadEncoded = base64UrlEncode(JSON.stringify(payload));
@@ -43,28 +43,12 @@ async function createJWT(payload: Record<string, unknown>, secret: string): Prom
 }
 
 // Verify JWT
-async function verifyJWT<T = Record<string, unknown>>(token: string, secret: string): Promise<T> {
+export async function verifyJWT<T = Record<string, unknown>>(token: string, secret: string): Promise<T> {
   const [headerEncoded, payloadEncoded, signature] = token.split('.');
   const expectedSignature = await createHmacSHA256(`${headerEncoded}.${payloadEncoded}`, secret);
-
   if (expectedSignature !== signature) {
     throw new Error('Invalid token or secret key');
   }
 
   return JSON.parse(base64UrlDecode(payloadEncoded)) as T;
 }
-console.log("Decoded:", await verifyJWT("your_jwt_token", "my_secret_key"));
-console.log("Decoded:", await createJWT({}, "my_secret_key"));
-// // Example usage
-// (async () => {
-//   const secret = "my_secret_key"; // ⚠️ Don't expose in production!
-//   const token = await createJWT({ userId: 1, role: "admin" }, secret);
-//   console.log("Token:", token);
-
-//   try {
-//     const data = await verifyJWT<{ userId: number; role: string }>(token, secret);
-//     console.log("Decoded:", data);
-//   } catch (err) {
-//     console.error((err as Error).message);
-//   }
-// })();

@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react';
 import { useDeleteCartMutation, useGetCartQuery } from '@/Redux/apis/cartApis';
 import toast from 'react-hot-toast';
 import { imageUrl } from '@/Redux/baseApi';
+import { createJWT } from '@/utils/jwt';
 
 const CartButton = () => {
   const [open, setOpen] = useState(false);
@@ -103,7 +104,34 @@ const CartButton = () => {
                 icon={<ArrowBigRight />}
               />
             </div>
-            <IconButton handler={() => console.log('Order Now')}
+            <IconButton handler={async () => {
+              const raw = cartRes?.data || [];
+              if (!raw.length) {
+                toast.error('No products selected');
+                return;
+              }
+              try {
+                const checkoutData = {
+                  items: raw.map((it: any) => ({
+                    id: it?._id,
+                    product_id: it?.product_id?._id,
+                    name: it?.product_id?.name,
+                    price: it?.price,
+                    quantity: it?.quantity,
+                    total_price: it?.total_price,
+                    variants: it?.variants || [],
+                    img: it?.product_id?.img || [],
+                  })),
+                  total: total,
+                  ts: Date.now(),
+                };
+                const secret = (import.meta as any).env?.VITE_JWT_SECRET || 'cart_secret';
+                const token = await createJWT(checkoutData as any, secret);
+                window.location.href = `/checkout?token=${encodeURIComponent(token)}`;
+              } catch (e) {
+                toast.error('Unable to prepare checkout');
+              }
+            }}
               style={{
                 backgroundColor: hexToRGBA6(themeColor.green),
                 padding: '4px 10px',

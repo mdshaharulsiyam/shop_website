@@ -33,7 +33,10 @@ const OrderCard = ({ item, type = "order", handler, removeHandler }: IOrderCard)
                   color: themeColor.white
                 }}
 
-                handler={() => console.log('')}
+                handler={() => {
+                  const newQty = Math.max(1, (item?.quantity || 1) - 1)
+                  handler && handler((item as any)?.id || (item as any)?._id, newQty)
+                }}
                 icon={<Minus size={16} />}
               />
               <p className=''>{item?.quantity}</p>
@@ -44,7 +47,10 @@ const OrderCard = ({ item, type = "order", handler, removeHandler }: IOrderCard)
                   color: themeColor.white
                 }}
 
-                handler={() => console.log('')}
+                handler={() => {
+                  const newQty = (item?.quantity || 1) + 1
+                  handler && handler((item as any)?.id || (item as any)?._id, newQty)
+                }}
                 icon={<Plus size={16} />}
               />
             </div>
