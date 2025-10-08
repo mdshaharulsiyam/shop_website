@@ -6,13 +6,14 @@ import { verifyJWT } from '@/utils/jwt'
 import { imageUrl } from '@/Redux/baseApi'
 import { usePatchProfileMutation } from '@/Redux/apis/authSlice'
 import { useCreateShippingAddressMutation, useGetAllShippingAddressesQuery } from '@/Redux/apis/shippingAddressApis'
+import { useCreateOrderMutation } from '@/Redux/apis/orderApis'
 import toast from 'react-hot-toast'
 import { PlusCircle, Edit3 } from 'lucide-react'
 
 const Checkout = () => {
   const { themeColor ,user} = useGlobalContext()
   const location = useLocation()
-  const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number }>>([])
+  const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number; variants?: Array<{name:string; value:string}> }>>([])
   const [decodeError, setDecodeError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const Checkout = () => {
           image: Array.isArray(it?.img) && it.img[0] ? imageUrl(it.img[0]) : 'https://via.placeholder.co/80?text=No+Image',
           quantity: Number(it?.quantity || 1),
           price: Number(it?.price || 0),
+          variants: Array.isArray(it?.variants) ? it.variants : [],
         }))
         if (!mapped.length) setDecodeError('No products selected')
         setItems(mapped)
@@ -52,6 +54,7 @@ const Checkout = () => {
   const [patchProfile, { isLoading: isUpdatingPhone }] = usePatchProfileMutation();
   const { data: addrRes } = useGetAllShippingAddressesQuery();
   const [createAddress] = useCreateShippingAddressMutation();
+  const [createOrder, { isLoading: isPlacingOrder }] = useCreateOrderMutation();
 
   useEffect(() => {
     // Initialize phone number from user if available
@@ -128,8 +131,39 @@ const Checkout = () => {
     }
   };
 
-  const handleConfirmOrder = () => {
-    console.log("Order Confirmed with details:", { transactionId, paymentPhoneNumber });
+  const handleConfirmOrder = async () => {
+    if (!items.length) {
+      toast.error('No products selected')
+      return
+    }
+    if (!selectedAddress) {
+      toast.error('Please select a delivery address')
+      return
+    }
+    if (!transactionId || !paymentPhoneNumber) {
+      toast.error('Please provide transaction ID and payment phone')
+      return
+    }
+    const body = {
+      items: items.map((x) => ({
+        product: (x._id || x.id) as string,
+        quantity: x.quantity,
+        variants: Array.isArray(x.variants) ? x.variants : undefined,
+      })),
+      total_amount: total,
+      final_amount: total,
+      delivery_address: selectedAddress,
+      transaction_id: transactionId,
+      payement_phone: paymentPhoneNumber,
+    }
+    try {
+      await toast.promise(createOrder(body as any).unwrap(), {
+        loading: 'Placing order...',
+        success: (res) => res?.message || 'Order placed successfully',
+        error: (err) => err?.data?.message || 'Failed to place order',
+      })
+      // Optionally redirect or clear local cart state
+    } catch {}
   };
   const handlerRemove = (id: string) => {
     setItems(prev => prev.filter(x => (x.id || x._id) !== id))
@@ -242,9 +276,10 @@ const Checkout = () => {
           </div>
           <button
             onClick={handleConfirmOrder}
-            className='w-full py-3 bg-green-600 text-white text-xl font-bold rounded-lg hover:bg-green-700 transition-colors duration-200'
+            disabled={isPlacingOrder}
+            className={`w-full cursor-pointer py-3 text-white text-xl font-bold rounded-lg transition-colors duration-200 ${isPlacingOrder ? 'bg-green-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
           >
-            Confirm Order
+            {isPlacingOrder ? 'Processing...' : 'Confirm Order'}
           </button>
         </div>
       </div>
