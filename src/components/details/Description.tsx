@@ -3,7 +3,8 @@ import type { IDetailsDescType } from '@/types/propsTypes'
 import { hexToRGBA5, hexToRGBA6, hexToRGBA7 } from '@/utils/hexToRGBA'
 import { FaStar } from 'react-icons/fa'
 import IconButton from '../buttons/IconButton'
-// import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
+import { Modal, Radio, InputNumber, Divider } from 'antd'
+import React from 'react'
 
 const Description = ({ data }: IDetailsDescType) => {
   const { themeColor } = useGlobalContext()
@@ -15,6 +16,49 @@ const Description = ({ data }: IDetailsDescType) => {
     stock,
     attributes
   } = data
+
+  // Modal + variant state
+  const [open, setOpen] = React.useState(false)
+  const [selected, setSelected] = React.useState<Record<string, string>>({})
+  const [qty, setQty] = React.useState<number>(1)
+
+  // Initialize defaults: pick first value of each attribute
+  React.useEffect(() => {
+    const initial: Record<string, string> = {}
+    attributes?.forEach(attr => {
+      if (Array.isArray(attr.value) && attr.value.length > 0) {
+        initial[attr.name] = attr.value[0]
+      }
+    })
+    setSelected(initial)
+  }, [attributes])
+
+  const onChangeAttr = (name: string, value: string) => {
+    setSelected(prev => ({ ...prev, [name]: value }))
+  }
+
+  const openVariantModal = () => {
+    setOpen(true)
+  }
+
+  const handleAddToCart = () => {
+    // Build payload for backend /cart/create
+    const unitPrice = typeof discount === 'number' && discount > 0
+      ? Number((price * (1 - discount / 100)).toFixed(2))
+      : price;
+    const total = Number((unitPrice * qty).toFixed(2));
+    const variants = Object.entries(selected).map(([name, value]) => ({ name, value }));
+    const payload = {
+      product_id: data._id,
+      quantity: qty,
+      price: unitPrice,
+      total_price: total,
+      variants,
+    };
+    // Ready for API: POST /cart/create with payload (auth required)
+    console.log('cart.create payload', payload)
+    setOpen(false)
+  }
 
   const renderStars = () => {
     return (
@@ -28,10 +72,6 @@ const Description = ({ data }: IDetailsDescType) => {
       </div>
     )
   }
-
-  // const formatTimer = (timer) => {
-  //   return `${timer.days} Days ${String(timer.hours).padStart(2, '0')}:${String(timer.minutes).padStart(2, '0')}:${String(timer.seconds).padStart(2, '0')}`
-  // }
 
   return (
     <div className="p-4 md:p-8">
@@ -115,7 +155,7 @@ const Description = ({ data }: IDetailsDescType) => {
         </div>
       </div>
       <div className='flex justify-start items-center gap-2'>
-        <IconButton handler={() => console.log(attributes)}
+        <IconButton handler={openVariantModal}
           style={{
             backgroundColor: hexToRGBA6(themeColor.blue),
             padding: '8px 20px',
@@ -136,6 +176,93 @@ const Description = ({ data }: IDetailsDescType) => {
             }}>Order Now</p>
           </div>} />
       </div>
+
+      {/* Variant selection modal */}
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        title={
+          <div className="flex items-center justify-between w-full">
+            <span>Select Options</span>
+            <span style={{ color: themeColor.gray, fontSize: 12 }}>In stock: {stock}</span>
+          </div>
+        }
+        okText="Add to Cart"
+        onOk={handleAddToCart}
+      >
+        <div className="space-y-5">
+          {/* Summary */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-semibold">{name}</h3>
+              <p className="text-xs" style={{ color: themeColor.gray }}>Configure your selection</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm" style={{ color: themeColor.gray }}>Unit price</p>
+              <p className="text-lg font-bold">${(typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100)).toFixed(2)) : price).toFixed(2)}</p>
+            </div>
+          </div>
+          <Divider style={{ margin: '8px 0' }} />
+
+          {/* Attributes */}
+          {attributes?.map((attr) => (
+            <div key={attr._id} className="space-y-2">
+              <h4 className="font-medium">{attr.name.toUpperCase()}</h4>
+              {attr.name?.toLowerCase() === 'colors' ? (
+                <div className="flex items-center gap-3 flex-wrap">
+                  {attr.value.map((color) => {
+                    const isSelected = selected[attr.name] === color
+                    return (
+                      <div
+                        key={color}
+                        onClick={() => onChangeAttr(attr.name, color)}
+                        title={color}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: '50%',
+                          backgroundColor: color as any,
+                          border: `2px solid ${isSelected ? themeColor.blue : hexToRGBA5(themeColor.gray)}`,
+                          boxShadow: isSelected ? `0 0 0 2px ${hexToRGBA5(themeColor.blue)}` : 'none',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+              ) : (
+                <Radio.Group
+                  value={selected[attr.name]}
+                  onChange={(e) => onChangeAttr(attr.name, e.target.value)}
+                >
+                  {attr.value.map((val) => (
+                    <Radio.Button key={val} value={val} style={{ marginRight: 8, marginBottom: 6 }}>
+                      {val}
+                    </Radio.Button>
+                  ))}
+                </Radio.Group>
+              )}
+            </div>
+          ))}
+
+          {/* Quantity and total */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium mb-2">Quantity</h4>
+              <InputNumber min={1} max={stock || 99} value={qty} onChange={(v) => setQty(Number(v) || 1)} />
+            </div>
+            <div className="text-right">
+              <p className="text-sm" style={{ color: themeColor.gray }}>Total</p>
+              <p className="text-lg font-bold">
+                ${(
+                  (typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100)).toFixed(2)) : price)
+                  * qty
+                ).toFixed(2)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
