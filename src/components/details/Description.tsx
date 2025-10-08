@@ -4,6 +4,8 @@ import { hexToRGBA5, hexToRGBA6, hexToRGBA7 } from '@/utils/hexToRGBA'
 import { FaStar } from 'react-icons/fa'
 import IconButton from '../buttons/IconButton'
 import { Modal, Radio, InputNumber, Divider } from 'antd'
+import { useCreateCartMutation } from '@/Redux/apis/cartApis'
+import toast from 'react-hot-toast'
 import React from 'react'
 
 const Description = ({ data }: IDetailsDescType) => {
@@ -21,6 +23,7 @@ const Description = ({ data }: IDetailsDescType) => {
   const [open, setOpen] = React.useState(false)
   const [selected, setSelected] = React.useState<Record<string, string>>({})
   const [qty, setQty] = React.useState<number>(1)
+  const [createCart, { isLoading: isCreating }] = useCreateCartMutation()
 
   // Initialize defaults: pick first value of each attribute
   React.useEffect(() => {
@@ -41,12 +44,12 @@ const Description = ({ data }: IDetailsDescType) => {
     setOpen(true)
   }
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     // Build payload for backend /cart/create
     const unitPrice = typeof discount === 'number' && discount > 0
-      ? Number((price * (1 - discount / 100)).toFixed(2))
+      ? Number((price * (1 - discount / 100))?.toFixed(2))
       : price;
-    const total = Number((unitPrice * qty).toFixed(2));
+    const total = Number((unitPrice * qty)?.toFixed(2));
     const variants = Object.entries(selected).map(([name, value]) => ({ name, value }));
     const payload = {
       product_id: data._id,
@@ -55,8 +58,13 @@ const Description = ({ data }: IDetailsDescType) => {
       total_price: total,
       variants,
     };
-    // Ready for API: POST /cart/create with payload (auth required)
-    console.log('cart.create payload', payload)
+    // Call API: POST /cart/create (auth required)
+    const promise = createCart(payload).unwrap()
+    await toast.promise(promise, {
+      loading: 'Adding to cart...',
+      success: (res) => res?.message || 'Added to cart',
+      error: (err) => err?.data?.message || 'Failed to add to cart',
+    })
     setOpen(false)
   }
 
@@ -189,6 +197,7 @@ const Description = ({ data }: IDetailsDescType) => {
         }
         okText="Add to Cart"
         onOk={handleAddToCart}
+        okButtonProps={{ loading: isCreating }}
       >
         <div className="space-y-5">
           {/* Summary */}
@@ -199,7 +208,7 @@ const Description = ({ data }: IDetailsDescType) => {
             </div>
             <div className="text-right">
               <p className="text-sm" style={{ color: themeColor.gray }}>Unit price</p>
-              <p className="text-lg font-bold">${(typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100)).toFixed(2)) : price).toFixed(2)}</p>
+              <p className="text-lg font-bold">${(typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100))?.toFixed(2)) : price)?.toFixed(2)}</p>
             </div>
           </div>
           <Divider style={{ margin: '8px 0' }} />
@@ -255,9 +264,9 @@ const Description = ({ data }: IDetailsDescType) => {
               <p className="text-sm" style={{ color: themeColor.gray }}>Total</p>
               <p className="text-lg font-bold">
                 ${(
-                  (typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100)).toFixed(2)) : price)
+                  (typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100))?.toFixed(2)) : price)
                   * qty
-                ).toFixed(2)}
+                )?.toFixed(2)}
               </p>
             </div>
           </div>

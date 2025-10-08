@@ -158,16 +158,12 @@ export interface IUser {
   password: string;
   role: 'SUPER_ADMIN' | 'ADMIN' | 'VENDOR' | 'CUSTOMER' | string;
   block: boolean;
-  is_verified: boolean;
   provider: 'CREDENTIAL' | 'GOOGLE' | 'FACEBOOK' | string;
   accessToken: string;
   use_type: 'BASIC' | 'PREMIUM' | string;
   is_identity_verified: boolean;
   documents: string[];
   stripe: string | null;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
 }
 
 export interface IProductAttribute {
@@ -176,20 +172,17 @@ export interface IProductAttribute {
   value: string[];
   product_attribute_id: string;
 }
+
 export interface ICartCard {
   item: {
+    id?: string,
     name: string,
     price: number,
-    image: string
+    image: string,
+    quantity?: number,
+    total_price?: number,
+    variants?: { name: string; value: string }[]
   },
-  setOpen: (arg: boolean) => void
-}
-export interface IOrderTable {
-  status: string
-}
-export interface IOrderCard {
-  item: IOrder,
-  type?: "order" | "checkout",
-  handler?: (id: string, count: number) => void,
+  setOpen: (arg: boolean) => void,
   removeHandler?: (id: string) => void
 }
