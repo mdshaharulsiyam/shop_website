@@ -19,25 +19,21 @@ const RegisterSeller = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  // 🖼️ File states
   const [logoFile, setLogoFile] = useState<any[]>([]);
   const [bannerFile, setBannerFile] = useState<any[]>([]);
   const [documentFiles, setDocumentFiles] = useState<any[]>([]);
   const [registerBusiness, { isLoading: isLoadingRegister }] = useCreateBusinessMutation();
 
 
-  // 🧠 File change handler
   const handleFileChange =
     (setFile: React.Dispatch<React.SetStateAction<any[]>>) =>
       ({ fileList }: { fileList: any[] }) => {
         setFile(fileList);
       };
 
-  // 🧾 Form submit handler
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-      // Build multipart/form-data payload expected by backend `/business/create`
       const formData = new FormData();
       if (values?.name) formData.append("name", values.name);
       if (values?.address) formData.append("address", values.address);
@@ -55,7 +51,6 @@ const RegisterSeller = () => {
         });
       }
 
-      // Call API
       await registerBusiness(formData).unwrap();
 
       message.success("Business registration submitted successfully!");

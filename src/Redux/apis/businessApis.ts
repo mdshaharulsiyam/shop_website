@@ -8,13 +8,16 @@ export const businessApi = baseApis.injectEndpoints({
                 method: 'POST',
                 body: data
             }),
+            invalidatesTags: ['auth']
         }),
         updateBusiness: builder.mutation({
-            query: (data) => ({
-                url: '/business/update',
+            // expects { id, data }
+            query: ({ id, data }: { id: string; data: FormData }) => ({
+                url: `/business/update/${id}`,
                 method: 'PATCH',
-                body: data
+                body: data,
             }),
+            invalidatesTags: ['auth']
         }),
         getBusiness: builder.query({
             query: () => ({

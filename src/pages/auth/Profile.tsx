@@ -4,7 +4,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import type { UploadFile } from "antd/es/upload/interface";
 import { useGlobalContext } from "@/providers/ContextProvider";
 import { usePatchNewPasswordMutation, usePatchProfileMutation } from "@/Redux/apis/authSlice";
-import { useUpdateBusinessMutation, useGetBusinessQuery } from "@/Redux/apis/businessApis";
+import { useUpdateBusinessMutation } from "@/Redux/apis/businessApis";
 import toast from "react-hot-toast";
 import { imageUrl } from "@/Redux/baseApi";
 
@@ -15,55 +15,47 @@ const Profile = () => {
   const [updatePassword, { isLoading: isLoadingPassword }] = usePatchNewPasswordMutation()
   const [form] = Form.useForm();
   console.log(user)
-  // 🧩 Manage uploaded image
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [businessForm] = Form.useForm();
   const [logoFile, setLogoFile] = useState<any[]>([]);
   const [bannerFile, setBannerFile] = useState<any[]>([]);
   const [documentFiles, setDocumentFiles] = useState<any[]>([]);
   const [updateBusiness] = useUpdateBusinessMutation();
-  const { data: businessData } = useGetBusinessQuery({});
 
-  // Set business form values when data is loaded
   useEffect(() => {
-    if (businessData?.data) {
-      const business = businessData.data;
+    const business = user?.business as any;
+    if (business) {
       businessForm.setFieldsValue({
         name: business.name || "",
         address: business.address || "",
       });
 
-      // Set logo file if exists
       if (business.logo) {
-        setLogoFile([{
-          uid: '-1',
-          name: 'logo.jpg',
-          status: 'done',
-          url: imageUrl(business.logo)
-        }]);
+        setLogoFile([{ uid: '-1', name: 'logo.jpg', status: 'done', url: imageUrl(business.logo) }]);
+      } else {
+        setLogoFile([]);
       }
 
-      // Set banner file if exists
       if (business.banner) {
-        setBannerFile([{
-          uid: '-2',
-          name: 'banner.jpg',
-          status: 'done',
-          url: imageUrl(business.banner)
-        }]);
+        setBannerFile([{ uid: '-2', name: 'banner.jpg', status: 'done', url: imageUrl(business.banner) }]);
+      } else {
+        setBannerFile([]);
       }
 
-      // Set document files if exist
       if (business.business_documents?.length) {
-        setDocumentFiles(business.business_documents.map((doc: string, index: number) => ({
-          uid: `doc-${index}`,
-          name: `document-${index + 1}.jpg`,
-          status: 'done',
-          url: imageUrl(doc)
-        })));
+        setDocumentFiles(
+          business.business_documents.map((doc: string, index: number) => ({
+            uid: `doc-${index}`,
+            name: `document-${index + 1}.jpg`,
+            status: 'done',
+            url: imageUrl(doc),
+          }))
+        );
+      } else {
+        setDocumentFiles([]);
       }
     }
-  }, [businessData, businessForm]);
+  }, [user?.business, businessForm]);
 
   useEffect(() => {
     if (user) {
@@ -73,7 +65,6 @@ const Profile = () => {
         phone: user.phone || "",
       });
 
-      // set default profile picture if exists
       if (user.img) {
         setFileList([
           {
@@ -86,19 +77,16 @@ const Profile = () => {
       }
     }
   }, [user, form]);
-  // 🧩 Handle file upload change
   const handleFileChange = ({ fileList }: { fileList: UploadFile[] }) => {
     setFileList(fileList);
   };
 
-  // 🧩 Handle business file uploads
   const handleBusinessFileChange =
     (setFile: React.Dispatch<React.SetStateAction<any[]>>) =>
       ({ fileList }: { fileList: any[] }) => {
         setFile(fileList);
       };
 
-  // 🧩 Handle business form submit
   const handleBusinessUpdate = async (values: any) => {
     try {
       const formData = new FormData();
@@ -118,29 +106,53 @@ const Profile = () => {
         });
       }
 
-      const promise = updateBusiness(formData).unwrap();
-      await toast.promise(promise, {
+      if (!user?.business?._id) {
+        toast.error('Business not found for current user');
+        return;
+      }
+      const promise = updateBusiness({ id: user?.business?._id as string, data: formData }).unwrap();
+      const res: any = await toast.promise(promise, {
         loading: 'Updating business information...',
         success: (res) => res?.message || 'Business information updated successfully',
         error: (err) => err?.data?.message || 'Failed to update business information',
       });
 
-      // Reset file states if needed
-      setLogoFile([]);
-      setBannerFile([]);
-      setDocumentFiles([]);
+      // Keep images visible immediately after update using server response
+      const updated = res?.data || {};
+      if (updated.logo) {
+        setLogoFile([{ uid: '-1', name: 'logo.jpg', status: 'done', url: imageUrl(updated.logo) }]);
+      } else if (logoFile.length) {
+        setLogoFile(logoFile);
+      }
+      if (updated.banner) {
+        setBannerFile([{ uid: '-2', name: 'banner.jpg', status: 'done', url: imageUrl(updated.banner) }]);
+      } else if (bannerFile.length) {
+        setBannerFile(bannerFile);
+      }
+      if (Array.isArray(updated.business_documents)) {
+        setDocumentFiles(
+          updated.business_documents.map((doc: string, index: number) => ({
+            uid: `doc-${index}`,
+            name: `document-${index + 1}.jpg`,
+            status: 'done',
+            url: imageUrl(doc),
+          }))
+        );
+      } else if (documentFiles.length) {
+        setDocumentFiles(documentFiles);
+      }
     } catch (err) {
       console.error('Business update error:', err);
     }
   };
-
-  // 🧩 Handle form submit for profile update
   const handleProfileUpdate = (values: any) => {
     setLoading(true);
 
     const payload = {
       ...values,
-      img: fileList[0]?.originFileObj || user?.img || null,
+      ...((fileList[0]?.originFileObj || user?.img) ? {
+        img: fileList[0]?.originFileObj || user?.img,
+      } : {})
     };
     const formData = new FormData();
     Object.entries(payload).forEach(([key, value]) => {
@@ -158,7 +170,6 @@ const Profile = () => {
     setLoading(false);
   };
 
-  // 🧩 Handle password change
   const handlePasswordChange = (values: any) => {
     setLoading(true)
     const promise = updatePassword(values).unwrap();
@@ -362,7 +373,7 @@ const Profile = () => {
                         <div className="flex flex-col items-center w-full">
                           <UploadOutlined className="text-2xl" />
                           <span className="text-sm mt-2 text-gray-500">
-                            {businessData?.data?.logo ? 'Change Logo' : 'Upload Logo'}
+                            {user?.business?.logo ? 'Change Logo' : 'Upload Logo'}
                           </span>
                         </div>
                       )}
@@ -384,7 +395,7 @@ const Profile = () => {
                         <div className="flex flex-col items-center w-full">
                           <UploadOutlined className="text-2xl" />
                           <span className="text-sm mt-2 text-gray-500">
-                            {businessData?.data?.banner ? 'Change Banner' : 'Upload Banner'}
+                            {user?.business?.banner ? 'Change Banner' : 'Upload Banner'}
                           </span>
                         </div>
                       )}
@@ -403,6 +414,15 @@ const Profile = () => {
                       multiple
                       fileList={documentFiles}
                       onChange={handleBusinessFileChange(setDocumentFiles)}
+                      onRemove={(file) => {
+                        // prevent deletion of existing server files
+                        if ((file as any)?.url && !(file as any)?.originFileObj) {
+                          return false;
+                        }
+                        // allow removal of newly added, not yet uploaded files
+                        setDocumentFiles((prev) => prev.filter((f) => f.uid !== file.uid));
+                        return true;
+                      }}
                       className="w-full"
                       showUploadList={{
                         showRemoveIcon: true,
@@ -413,7 +433,7 @@ const Profile = () => {
                         <div className="flex flex-col items-center w-full p-4 border-2 border-dashed border-gray-300 rounded-lg">
                           <UploadOutlined className="text-2xl" />
                           <span className="text-sm mt-2 text-gray-500">
-                            {businessData?.data?.business_documents?.length ? 'Add More Documents' : 'Upload Documents'}
+                            {user?.business?.business_documents?.length ? 'Add More Documents' : 'Upload Documents'}
                           </span>
                         </div>
                       ) : (
