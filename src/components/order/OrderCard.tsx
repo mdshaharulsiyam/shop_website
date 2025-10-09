@@ -22,6 +22,30 @@ const OrderCard = ({ item, type = "order", handler, removeHandler }: IOrderCard)
               type == "order" && <p className=''>({item?.quantity})</p>
             }
           </div>
+          {Array.isArray(item?.variants) && item.variants.length > 0 && (
+            <div className='text-xs text-gray-600 mb-1 flex items-center gap-2 flex-wrap'>
+              {item.variants.map((v, i) => {
+                const isColor = String(v?.name || '').toLowerCase().includes('color');
+                if (isColor) {
+                  return (
+                    <span key={i} className='inline-flex items-center gap-1 mr-2'>
+                      <span
+                        className='inline-block rounded-full border'
+                        style={{ width: 14, height: 14, backgroundColor: v?.value || '#ccc' }}
+                        title={`${v.name}: ${v.value}`}
+                      />
+                      <span>{v.value}</span>
+                    </span>
+                  );
+                }
+                return (
+                  <span key={i} className='mr-2'>
+                    <span className='font-semibold'>{v.name}:</span> {v.value}
+                  </span>
+                );
+              })}
+            </div>
+          )}
           <p className='text-sm my-1'>Price : {item?.price} TK</p>
           <p className='text-sm'>Total price : {item?.price * item?.quantity} TK</p>
           {type == 'checkout' &&

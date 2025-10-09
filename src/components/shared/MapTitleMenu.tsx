@@ -13,13 +13,16 @@ const MapTitleMenu = ({ data }: IMapTitleMenu) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
         >
-          <h3 style={{
-            color: themeColor.black
-          }} className="font-semibold mb-3">{category?.name}</h3>
+          <MenuLink
+            href={`/products?category=${encodeURIComponent(category?._id as any)}`}
+            title={category?.name}
+            className='font-semibold mb-3'
+            style={{ color: themeColor.black }}
+          />
           <ul className="space-y-2">
             {category.subCategories.map((subCategory) => (
               <MenuLink key={subCategory?.name}
-                href="#"
+                href={`/products?category=${encodeURIComponent(category?._id as any)}&subCategory=${encodeURIComponent(subCategory?._id as any)}`}
                 title={subCategory?.name}
                 className='text-sm font-normal'
               >

@@ -19,6 +19,7 @@ export interface IOrderCard {
     image: string,
     quantity: number,
     price: number,
+    variants?: { name: string; value: string }[],
   },
   type?: 'order' | 'checkout',
   handler?: (id: string, count: number) => void,

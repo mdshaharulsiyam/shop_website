@@ -3,11 +3,13 @@ import Search from '@/components/product/Search'
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { Filter } from 'lucide-react'
 import { Drawer, Select, Slider, Button, Space, Typography } from 'antd'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useGetCategoriesQuery } from '@/Redux/apis/categorySlice'
 
 const Product = () => {
   const { themeColor } = useGlobalContext()
+  const [searchParams] = useSearchParams()
 
   // drawer state
   const [open, setOpen] = useState(false)
@@ -42,6 +44,15 @@ const Product = () => {
     setPriceRange([0, 99999999])
     setSort(undefined)
   }
+
+  // Initialize filters from query params (?category=...&subCategory=...)
+  useEffect(() => {
+    const c = searchParams.get('category') || undefined
+    const s = searchParams.get('subCategory') || undefined
+    if (c && c !== category) setCategory(c)
+    // set sub after category; it's ok to set directly, UI will disable if category missing
+    if (s && s !== subCategory) setSubCategory(s)
+  }, [searchParams])
 
   return (
     <div className='container mx-auto'>

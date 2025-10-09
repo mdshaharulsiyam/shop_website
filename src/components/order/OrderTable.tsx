@@ -9,7 +9,7 @@ const OrderTable = ({ status }: IOrderTable) => {
 
   // Flatten orders -> items ready for OrderCard
   const items = useMemo(() => {
-    const rows: Array<{ name: string; image: string; quantity: number; price: number }> = []
+    const rows: Array<{ name: string; image: string; quantity: number; price: number; variants?: Array<{name:string; value:string}> }> = []
     for (const order of list) {
       const orderItems = Array.isArray(order?.items) ? order.items : []
       for (const it of orderItems) {
@@ -18,7 +18,7 @@ const OrderTable = ({ status }: IOrderTable) => {
         const price = Number(prod?.price ?? 0)
         const imgArr = prod?.img || []
         const image = Array.isArray(imgArr) && imgArr[0] ? imageUrl(imgArr[0]) : 'https://via.placeholder.co/80?text=No+Image'
-        rows.push({ name, image, quantity: Number(it?.quantity || 1), price })
+        rows.push({ name, image, quantity: Number(it?.quantity || 1), price, variants: Array.isArray(it?.variants) ? it.variants : [] })
       }
     }
     return rows

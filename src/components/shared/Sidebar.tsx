@@ -5,6 +5,7 @@ import { imageUrl } from '@/Redux/baseApi'
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from 'react-router-dom'
 interface ILabel {
   label: string;
   category: ICategory[];
@@ -25,6 +26,7 @@ interface ISubCategory {
 const Sidebar = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>(["clothes"])
   const { data } = useGetCategoryGroupQuery({})
+  const navigate = useNavigate()
   const toggleExpanded = (item: string) => {
     setExpandedItems((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
   }
@@ -63,6 +65,10 @@ const Sidebar = () => {
                         className="p-1 hover:bg-slate-600 rounded"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/products?category=${encodeURIComponent(item._id)}`)
+                        }}
                       >
                         <motion.div
                           animate={{ rotate: expandedItems.includes(item.name) ? 90 : 0 }}
@@ -89,6 +95,10 @@ const Sidebar = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.2, delay: subIndex * 0.05 }}
                             className="p-2 text-sm text-gray-300 hover:text-white hover:bg-slate-700 rounded cursor-pointer transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/products?category=${encodeURIComponent(subItem.parent_id)}&subCategory=${encodeURIComponent(subItem._id)}`)
+                            }}
                           >
                             {subItem?.name}
                           </motion.li>
