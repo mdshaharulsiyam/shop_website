@@ -18,9 +18,9 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
   const [page, setPage] = useState(1)
   const limit = 20
 
-  // fetch products
-  const { data, isLoading, isError, refetch } = useGetAllProductQuery({
-    order: 'desc',
+  // memoize query args to avoid unnecessary re-fetches
+  const queryArgs = useMemo(() => ({
+    order: 'desc' as const,
     sort: sort ?? 'createdAt',
     page,
     limit,
@@ -28,6 +28,13 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
     sub_category: subCategory,
     minPrice,
     maxPrice,
+  }), [sort, page, limit, category, subCategory, minPrice, maxPrice])
+
+  // fetch products
+  const { data, isLoading, isError, isFetching } = useGetAllProductQuery(queryArgs, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
   })
 
   // map API to card shape with optional chaining
@@ -54,13 +61,16 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
 
   // paging helpers
   const canNext = (products?.length ?? 0) === limit
-  // Pragmatic total so Antd knows if there is a next page when we have a full page of results
-  const total = page * limit + (canNext ? 1 : 0)
+  // Prefer server-provided totals when available
+  const total = (data as any)?.pagination?.totalItems ?? (page * limit + (canNext ? 1 : 0))
 
+  // Reset page when filters change so we don't request out-of-range pages
   useEffect(() => {
-    // refetch when page changes (RTK Query already does, but safe)
-    refetch()
-    // scroll to top of list on page change
+    setPage(1)
+  }, [category, subCategory, sort, minPrice, maxPrice])
+
+  // Scroll to top on page change for better UX
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -97,16 +107,16 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
       {/* Products Grid with animation */}
       <div className="relative overflow-hidden min-h-[400px]">
         {/* Loading / Error States */}
-        {isLoading && (
+        {(isLoading || isFetching) && (
           <div className="flex items-center justify-center h-60 text-gray-500 gap-2">
             <CloudCog className="w-5 h-5 animate-spin" /> Loading products...
           </div>
         )}
-        {isError && !isLoading && (
+        {isError && !isLoading && !isFetching && (
           <div className="flex items-center justify-center h-60 text-red-500">Failed to load products.</div>
         )}
         <AnimatePresence mode="wait" custom={0}>
-          {!isLoading && !isError && (
+          {!isLoading && !isFetching && !isError && (
             <motion.div
               custom={0}
               variants={variants as any}

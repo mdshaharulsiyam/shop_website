@@ -30,7 +30,6 @@ const Sidebar = () => {
   const toggleExpanded = (item: string) => {
     setExpandedItems((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
   }
-  console.log({ data })
   return (
     <div className="w-64 h-full bg-slate-800 text-white overflow-y-auto shadow-xl rounded-r-2xl">
       <div className="p-4">

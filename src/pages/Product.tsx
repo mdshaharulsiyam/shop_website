@@ -41,17 +41,21 @@ const Product = () => {
   const handleReset = () => {
     setCategory(undefined)
     setSubCategory(undefined)
-    setPriceRange([0, 99999999])
+    setPriceRange([0, 100000])
     setSort(undefined)
   }
 
-  // Initialize filters from query params (?category=...&subCategory=...)
+  // Initialize and reset filters from URL params (?category=...&subCategory=...)
   useEffect(() => {
     const c = searchParams.get('category') || undefined
     const s = searchParams.get('subCategory') || undefined
-    if (c && c !== category) setCategory(c)
-    // set sub after category; it's ok to set directly, UI will disable if category missing
-    if (s && s !== subCategory) setSubCategory(s)
+    // Always sync to URL params (can be undefined)
+    setCategory(c)
+    setSubCategory(s)
+    // Reset other filters when navigation changes params
+    setPriceRange([0, 100000])
+    setSort(undefined)
+    setOpen(false)
   }, [searchParams])
 
   return (
