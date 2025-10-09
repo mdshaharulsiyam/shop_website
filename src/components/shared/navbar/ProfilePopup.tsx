@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { dashboard_link } from '@/Redux/baseApi'
 import type { IProfilePopup } from '@/types/propsTypes'
 import { AnimatePresence, motion } from 'framer-motion'
 import { LogOut, Package, User, UserCircle } from 'lucide-react'
@@ -46,15 +47,22 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
               My Order
             </Link>
             {
-               !user?.business?._id &&  <Link
-               to="/register-seller"
-               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-             >
-               <Package className="h-4 w-4 mr-3" />
-               Sell Product
-             </Link>
+              user?.business?._id ? <a
+                href={dashboard_link}
+                target='_blank'
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <FaShippingFast className="h-4 w-4 mr-3" />
+                My Order
+              </a> : <Link
+                to="/register-seller"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <Package className="h-4 w-4 mr-3" />
+                Sell Product
+              </Link>
             }
-           
+
             <hr className="my-1" />
             <button
               onClick={() => {

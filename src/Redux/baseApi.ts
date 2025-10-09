@@ -1,13 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const server = "http://localhost:5004"//http://10.10.20.40:5004/ //http://192.168.1.108:5004
-
+export const dashboard_link = "http://localhost:5005"//http://10.10.20.40:5005/ //http://192.168.1.108:5005
 const baseApis = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: server,
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-
+      const token = JSON.parse(localStorage.getItem('token') || "");
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }

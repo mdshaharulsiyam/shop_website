@@ -63,7 +63,7 @@ const [verify,{isLoading}]=useVerifyOtpMutation()
       promise.then((res) => {
         const from = localStorage.getItem("from")
         if(from=="signUp"){
-          localStorage.setItem("token",res?.data?.token)
+          localStorage.setItem('token', JSON.stringify(res?.data?.token))
           localStorage.removeItem("from")
           localStorage.removeItem("email")
           navigate("/")
