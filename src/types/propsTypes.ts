@@ -1,5 +1,5 @@
 import type React from 'react'
-import type { IOrder, IProduct, IProfile, IThemeColor } from './dataTypes'
+import type { IProduct, IProfile, IThemeColor } from './dataTypes'
 import type { SetState } from './functionsTypes'
 
 
@@ -23,6 +23,9 @@ export interface IOrderCard {
   type?: 'order' | 'checkout',
   handler?: (id: string, count: number) => void,
   removeHandler?: (id: string) => void,
+}
+export interface IOrderTable {
+  status: string;
 }
 export interface IIconButton {
   handler: () => void,

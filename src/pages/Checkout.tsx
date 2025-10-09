@@ -1,7 +1,7 @@
 import OrderCard from '@/components/order/OrderCard'
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { verifyJWT } from '@/utils/jwt'
 import { imageUrl } from '@/Redux/baseApi'
 import { usePatchProfileMutation } from '@/Redux/apis/authSlice'
@@ -15,7 +15,7 @@ const Checkout = () => {
   const location = useLocation()
   const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number; variants?: Array<{name:string; value:string}> }>>([])
   const [decodeError, setDecodeError] = useState<string | null>(null)
-
+const navigate = useNavigate()
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const token = params.get('token')
@@ -157,10 +157,14 @@ const Checkout = () => {
       payement_phone: paymentPhoneNumber,
     }
     try {
-      await toast.promise(createOrder(body as any).unwrap(), {
+      const promise = createOrder(body as any).unwrap()
+       toast.promise(promise, {
         loading: 'Placing order...',
         success: (res) => res?.message || 'Order placed successfully',
         error: (err) => err?.data?.message || 'Failed to place order',
+      })
+      promise.then(()=>{
+        navigate("/order")
       })
       // Optionally redirect or clear local cart state
     } catch {}
