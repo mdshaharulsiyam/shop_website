@@ -216,8 +216,8 @@ const Description = ({ data }: IDetailsDescType) => {
           {/* Attributes */}
           {attributes?.map((attr) => (
             <div key={attr._id} className="space-y-2">
-              <h4 className="font-medium">{attr.name.toUpperCase()}</h4>
-              {attr.name?.toLowerCase() === 'colors' ? (
+              <h4 className="font-medium">{attr?.name?.toUpperCase()}</h4>
+              {attr?.name?.toLowerCase() === 'colors' ? (
                 <div className="flex items-center gap-3 flex-wrap">
                   {attr.value.map((color) => {
                     const isSelected = selected[attr.name] === color
