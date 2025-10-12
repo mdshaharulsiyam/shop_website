@@ -4,7 +4,7 @@ const authSlice = baseApis.injectEndpoints({
   endpoints: (builder) => ({
     postLoginInof: builder.mutation({
       query: (data) => ({
-        url: "/auth/login",
+        url: "/auth/sign-in",
         method: "POST",
         body: data
       }),

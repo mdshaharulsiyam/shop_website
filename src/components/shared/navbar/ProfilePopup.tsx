@@ -20,7 +20,6 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
       >
         <User className="h-5 w-5" />
       </Button>
-
       <AnimatePresence>
         {showProfileMenu && (
           <motion.div

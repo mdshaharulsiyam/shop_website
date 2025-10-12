@@ -67,7 +67,7 @@ const navigate=useNavigate()
       );
       
       promise.then((res) => {
-        localStorage.setItem('token', JSON.stringify(res?.data?.token))
+        localStorage.setItem('token', JSON.stringify(res?.token))
         navigate("/")
       })
     } else {
