@@ -1,0 +1,26 @@
+/* Custom styles for FAQ Collapse component */
+.faqCollapse :global(.ant-collapse-item) {
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: none;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.faqCollapse :global(.ant-collapse-item:hover) {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.faqCollapse :global(.ant-collapse-header) {
+  padding: 20px 24px !important;
+  align-items: center !important;
+}
+
+.faqCollapse :global(.ant-collapse-content-box) {
+  padding: 0 24px 20px 24px !important;
+}
+
+.faqCollapse :global(.ant-collapse-expand-icon) {
+  padding-inline-start: 12px !important;
+}
