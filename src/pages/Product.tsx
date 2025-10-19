@@ -15,6 +15,8 @@ const Product = () => {
   const [open, setOpen] = useState(false)
 
   // filter states
+  const [search, setSearch] = useState<string>('')
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('')
   const [category, setCategory] = useState<string | undefined>(undefined)
   const [subCategory, setSubCategory] = useState<string | undefined>(undefined)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000])
@@ -39,11 +41,20 @@ const Product = () => {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleReset = () => {
+    setSearch('')
     setCategory(undefined)
     setSubCategory(undefined)
     setPriceRange([0, 100000])
     setSort(undefined)
   }
+
+  // Debounce search input to avoid too many API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search)
+    }, 500) // 500ms delay
+    return () => clearTimeout(timer)
+  }, [search])
 
   // Initialize and reset filters from URL params (?category=...&subCategory=...)
   useEffect(() => {
@@ -61,7 +72,7 @@ const Product = () => {
   return (
     <div className='container mx-auto'>
       <div className='flex justify-between items-center gap-3 mt-3'>
-        <Search />
+        <Search value={search} onChange={setSearch} />
         <button
           onClick={handleOpen}
           style={{ backgroundColor: themeColor.white }}
@@ -139,6 +150,7 @@ const Product = () => {
 
       {/* Products list */}
       <Products
+        search={debouncedSearch}
         sort={sort}
         category={category}
         subCategory={subCategory}

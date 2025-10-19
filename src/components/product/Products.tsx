@@ -6,6 +6,7 @@ import { imageUrl } from '@/Redux/baseApi'
 import { CloudCog } from 'lucide-react'
 import { Pagination } from 'antd'
 type ProductsProps = {
+  search?: string
   sort?: string
   category?: string
   subCategory?: string
@@ -13,7 +14,7 @@ type ProductsProps = {
   maxPrice?: number
 }
 
-const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsProps) => {
+const Products = ({ search, sort, category, subCategory, minPrice, maxPrice }: ProductsProps) => {
   // pagination state (no filters)
   const [page, setPage] = useState(1)
   const limit = 20
@@ -24,11 +25,12 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
     sort: sort ?? 'createdAt',
     page,
     limit,
+    search: search || undefined,
     category,
     sub_category: subCategory,
     minPrice,
     maxPrice,
-  }), [sort, page, limit, category, subCategory, minPrice, maxPrice])
+  }), [search, sort, page, limit, category, subCategory, minPrice, maxPrice])
 
   // fetch products
   const { data, isLoading, isError, isFetching } = useGetAllProductQuery(queryArgs, {
@@ -67,7 +69,7 @@ const Products = ({ sort, category, subCategory, minPrice, maxPrice }: ProductsP
   // Reset page when filters change so we don't request out-of-range pages
   useEffect(() => {
     setPage(1)
-  }, [category, subCategory, sort, minPrice, maxPrice])
+  }, [search, category, subCategory, sort, minPrice, maxPrice])
 
   // Scroll to top on page change for better UX
   useEffect(() => {
