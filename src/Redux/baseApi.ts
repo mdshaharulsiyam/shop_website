@@ -16,7 +16,8 @@ const baseApis = createApi({
   tagTypes: [
     "auth",
     "faq",
-    "settings"
+    "settings",
+    "contact"
   ],
   endpoints: () => ({}),
 });
