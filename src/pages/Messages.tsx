@@ -78,8 +78,6 @@ const Messages = () => {
   }
 
   const getOtherUser = (conversation: any) => {
-    console.log('Conversation users:', conversation?.users)
-    console.log('Current userId:', userId)
     return conversation?.users?.find((u: any) => String(u._id) !== String(userId))
   }
 
@@ -105,7 +103,6 @@ const Messages = () => {
           ) : conversations?.data?.length > 0 ? (
             <div>
               {conversations.data.map((conv: any) => {
-                console.log('Full conversation:', conv)
                 const otherUser = getOtherUser(conv)
                 const isOnline = isUserOnline(otherUser)
                 const isSelected = selectedConversation?._id === conv._id
@@ -173,7 +170,8 @@ const Messages = () => {
                 ) : messages?.data?.length > 0 ? (
                   <>
                     {messages.data.map((msg: any) => {
-                      const isMine = msg.sender === userId
+                      const senderId = typeof msg.sender === 'object' ? msg.sender._id : msg.sender
+                      const isMine = String(senderId) === String(userId)
                       return (
                         <div
                           key={msg._id}
