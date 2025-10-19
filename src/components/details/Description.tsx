@@ -7,6 +7,7 @@ import { Modal, Radio, InputNumber, Divider } from 'antd'
 import { useCreateCartMutation } from '@/Redux/apis/cartApis'
 import toast from 'react-hot-toast'
 import React from 'react'
+import { createJWT } from '@/utils/jwt'
 
 const Description = ({ data }: IDetailsDescType) => {
   const { themeColor } = useGlobalContext()
@@ -21,6 +22,7 @@ const Description = ({ data }: IDetailsDescType) => {
 
   // Modal + variant state
   const [open, setOpen] = React.useState(false)
+  const [modalMode, setModalMode] = React.useState<'cart' | 'order'>('cart')
   const [selected, setSelected] = React.useState<Record<string, string>>({})
   const [qty, setQty] = React.useState<number>(1)
   const [createCart, { isLoading: isCreating }] = useCreateCartMutation()
@@ -41,6 +43,12 @@ const Description = ({ data }: IDetailsDescType) => {
   }
 
   const openVariantModal = () => {
+    setModalMode('cart')
+    setOpen(true)
+  }
+
+  const openOrderModal = () => {
+    setModalMode('order')
     setOpen(true)
   }
 
@@ -66,6 +74,38 @@ const Description = ({ data }: IDetailsDescType) => {
       error: (err) => err?.data?.message || 'Failed to add to cart',
     })
     setOpen(false)
+  }
+
+  const handleOrderNow = async () => {
+    // Calculate unit price and total
+    const unitPrice = typeof discount === 'number' && discount > 0
+      ? Number((price * (1 - discount / 100))?.toFixed(2))
+      : price;
+    const total = Number((unitPrice * qty)?.toFixed(2));
+    const variants = Object.entries(selected).map(([name, value]) => ({ name, value }));
+    
+    try {
+      // Create checkout data with single product
+      const checkoutData = {
+        items: [{
+          product_id: data._id,
+          name: data.name,
+          price: unitPrice,
+          quantity: qty,
+          total_price: total,
+          variants: variants,
+          img: data.img || [],
+        }],
+        total: total,
+        ts: Date.now(),
+      };
+      
+      const secret = (import.meta as any).env?.VITE_JWT_SECRET || 'cart_secret';
+      const token = await createJWT(checkoutData as any, secret);
+      window.location.href = `/checkout?token=${encodeURIComponent(token)}`;
+    } catch (e) {
+      toast.error('Unable to prepare checkout');
+    }
   }
 
   const renderStars = () => {
@@ -173,7 +213,7 @@ const Description = ({ data }: IDetailsDescType) => {
               color: themeColor.white
             }}>Add To Cart</p>
           </div>} />
-        <IconButton handler={() => console.log(attributes)}
+        <IconButton handler={openOrderModal}
           style={{
             backgroundColor: hexToRGBA6(themeColor.green),
             padding: '8px 20px',
@@ -195,9 +235,9 @@ const Description = ({ data }: IDetailsDescType) => {
             <span style={{ color: themeColor.gray, fontSize: 12 }}>In stock: {stock}</span>
           </div>
         }
-        okText="Add to Cart"
-        onOk={handleAddToCart}
-        okButtonProps={{ loading: isCreating }}
+        okText={modalMode === 'cart' ? 'Add to Cart' : 'Proceed to Checkout'}
+        onOk={modalMode === 'cart' ? handleAddToCart : handleOrderNow}
+        okButtonProps={{ loading: modalMode === 'cart' ? isCreating : false }}
       >
         <div className="space-y-5">
           {/* Summary */}
