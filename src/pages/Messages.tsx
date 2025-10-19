@@ -28,24 +28,48 @@ const Messages = () => {
 
   // Socket connection
   useEffect(() => {
-    if (userId) {
-      const newSocket = io(BASE_URL, {
-        query: { user_id: userId }
-      })
-      
-      setSocket(newSocket)
+    if (!userId) {
+      console.log('No userId available for socket connection')
+      return
+    }
 
-      newSocket.on('get-online-user', (users: string[]) => {
-        setOnlineUsers(users)
-      })
+    console.log('Attempting socket connection to:', BASE_URL, 'with userId:', userId)
+    
+    const newSocket = io(BASE_URL, {
+      query: { user_id: userId },
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5
+    })
+    
+    newSocket.on('connect', () => {
+      console.log('Socket connected successfully:', newSocket.id)
+    })
 
-      newSocket.on('new-message', () => {
-        refetchMessages()
-      })
+    newSocket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error)
+    })
 
-      return () => {
-        newSocket.disconnect()
-      }
+    newSocket.on('get-online-user', (users: string[]) => {
+      console.log('Online users updated:', users)
+      setOnlineUsers(users)
+    })
+
+    newSocket.on('new-message', () => {
+      console.log('New message received, refetching...')
+      refetchMessages()
+    })
+
+    newSocket.on('disconnect', (reason) => {
+      console.log('Socket disconnected:', reason)
+    })
+
+    setSocket(newSocket)
+
+    return () => {
+      console.log('Cleaning up socket connection')
+      newSocket.disconnect()
     }
   }, [userId, refetchMessages])
 
