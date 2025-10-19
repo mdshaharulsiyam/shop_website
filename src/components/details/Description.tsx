@@ -3,21 +3,26 @@ import type { IDetailsDescType } from '@/types/propsTypes'
 import { hexToRGBA5, hexToRGBA6, hexToRGBA7 } from '@/utils/hexToRGBA'
 import { FaStar } from 'react-icons/fa'
 import IconButton from '../buttons/IconButton'
-import { Modal, Radio, InputNumber, Divider } from 'antd'
+import { Modal, Radio, InputNumber, Divider, Button } from 'antd'
 import { useCreateCartMutation } from '@/Redux/apis/cartApis'
+import { useCreateConversationMutation } from '@/Redux/apis/messageSlice'
 import toast from 'react-hot-toast'
 import React from 'react'
 import { createJWT } from '@/utils/jwt'
+import { MessageOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const Description = ({ data }: IDetailsDescType) => {
   const { themeColor } = useGlobalContext()
+  const navigate = useNavigate()
   const {
     name,
     sort_description,
     price,
     discount,
     stock,
-    attributes
+    attributes,
+    user
   } = data
 
   // Modal + variant state
@@ -26,6 +31,7 @@ const Description = ({ data }: IDetailsDescType) => {
   const [selected, setSelected] = React.useState<Record<string, string>>({})
   const [qty, setQty] = React.useState<number>(1)
   const [createCart, { isLoading: isCreating }] = useCreateCartMutation()
+  const [createConversation, { isLoading: creatingConversation }] = useCreateConversationMutation()
 
   // Initialize defaults: pick first value of each attribute
   React.useEffect(() => {
@@ -74,6 +80,21 @@ const Description = ({ data }: IDetailsDescType) => {
       error: (err) => err?.data?.message || 'Failed to add to cart',
     })
     setOpen(false)
+  }
+
+  const handleMessageVendor = async () => {
+    if (!user?._id) {
+      toast.error('Vendor information not available')
+      return
+    }
+    
+    try {
+      await createConversation(user._id).unwrap()
+      toast.success('Opening conversation...')
+      navigate('/messages')
+    } catch (err: any) {
+      toast.error(err?.data?.message || 'Failed to start conversation')
+    }
   }
 
   const handleOrderNow = async () => {
@@ -202,7 +223,7 @@ const Description = ({ data }: IDetailsDescType) => {
           ))}
         </div>
       </div>
-      <div className='flex justify-start items-center gap-2'>
+      <div className='flex justify-start items-center gap-2 flex-wrap'>
         <IconButton handler={openVariantModal}
           style={{
             backgroundColor: hexToRGBA6(themeColor.blue),
@@ -223,6 +244,17 @@ const Description = ({ data }: IDetailsDescType) => {
               color: themeColor.white
             }}>Order Now</p>
           </div>} />
+        {user?._id && (
+          <Button
+            type='default'
+            icon={<MessageOutlined />}
+            onClick={handleMessageVendor}
+            loading={creatingConversation}
+            style={{ padding: '10px 20px', height: 'auto' }}
+          >
+            Message Vendor
+          </Button>
+        )}
       </div>
 
       {/* Variant selection modal */}

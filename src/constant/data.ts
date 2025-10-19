@@ -2,6 +2,7 @@ export const pagesData = [
   { title: "About Us", href: "/about", type: "link" },
   { title: "Contact", href: "/contact", type: "link" },
   { title: "FAQ", href: "/faq", type: "link" },
+  { title: "Messages", href: "/messages", type: "link" },
   { title: "Privacy Policy", href: "/privacy", type: "link" },
   { title: "Terms of Service", href: "/terms", type: "link" },
   // { title: "Shipping Info", href: "/shipping", type: "link" },

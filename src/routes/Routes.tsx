@@ -15,6 +15,7 @@ import Privacy from '@/pages/Privacy';
 import Product from '@/pages/Product';
 import Terms from '@/pages/Terms';
 import FAQ from '@/pages/FAQ';
+import Messages from '@/pages/Messages';
 import LayoutProvider from '@/providers/LayoutProvider';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -90,6 +91,10 @@ export const router = createBrowserRouter([
       {
         path: "/register-seller",
         element: <RegisterSeller />
+      },
+      {
+        path: "/messages",
+        element: <Messages />
       },
     ]
   },
