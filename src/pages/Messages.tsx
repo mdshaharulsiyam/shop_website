@@ -78,7 +78,9 @@ const Messages = () => {
   }
 
   const getOtherUser = (conversation: any) => {
-    return conversation?.users?.find((u: any) => u._id !== userId)
+    console.log('Conversation users:', conversation?.users)
+    console.log('Current userId:', userId)
+    return conversation?.users?.find((u: any) => String(u._id) !== String(userId))
   }
 
   const isUserOnline = (user: any) => {
@@ -103,6 +105,7 @@ const Messages = () => {
           ) : conversations?.data?.length > 0 ? (
             <div>
               {conversations.data.map((conv: any) => {
+                console.log('Full conversation:', conv)
                 const otherUser = getOtherUser(conv)
                 const isOnline = isUserOnline(otherUser)
                 const isSelected = selectedConversation?._id === conv._id
