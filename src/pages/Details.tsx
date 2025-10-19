@@ -66,7 +66,12 @@ const Details = () => {
           ))
         }
       </div>
-      <SimilarProduct />
+      <div className='container mx-auto p-3'>
+        <SimilarProduct 
+          subCategoryId={data?.data?.sub_category?._id} 
+          currentProductId={data?.data?._id}
+        />
+      </div>
       <TabButton data={data?.data || {}} />
     </>
   )
