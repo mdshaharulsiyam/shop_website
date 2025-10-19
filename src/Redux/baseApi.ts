@@ -17,7 +17,8 @@ const baseApis = createApi({
     "auth",
     "faq",
     "settings",
-    "contact"
+    "contact",
+    "reviews"
   ],
   endpoints: () => ({}),
 });
