@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useGetAllConversationsQuery, useGetConversationMessagesQuery, useSendMessageMutation } from '@/Redux/apis/messageSlice'
 import { Avatar, Input, Button, Empty, Spin, Badge } from 'antd'
-import { SendOutlined, UserOutlined } from '@ant-design/icons'
+import { SendOutlined, UserOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import toast from 'react-hot-toast'
 import { io, Socket } from 'socket.io-client'
 import { server } from '@/Redux/baseApi'
@@ -93,10 +93,12 @@ const Messages = () => {
     }
   }, [socket, selectedConversation, refetchMessages])
 
-  // Scroll to bottom
+  // Scroll to bottom whenever messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    }
+  }, [messages?.data])
 
   const handleSendMessage = async () => {
     if (!message.trim() || !selectedConversation) return
@@ -134,8 +136,10 @@ const Messages = () => {
       <h1 className='text-2xl font-bold mb-4'>Messages</h1>
       
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 h-[600px]'>
-        {/* Conversation List */}
-        <div className='bg-white rounded-lg shadow overflow-y-auto'>
+        {/* Conversation List - Hidden on mobile when conversation is selected */}
+        <div className={`bg-white rounded-lg shadow overflow-y-auto ${
+          selectedConversation ? 'hidden md:block' : 'block'
+        }`}>
           <div className='p-4 border-b'>
             <h2 className='font-semibold'>Conversations</h2>
           </div>
@@ -181,13 +185,22 @@ const Messages = () => {
           )}
         </div>
 
-        {/* Chat Area */}
-        <div className='md:col-span-2 bg-white rounded-lg shadow flex flex-col'>
+        {/* Chat Area - Hidden on mobile when no conversation is selected */}
+        <div className={`md:col-span-2 bg-white rounded-lg shadow flex flex-col ${
+          selectedConversation ? 'block' : 'hidden md:flex'
+        }`}>
           {selectedConversation ? (
             <>
               {/* Chat Header */}
               <div className='p-4 border-b'>
                 <div className='flex items-center gap-3'>
+                  {/* Back button - only visible on mobile */}
+                  <Button
+                    type='text'
+                    icon={<ArrowLeftOutlined />}
+                    onClick={() => setSelectedConversation(null)}
+                    className='md:hidden'
+                  />
                   <Badge dot={isUserOnline(getOtherUser(selectedConversation))} status='success'>
                     <Avatar
                       size={40}
@@ -206,7 +219,7 @@ const Messages = () => {
               </div>
 
               {/* Messages */}
-              <div className='flex-1 overflow-y-auto p-4 space-y-4'>
+              <div className='flex-1 overflow-y-auto p-4 space-y-4' style={{ maxHeight: 'calc(600px - 140px)' }}>
                 {loadingMessages ? (
                   <div className='flex justify-center items-center h-full'>
                     <Spin />
