@@ -56,8 +56,9 @@ const Messages = () => {
       setOnlineUsers(users)
     })
 
-    newSocket.on('new-message', () => {
-      console.log('New message received, refetching...')
+    // Listen for general new message event
+    newSocket.on('new-message', (data) => {
+      console.log('New message received (general):', data)
       refetchMessages()
     })
 
@@ -72,6 +73,25 @@ const Messages = () => {
       newSocket.disconnect()
     }
   }, [userId, refetchMessages])
+
+  // Listen for conversation-specific messages
+  useEffect(() => {
+    if (!socket || !selectedConversation) return
+
+    const eventName = `new-message::${selectedConversation._id}`
+    console.log('Listening for messages on:', eventName)
+    
+    const handleNewMessage = (data: any) => {
+      console.log('New message in conversation:', data)
+      refetchMessages()
+    }
+
+    socket.on(eventName, handleNewMessage)
+
+    return () => {
+      socket.off(eventName, handleNewMessage)
+    }
+  }, [socket, selectedConversation, refetchMessages])
 
   // Scroll to bottom
   useEffect(() => {
