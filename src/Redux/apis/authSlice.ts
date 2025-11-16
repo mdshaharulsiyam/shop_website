@@ -2,6 +2,14 @@ import baseApis from '../baseApi';
 
 const authSlice = baseApis.injectEndpoints({
   endpoints: (builder) => ({
+    googleLogin: builder.mutation({
+      query: (body: { credential: string }) => ({
+        url: '/auth/google',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['auth']
+    }),
     postLoginInof: builder.mutation({
       query: (data) => ({
         url: "/auth/sign-in",
@@ -72,6 +80,7 @@ const authSlice = baseApis.injectEndpoints({
 });
 
 export const {
+  useGoogleLoginMutation,
   usePostLoginInofMutation,
   usePatchNewPasswordMutation,
   useForgetEmailPostMutation,

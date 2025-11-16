@@ -1,4 +1,7 @@
+import { auth } from '@/firebase/firebase.config';
 import { usePostSignUpMutation } from '@/Redux/apis/authSlice';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
@@ -32,8 +35,8 @@ const SignUp = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate=useNavigate()
-const [signUp,{isLoading}]=usePostSignUpMutation()
+  const navigate = useNavigate()
+  const [signUp] = usePostSignUpMutation()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
@@ -76,9 +79,9 @@ const [signUp,{isLoading}]=usePostSignUpMutation()
           error: (err) => err?.data?.message || 'Sign up failed',
         }
       );
-      promise.then((res) => {
-        localStorage.setItem("email",formData.email)
-        localStorage.setItem("from","signUp")
+      promise.then((_res) => {
+        localStorage.setItem("email", formData.email)
+        localStorage.setItem("from", "signUp")
         navigate("/otp")
       })
       // Here you would typically handle the login logic, e.g., API call to authenticate the user
@@ -148,13 +151,7 @@ const [signUp,{isLoading}]=usePostSignUpMutation()
               onClick={() => setShowPassword(!showPassword)}
               className='absolute inset-y-0 right-0 top-6 flex items-center pr-3 text-gray-400 hover:text-gray-600'
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                {showPassword ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.958 12h.002a10.51 10.51 0 013.88 4.298m9.407-1.071a10.468 10.468 0 011.89-4.299m-1.89 4.299a10.468 10.468 0 003.88-4.299m-1.89 4.299A10.476 10.476 0 0112 18.223m-1.071-9.407a3.5 3.5 0 11-4.299-1.89" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.182.001.03.001.06 0 .092-.003.06-.003.12 0 .182s.003.12-.001.182l-.001.002c-1.388 4.172-5.325 7.182-9.963 7.182-4.639 0-8.576-3.01-9.964-7.182z" />
-                )}
-              </svg>
+              {showPassword ? <EyeOff className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
             </button>
           </div>
           <div className='relative'>
@@ -173,13 +170,7 @@ const [signUp,{isLoading}]=usePostSignUpMutation()
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className='absolute inset-y-0 right-0 top-6 flex items-center pr-3 text-gray-400 hover:text-gray-600'
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                {showConfirmPassword ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.958 12h.002a10.51 10.51 0 013.88 4.298m9.407-1.071a10.468 10.468 0 011.89-4.299m-1.89 4.299a10.468 10.468 0 003.88-4.299m-1.89 4.299A10.476 10.476 0 0112 18.223m-1.071-9.407a3.5 3.5 0 11-4.299-1.89" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.182.001.03.001.06 0 .092-.003.06-.003.12 0 .182s.003.12-.001.182l-.001.002c-1.388 4.172-5.325 7.182-9.963 7.182-4.639 0-8.576-3.01-9.964-7.182z" />
-                )}
-              </svg>
+              {showConfirmPassword ? <EyeOff className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
             </button>
           </div>
           <button
@@ -199,6 +190,36 @@ const [signUp,{isLoading}]=usePostSignUpMutation()
         </div>
         <button
           className='w-full flex items-center justify-center bg-gray-50 text-gray-700 py-2 px-4 rounded-lg font-semibold border border-gray-300 hover:bg-gray-100 transition-colors duration-200'
+          onClick={async () => {
+            try {
+              const provider = new GoogleAuthProvider()
+              const result = await signInWithPopup(auth, provider)
+              const user = result.user
+              const idToken = await user.getIdToken()
+              const payload = {
+                name: user.displayName,
+                email: user.email,
+                img: user.photoURL ? [user.photoURL] : undefined,
+                provider: 'GOOGLE',
+                accessToken: idToken,
+              } as any
+              const promise = signUp(payload).unwrap()
+              toast.promise(promise, {
+                loading: 'Signing in with Google...',
+                success: (res) => res?.message || 'Login successful!',
+                error: (err) => err?.data?.message || 'Google login failed!',
+              })
+              promise.then((res) => {
+                const token = res?.token || res?.data?.token
+                if (token) {
+                  localStorage.setItem('token', JSON.stringify(token))
+                  window.location.href = '/'
+                }
+              })
+            } catch (e: any) {
+              toast.error(e?.message || 'Google popup blocked or failed')
+            }
+          }}
         >
           <svg className='w-5 h-5 mr-2' viewBox="0 0 24 24" fill="currentColor">
             <path d="M12.24 10.284v3.696h5.312c-.22.426-.93 1.93-2.66 3.32-1.74 1.4-4.45 2.58-7.39 2.58-5.32 0-9.67-4.35-9.67-9.67s4.35-9.67 9.67-9.67c2.94 0 5.65 1.18 7.39 2.58 1.73 1.39 2.44 2.89 2.66 3.32h-5.312z" />

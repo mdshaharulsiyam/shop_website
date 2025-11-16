@@ -16,7 +16,7 @@ const CartButton = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
   const { width, themeColor } = useGlobalContext();
-  const { data: cartRes, refetch, isFetching } = useGetCartQuery({ page, limit });
+  const { data: cartRes, isFetching } = useGetCartQuery({ page, limit });
   const [deleteCart, { isLoading: isDeleting }] = useDeleteCartMutation();
   const items = useMemo(() => {
     const list = cartRes?.data || [];
@@ -70,7 +70,7 @@ const CartButton = () => {
                 success: (res) => res?.message || 'Removed from cart',
                 error: (err) => err?.data?.message || 'Failed to remove',
               });
-              await refetch();
+              // No manual refetch; RTK Query will refetch due to tag invalidation
             }}
           />
         ))}

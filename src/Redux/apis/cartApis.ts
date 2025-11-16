@@ -14,7 +14,7 @@ export const cartApi = baseApis.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      // invalidatesTags: ["cart"],
+      invalidatesTags: ["cart"],
     }),
     getCart: builder.query<
       { success: boolean; data: any[]; pagination?: any },
@@ -25,14 +25,14 @@ export const cartApi = baseApis.injectEndpoints({
         method: "GET",
         params: params || { page: 1, limit: 10 },
       }),
-      // providesTags: ["cart"],
+      providesTags: ["cart"],
     }),
     deleteCart: builder.mutation<{ success: boolean; message?: string }, string>({
       query: (id: string) => ({
         url: `/cart/delete/${id}`,
         method: "DELETE",
       }),
-      // invalidatesTags: ["cart"],
+      invalidatesTags: ["cart"],
     }),
   }),
 });

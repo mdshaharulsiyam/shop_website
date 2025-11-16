@@ -7,6 +7,7 @@ const bannerSlice = baseApis.injectEndpoints({
         url: '/banner/get-all',
         method: 'GET',
       }),
+      providesTags: ['banner']
     }),
   }),
 });
