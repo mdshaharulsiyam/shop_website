@@ -1,6 +1,6 @@
-import type React from 'react'
-import type { IProduct, IProfile, IThemeColor } from './dataTypes'
-import type { SetState } from './functionsTypes'
+import type React from 'react';
+import type { IProduct, IProfile, IThemeColor } from './dataTypes';
+import type { SetState } from './functionsTypes';
 
 
 export interface IContextData {
@@ -8,7 +8,7 @@ export interface IContextData {
   themeColor: IThemeColor,
   width: number,
   height: number,
-  user:IProfile |undefined
+  user: IProfile | undefined
 }
 
 export interface IOrderCard {
@@ -194,12 +194,14 @@ export interface IProductAttribute {
 export interface ICartCard {
   item: {
     id?: string,
+    product_id?: string,
     name: string,
     price: number,
     image: string,
     quantity?: number,
     total_price?: number,
-    variants?: { name: string; value: string }[]
+    variants?: { name: string; value: string }[],
+    img?: string[]
   },
   setOpen: (arg: boolean) => void,
   removeHandler?: (id: string) => void

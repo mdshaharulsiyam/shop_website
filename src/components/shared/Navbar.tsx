@@ -55,7 +55,6 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
   //   },
   // ]
 
-console.log(user)
   return (
     <nav className=" border-b px-4 py-3 sticky top-0 z-50 shadow-sm rounded-[10px]"
       style={{

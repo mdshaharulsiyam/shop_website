@@ -2,14 +2,14 @@ import BadgesButton from '@/components/buttons/BadgesButton';
 import IconButton from '@/components/buttons/IconButton';
 import CartCard from '@/components/cart/CartCard';
 import { useGlobalContext } from '@/providers/ContextProvider';
+import { useDeleteCartMutation, useGetCartQuery } from '@/Redux/apis/cartApis';
+import { imageUrl } from '@/Redux/baseApi';
 import { hexToRGBA4, hexToRGBA6 } from '@/utils/hexToRGBA';
+import { createJWT } from '@/utils/jwt';
 import { Drawer } from 'antd';
 import { ArrowBigLeft, ArrowBigRight, ShoppingCart } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useDeleteCartMutation, useGetCartQuery } from '@/Redux/apis/cartApis';
 import toast from 'react-hot-toast';
-import { imageUrl } from '@/Redux/baseApi';
-import { createJWT } from '@/utils/jwt';
 
 const CartButton = () => {
   const [open, setOpen] = useState(false);
@@ -22,6 +22,7 @@ const CartButton = () => {
     const list = cartRes?.data || [];
     return list.map((it: any) => ({
       id: it?._id,
+      product_id: it?.product_id?._id,
       name: it?.product_id?.name,
       price: it?.price, // unit price
       image: it?.product_id?.img?.[0]
@@ -30,6 +31,7 @@ const CartButton = () => {
       quantity: it?.quantity,
       total_price: it?.total_price,
       variants: it?.variants || [],
+      img: it?.product_id?.img || [],
     }));
   }, [cartRes]);
   const total = useMemo(() => {

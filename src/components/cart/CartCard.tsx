@@ -1,8 +1,9 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import type { ICartCard } from '@/types/propsTypes'
 import { hexToRGBA4, hexToRGBA6 } from '@/utils/hexToRGBA'
+import { createJWT } from '@/utils/jwt'
 import { X } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import IconButton from '../buttons/IconButton'
 
 const CartCard = ({ item, setOpen, removeHandler }: ICartCard) => {
@@ -61,16 +62,44 @@ const CartCard = ({ item, setOpen, removeHandler }: ICartCard) => {
           <span className='font-semibold'>${item.total_price.toFixed(2)}</span>
         </div>
       )}
-      <IconButton handler={() => console.log('Order Now')}
+      <IconButton handler={async () => {
+        try {
+          const unitPrice = Number(item?.price || 0)
+          const qty = Number(item?.quantity || 1)
+          const total = Number((unitPrice * qty).toFixed(2))
+          const checkoutData = {
+            items: [
+              {
+                id: item?.id,
+                product_id: item?.product_id || item?.id,
+                name: item?.name,
+                price: unitPrice,
+                quantity: qty,
+                total_price: total,
+                variants: Array.isArray(item?.variants) ? item.variants : [],
+                img: Array.isArray(item?.img) ? item.img : [],
+              },
+            ],
+            total: total,
+            ts: Date.now(),
+          }
+          const secret = (import.meta as any).env?.VITE_JWT_SECRET || 'cart_secret'
+          const token = await createJWT(checkoutData as any, secret)
+          setOpen(false)
+          window.location.href = `/checkout?token=${encodeURIComponent(token)}`
+        } catch (e) {
+          toast.error('Unable to prepare checkout')
+        }
+      }}
         style={{
           backgroundColor: hexToRGBA6(themeColor.green),
           padding: '4px 10px',
         }}
-        icon={<Link onClick={() => setOpen(false)} to={`/checkout`}>
+        icon={<div>
           <p style={{
             color: themeColor.white
           }}>Order Now</p>
-        </Link>} />
+        </div>} />
     </div>
   )
 }
