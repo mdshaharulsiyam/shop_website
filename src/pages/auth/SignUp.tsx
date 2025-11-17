@@ -4,6 +4,7 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from 'react-router-dom';
 
 // Define types for the form data and errors
@@ -221,9 +222,7 @@ const SignUp = () => {
             }
           }}
         >
-          <svg className='w-5 h-5 mr-2' viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.24 10.284v3.696h5.312c-.22.426-.93 1.93-2.66 3.32-1.74 1.4-4.45 2.58-7.39 2.58-5.32 0-9.67-4.35-9.67-9.67s4.35-9.67 9.67-9.67c2.94 0 5.65 1.18 7.39 2.58 1.73 1.39 2.44 2.89 2.66 3.32h-5.312z" />
-          </svg>
+          <FcGoogle className='w-5 h-5 mr-2' />
           Sign in with Google
         </button>
       </div>
