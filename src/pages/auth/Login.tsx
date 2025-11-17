@@ -1,5 +1,5 @@
 import { auth } from '@/firebase/firebase.config';
-import { usePostLoginInofMutation, usePostSignUpMutation } from '@/Redux/apis/authSlice';
+import { useGoogleLoginMutation, usePostLoginInofMutation } from '@/Redux/apis/authSlice';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
@@ -27,7 +27,7 @@ const Login = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [login] = usePostLoginInofMutation()
-  const [signUp] = usePostSignUpMutation()
+  const [googleLogin] = useGoogleLoginMutation()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
@@ -153,7 +153,9 @@ const Login = () => {
                   provider: 'GOOGLE',
                   accessToken: idToken,
                 } as any
-                const promise = signUp(payload).unwrap()
+                // console.log(payload)
+                // return
+                const promise = googleLogin(payload).unwrap()
                 toast.promise(promise, {
                   loading: 'Signing in with Google...',
                   success: (res) => res?.message || 'Login successful!',

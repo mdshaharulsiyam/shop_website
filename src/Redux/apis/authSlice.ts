@@ -3,7 +3,7 @@ import baseApis from '../baseApi';
 const authSlice = baseApis.injectEndpoints({
   endpoints: (builder) => ({
     googleLogin: builder.mutation({
-      query: (body: { credential: string }) => ({
+      query: (body: { email: string; name?: string; img?: string | string[] }) => ({
         url: '/auth/google',
         method: 'POST',
         body,
