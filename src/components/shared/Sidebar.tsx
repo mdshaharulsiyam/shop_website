@@ -55,7 +55,11 @@ const Sidebar = () => {
                   <div className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700 cursor-pointer transition-colors group">
                     <div className="flex items-center space-x-3">
                       {/* <span className="text-lg">{item.icon}</span> */}
-                      <img className='h-5 w-5' src={imageUrl(item?.img?.[0] + "")} />
+                      <img
+                        className='h-5 w-5 rounded-full object-cover'
+                        src={item?.img ? imageUrl(item.img as string) : "/placeholder.svg"}
+                        alt={item?.name ?? "category icon"}
+                      />
                       <span className="text-sm font-medium">{item.name}</span>
                     </div>
                     {item?.subCategories?.length > 0 && (
