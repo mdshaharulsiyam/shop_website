@@ -6,6 +6,7 @@ const orderApi = baseApis.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation({
       query: (body) => ({ url: '/order/create', method: 'POST', body }),
+      invalidatesTags: ['cart'],
     }),
     getAllOrders: builder.query<
       { success?: boolean; message?: string; data?: any[]; result?: any[]; pagination?: any },
