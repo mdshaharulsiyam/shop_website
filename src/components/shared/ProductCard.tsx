@@ -1,13 +1,13 @@
 import { handleCardClick } from '@/handler/productCardHandler'
-import type { IProductCard } from '@/types/propsTypes'
-import { ListOrderedIcon, Ship, ShoppingCart, Zap } from 'lucide-react'
-import { Modal, Radio, InputNumber, Divider } from 'antd'
-import { useState, useEffect } from 'react'
-import { useGetProductDetailsQuery } from '@/Redux/apis/productSlice'
-import { useCreateCartMutation } from '@/Redux/apis/cartApis'
-import { createJWT } from '@/utils/jwt'
-import toast from 'react-hot-toast'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { useCreateCartMutation } from '@/Redux/apis/cartApis'
+import { useGetProductDetailsQuery } from '@/Redux/apis/productSlice'
+import type { IProductCard } from '@/types/propsTypes'
+import { createJWT } from '@/utils/jwt'
+import { Divider, InputNumber, Modal, Radio } from 'antd'
+import { ShoppingCart } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { FaShippingFast } from 'react-icons/fa'
 
 const ProductCard = ({ product, index, isVisible }: IProductCard) => {
@@ -41,6 +41,13 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
 
   const onChangeAttr = (name: string, value: string) => {
     setSelected(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleCardContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (modalOpen) return
+    const target = e.target as HTMLElement
+    if (target.closest('[data-prevent-card-nav="true"]')) return
+    handleCardClick(product.id?.toString())
   }
 
   const handleOpenCart = (e: React.MouseEvent) => {
@@ -112,7 +119,7 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
     }
   }
   return (
-    <div onClick={() => handleCardClick(product.id?.toString())}
+    <div onClick={handleCardContainerClick}
       key={product.id}
       className={`bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-500 group ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
@@ -137,9 +144,13 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
         />
 
         {/* Action Buttons */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+        <div
+          data-prevent-card-nav="true"
+          className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+        >
           <button
             onClick={handleOpenCart}
+            data-prevent-card-nav="true"
             className="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-md transition-colors cursor-pointer"
             title="Add to Cart"
           >
@@ -147,6 +158,7 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
           </button>
           <button
             onClick={handleOpenOrder}
+            data-prevent-card-nav="true"
             className="w-8 h-8 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-md transition-colors cursor-pointer"
             title="Order Now"
           >
@@ -184,17 +196,19 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
         </div>
 
         {/* Color Options */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" data-prevent-card-nav="true">
           <div className="flex gap-1">
             {product?.colors.map((color: any, colorIndex: number) => (
               <button
+                type="button"
+                data-prevent-card-nav="true"
                 key={colorIndex}
                 className="w-4 h-4 rounded-full border-2 border-gray-200 hover:border-gray-400 transition-colors"
                 style={{ backgroundColor: color }}
               />
             ))}
           </div>
-{/* 
+          {/* 
           <button className="text-gray-400 hover:text-blue-500 transition-colors md:opacity-0 md:group-hover:opacity-100 opacity-100">
             <ShoppingCart className="w-4 h-4" />
           </button> */}
@@ -236,8 +250,8 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
               <div className="text-right">
                 <p className="text-sm" style={{ color: themeColor.gray }}>Unit price</p>
                 <p className="text-lg font-bold">
-                  ${(productDetails.discount > 0 
-                    ? Number((productDetails.price * (1 - productDetails.discount / 100)).toFixed(2)) 
+                  ${(productDetails.discount > 0
+                    ? Number((productDetails.price * (1 - productDetails.discount / 100)).toFixed(2))
                     : productDetails.price
                   ).toFixed(2)}
                 </p>
@@ -293,19 +307,19 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-medium mb-2">Quantity</h4>
-                <InputNumber 
-                  min={1} 
-                  max={productDetails.stock || 99} 
-                  value={qty} 
-                  onChange={(v) => setQty(Number(v) || 1)} 
+                <InputNumber
+                  min={1}
+                  max={productDetails.stock || 99}
+                  value={qty}
+                  onChange={(v) => setQty(Number(v) || 1)}
                 />
               </div>
               <div className="text-right">
                 <p className="text-sm" style={{ color: themeColor.gray }}>Total</p>
                 <p className="text-lg font-bold">
                   ${(
-                    (productDetails.discount > 0 
-                      ? Number((productDetails.price * (1 - productDetails.discount / 100)).toFixed(2)) 
+                    (productDetails.discount > 0
+                      ? Number((productDetails.price * (1 - productDetails.discount / 100)).toFixed(2))
                       : productDetails.price
                     ) * qty
                   ).toFixed(2)}
