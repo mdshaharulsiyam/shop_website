@@ -1,16 +1,16 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
-import type { IDetailsDescType } from '@/types/propsTypes'
-import { hexToRGBA5, hexToRGBA6, hexToRGBA7 } from '@/utils/hexToRGBA'
-import { FaStar } from 'react-icons/fa'
-import IconButton from '../buttons/IconButton'
-import { Modal, Radio, InputNumber, Divider, Button } from 'antd'
 import { useCreateCartMutation } from '@/Redux/apis/cartApis'
 import { useCreateConversationMutation } from '@/Redux/apis/messageSlice'
-import toast from 'react-hot-toast'
-import React from 'react'
+import type { IDetailsDescType } from '@/types/propsTypes'
+import { hexToRGBA5, hexToRGBA6, hexToRGBA7 } from '@/utils/hexToRGBA'
 import { createJWT } from '@/utils/jwt'
 import { MessageOutlined } from '@ant-design/icons'
+import { Button, Divider, InputNumber, Modal, Radio } from 'antd'
+import React from 'react'
+import toast from 'react-hot-toast'
+import { FaStar } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import IconButton from '../buttons/IconButton'
 
 const Description = ({ data }: IDetailsDescType) => {
   const { themeColor } = useGlobalContext()
@@ -87,7 +87,7 @@ const Description = ({ data }: IDetailsDescType) => {
       toast.error('Vendor information not available')
       return
     }
-    
+
     try {
       await createConversation(user._id).unwrap()
       toast.success('Opening conversation...')
@@ -104,7 +104,7 @@ const Description = ({ data }: IDetailsDescType) => {
       : price;
     const total = Number((unitPrice * qty)?.toFixed(2));
     const variants = Object.entries(selected).map(([name, value]) => ({ name, value }));
-    
+
     try {
       // Create checkout data with single product
       const checkoutData = {
@@ -120,7 +120,7 @@ const Description = ({ data }: IDetailsDescType) => {
         total: total,
         ts: Date.now(),
       };
-      
+
       const secret = (import.meta as any).env?.VITE_JWT_SECRET || 'cart_secret';
       const token = await createJWT(checkoutData as any, secret);
       window.location.href = `/checkout?token=${encodeURIComponent(token)}`;
@@ -156,9 +156,9 @@ const Description = ({ data }: IDetailsDescType) => {
         <div className="flex items-center space-x-4">
           <span className="font-medium">{stock + ""}</span>
           <span style={{
-            color: stock>0 ? themeColor.green : hexToRGBA7(themeColor.red)
+            color: stock > 0 ? themeColor.green : hexToRGBA7(themeColor.red)
           }} className={`font-semibold `}>
-            {stock>0 ? 'IN STOCK' : 'OUT OF STOCK'}
+            {stock > 0 ? 'IN STOCK' : 'OUT OF STOCK'}
           </span>
         </div>
       </div>
@@ -262,7 +262,7 @@ const Description = ({ data }: IDetailsDescType) => {
         open={open}
         onCancel={() => setOpen(false)}
         title={
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full mt-3">
             <span>Select Options</span>
             <span style={{ color: themeColor.gray, fontSize: 12 }}>In stock: {stock}</span>
           </div>
