@@ -137,7 +137,25 @@ export interface IProductDetails {
   is_featured: boolean;
   stock: number;
   user: IUser;
-  business: string | null;
+  business: {
+    address: string,
+    banner: string,
+    block: boolean,
+    business_category: string,
+    business_documents: string[],
+    business_sub_admins: string[],
+    is_approve: boolean,
+    location: { type: 'Point', coordinates: number[] },
+    logo: string,
+    name: string,
+    trade_license: string,
+    user: string,
+    __v: number,
+    _id: string,
+    createdAt: string,
+    updatedAt: string,
+  }
+
   createdAt: string;
   updatedAt: string;
   __v: number;

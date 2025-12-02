@@ -5,6 +5,7 @@ import { hexToRGBA5 } from "@/utils/hexToRGBA"
 const Specifications = ({ data }: { data: IProductDetails }) => {
   const { attributes } = data
   const { themeColor } = useGlobalContext()
+
   return (
     <ul className="mt-4 space-y-2 text-sm">
       {
