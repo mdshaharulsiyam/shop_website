@@ -106,6 +106,7 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
           total_price: total,
           variants: variants,
           img: productDetails.img || [],
+          business: productDetails.business,
         }],
         total: total,
         ts: Date.now(),

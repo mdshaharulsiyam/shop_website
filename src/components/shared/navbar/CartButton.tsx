@@ -123,6 +123,7 @@ const CartButton = () => {
                     total_price: it?.total_price,
                     variants: it?.variants || [],
                     img: it?.product_id?.img || [],
+                    business: it?.product_id?.business || null,
                   })),
                   total: total,
                   ts: Date.now(),

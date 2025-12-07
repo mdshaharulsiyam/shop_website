@@ -1,21 +1,21 @@
 import OrderCard from '@/components/order/OrderCard'
 import { useGlobalContext } from '@/providers/ContextProvider'
-import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { verifyJWT } from '@/utils/jwt'
-import { imageUrl } from '@/Redux/baseApi'
 import { usePatchProfileMutation } from '@/Redux/apis/authSlice'
-import { useCreateShippingAddressMutation, useGetAllShippingAddressesQuery } from '@/Redux/apis/shippingAddressApis'
 import { useCreateOrderMutation } from '@/Redux/apis/orderApis'
+import { useCreateShippingAddressMutation, useGetAllShippingAddressesQuery } from '@/Redux/apis/shippingAddressApis'
+import { imageUrl } from '@/Redux/baseApi'
+import { verifyJWT } from '@/utils/jwt'
+import { Edit3, PlusCircle } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import { PlusCircle, Edit3 } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const Checkout = () => {
-  const { themeColor ,user} = useGlobalContext()
+  const { themeColor, user } = useGlobalContext()
   const location = useLocation()
-  const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number; variants?: Array<{name:string; value:string}> }>>([])
+  const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number; business?: string | { _id?: string } | null; variants?: Array<{ name: string; value: string }> }>>([])
   const [decodeError, setDecodeError] = useState<string | null>(null)
-const navigate = useNavigate()
+  const navigate = useNavigate()
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const token = params.get('token')
@@ -24,24 +24,25 @@ const navigate = useNavigate()
       return
     }
     const secret = (import.meta as any).env?.VITE_JWT_SECRET || 'cart_secret'
-    ;(async () => {
-      try {
-        const payload = await verifyJWT<any>(token, secret)
-        const mapped = (payload?.items || []).map((it: any) => ({
-          id: it?.id,
-          _id: it?.product_id,
-          name: it?.name,
-          image: Array.isArray(it?.img) && it.img[0] ? imageUrl(it.img[0]) : 'https://via.placeholder.co/80?text=No+Image',
-          quantity: Number(it?.quantity || 1),
-          price: Number(it?.price || 0),
-          variants: Array.isArray(it?.variants) ? it.variants : [],
-        }))
-        if (!mapped.length) setDecodeError('No products selected')
-        setItems(mapped)
-      } catch (e) {
-        setDecodeError('Invalid or expired checkout data')
-      }
-    })()
+      ; (async () => {
+        try {
+          const payload = await verifyJWT<any>(token, secret)
+          const mapped = (payload?.items || []).map((it: any) => ({
+            id: it?.id,
+            _id: it?.product_id,
+            name: it?.name,
+            image: Array.isArray(it?.img) && it.img[0] ? imageUrl(it.img[0]) : 'https://via.placeholder.co/80?text=No+Image',
+            quantity: Number(it?.quantity || 1),
+            price: Number(it?.price || 0),
+            business: it?.business ?? null,
+            variants: Array.isArray(it?.variants) ? it.variants : [],
+          }))
+          if (!mapped.length) setDecodeError('No products selected')
+          setItems(mapped)
+        } catch (e) {
+          setDecodeError('Invalid or expired checkout data')
+        }
+      })()
   }, [location.search])
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -70,7 +71,7 @@ const navigate = useNavigate()
       if (!selectedAddress && only[0]) setSelectedAddress(only[0])
     }
   }, [addrRes])
-
+  console.log(items)
   const userDetails = {
     name: user?.name || 'Unknown User',
     email: (user as any)?.email || 'Unknown',
@@ -99,7 +100,7 @@ const navigate = useNavigate()
         }
       )
       closePhoneModal();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleAddressSave = async () => {
@@ -158,16 +159,16 @@ const navigate = useNavigate()
     }
     try {
       const promise = createOrder(body as any).unwrap()
-       toast.promise(promise, {
+      toast.promise(promise, {
         loading: 'Placing order...',
         success: (res) => res?.message || 'Order placed successfully',
         error: (err) => err?.data?.message || 'Failed to place order',
       })
-      promise.then(()=>{
+      promise.then(() => {
         navigate("/order")
       })
       // Optionally redirect or clear local cart state
-    } catch {}
+    } catch { }
   };
   const handlerRemove = (id: string) => {
     setItems(prev => prev.filter(x => (x.id || x._id) !== id))
@@ -178,6 +179,29 @@ const navigate = useNavigate()
   }
 
   const total = useMemo(() => items.reduce((s, it) => s + it.price * it.quantity, 0), [items])
+
+  const businessGroupCount = useMemo(() => {
+    if (!items.length) return 0
+    const unique = new Set<string>()
+    items.forEach((it) => {
+      const biz = it?.business
+      if (!biz) {
+        unique.add('no_business')
+        return
+      }
+      if (typeof biz === 'string') {
+        unique.add(biz)
+        return
+      }
+      unique.add(biz?._id || JSON.stringify(biz))
+    })
+    return Math.max(unique.size, 1)
+  }, [items])
+
+  const DELIVERY_FEE_DHAKA = 80
+  const DELIVERY_FEE_OUTSIDE = 130
+  const totalDhakaDelivery = businessGroupCount * DELIVERY_FEE_DHAKA
+  const totalOutsideDelivery = businessGroupCount * DELIVERY_FEE_OUTSIDE
 
   return (
     <div className='py-6 container mx-auto'>
@@ -236,9 +260,14 @@ const navigate = useNavigate()
           <div>
             <p className='text-xl font-semibold'>💰 Delivery Charge:</p>
             <ul className='list-disc list-inside ml-4'>
-              <li><span className='font-medium'>Within Dhaka:</span> 80/- BDT</li>
-              <li><span className='font-medium'>Outside Dhaka:</span> 130/- BDT</li>
+              <li><span className='font-medium'>Within Dhaka:</span> {DELIVERY_FEE_DHAKA}/- BDT</li>
+              <li><span className='font-medium'>Outside Dhaka:</span> {DELIVERY_FEE_OUTSIDE}/- BDT</li>
             </ul>
+            {businessGroupCount > 1 && (
+              <p className='text-sm text-gray-600 mt-2'>
+                You have products from {businessGroupCount} different businesses. Delivery charge applies per business, so pay {totalDhakaDelivery}/- BDT within Dhaka or {totalOutsideDelivery}/- BDT outside Dhaka.
+              </p>
+            )}
           </div>
           <div>
             <p className='text-xl font-semibold'>🚚 Return Policy:</p>
@@ -254,7 +283,7 @@ const navigate = useNavigate()
             <span className='font-bold'>${total.toFixed(2)}</span>
           </div>
           <p className='text-gray-700'>
-            Please send the delivery charge to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
+            Please send the delivery charge ({businessGroupCount ? `${totalDhakaDelivery}/- BDT within Dhaka or ${totalOutsideDelivery}/- BDT outside Dhaka` : 'per the delivery rules'}) to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
           </p>
           <div>
             <label htmlFor='transactionId' className='block text-lg font-semibold mb-2'>Transaction ID</label>
