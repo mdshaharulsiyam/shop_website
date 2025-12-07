@@ -71,7 +71,6 @@ const Checkout = () => {
       if (!selectedAddress && only[0]) setSelectedAddress(only[0])
     }
   }, [addrRes])
-  console.log(items)
   const userDetails = {
     name: user?.name || 'Unknown User',
     email: (user as any)?.email || 'Unknown',
@@ -145,18 +144,12 @@ const Checkout = () => {
       toast.error('Please provide transaction ID and payment phone')
       return
     }
-    const body = {
-      items: items.map((x) => ({
-        product: (x._id || x.id) as string,
-        quantity: x.quantity,
-        variants: Array.isArray(x.variants) ? x.variants : undefined,
-      })),
-      total_amount: total,
-      final_amount: total,
-      delivery_address: selectedAddress,
-      transaction_id: transactionId,
-      payement_phone: paymentPhoneNumber,
+    const ordersPayload = buildOrderPayloads()
+    if (!ordersPayload.length) {
+      toast.error('Unable to prepare orders')
+      return
     }
+    const body = ordersPayload
     try {
       const promise = createOrder(body as any).unwrap()
       toast.promise(promise, {
@@ -180,23 +173,42 @@ const Checkout = () => {
 
   const total = useMemo(() => items.reduce((s, it) => s + it.price * it.quantity, 0), [items])
 
-  const businessGroupCount = useMemo(() => {
-    if (!items.length) return 0
-    const unique = new Set<string>()
+  const groupedByBusiness = useMemo(() => {
+    const groups = new Map<string, { key: string; business: typeof items[number]['business']; items: typeof items }>()
     items.forEach((it) => {
       const biz = it?.business
-      if (!biz) {
-        unique.add('no_business')
-        return
+      let key = 'no_business'
+      if (biz) {
+        key = typeof biz === 'string' ? biz : (biz?._id || JSON.stringify(biz))
       }
-      if (typeof biz === 'string') {
-        unique.add(biz)
-        return
+      if (!groups.has(key)) {
+        groups.set(key, { key, business: biz || null, items: [] })
       }
-      unique.add(biz?._id || JSON.stringify(biz))
+      groups.get(key)?.items.push(it)
     })
-    return Math.max(unique.size, 1)
+    return Array.from(groups.values())
   }, [items])
+
+  const businessGroupCount = groupedByBusiness.length || (items.length ? 1 : 0)
+
+  const buildOrderPayloads = () => {
+    if (!groupedByBusiness.length) return []
+    return groupedByBusiness.map((group) => {
+      const groupTotal = group.items.reduce((sum, it) => sum + it.price * it.quantity, 0)
+      return {
+        items: group.items.map((x) => ({
+          product: (x._id || x.id) as string,
+          quantity: x.quantity,
+          variants: Array.isArray(x.variants) ? x.variants : undefined,
+        })),
+        total_amount: groupTotal,
+        final_amount: groupTotal,
+        delivery_address: selectedAddress,
+        transaction_id: transactionId,
+        payement_phone: paymentPhoneNumber,
+      }
+    })
+  }
 
   const DELIVERY_FEE_DHAKA = 80
   const DELIVERY_FEE_OUTSIDE = 130
