@@ -9,7 +9,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-interface FormErrors {  
+interface FormErrors {
   password?: string;
   confirmPassword?: string;
 }
@@ -19,8 +19,8 @@ const Reset = () => {
     password: '',
     confirmPassword: ''
   });
-  const navigate=useNavigate()
-  const [resetPassword,{isLoading}]=useResetPasswordMutation()
+  const navigate = useNavigate()
+  const [resetPassword,] = useResetPasswordMutation()
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +59,7 @@ const Reset = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      const promise=resetPassword(formData).unwrap()
+      const promise = resetPassword(formData).unwrap()
       toast.promise(
         promise,
         {
@@ -68,7 +68,7 @@ const Reset = () => {
           error: (err) => err?.data?.message || 'Failed to reset password!',
         }
       );
-      promise.then((res) => {
+      promise.then(() => {
         navigate("/login")
       })
     } else {

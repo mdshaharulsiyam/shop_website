@@ -16,8 +16,8 @@ const Forget = () => {
   const [formData, setFormData] = useState<FormData>({
     email: ''
   });
-  const navigate=useNavigate()
-  const [forgetEmailPost,{isLoading}]=useForgetEmailPostMutation()
+  const navigate = useNavigate()
+  const [forgetEmailPost,] = useForgetEmailPostMutation()
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -50,7 +50,7 @@ const Forget = () => {
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      const promise=forgetEmailPost(formData).unwrap()
+      const promise = forgetEmailPost(formData).unwrap()
       toast.promise(
         promise,
         {
@@ -59,9 +59,9 @@ const Forget = () => {
           error: (err) => err?.data?.message || 'Failed to send email!',
         }
       );
-      promise.then((res) => {
-        localStorage.setItem("email",formData.email)
-        localStorage.setItem("from","forget")
+      promise.then(() => {
+        localStorage.setItem("email", formData.email)
+        localStorage.setItem("from", "forget")
         navigate("/otp")
       })
     } else {

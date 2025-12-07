@@ -1,11 +1,11 @@
 import Products from '@/components/product/Products'
 import Search from '@/components/product/Search'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { useGetCategoriesQuery } from '@/Redux/apis/categorySlice'
+import { Button, Drawer, Select, Slider, Space, Typography } from 'antd'
 import { Filter } from 'lucide-react'
-import { Drawer, Select, Slider, Button, Space, Typography } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useGetCategoriesQuery } from '@/Redux/apis/categorySlice'
 
 const Product = () => {
   const { themeColor } = useGlobalContext()

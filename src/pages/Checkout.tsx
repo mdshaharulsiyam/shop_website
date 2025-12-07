@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const Checkout = () => {
-  const { themeColor, user } = useGlobalContext()
+  const { user } = useGlobalContext()
   const location = useLocation()
   const [items, setItems] = useState<Array<{ id?: string; _id?: string; name: string; image: string; quantity: number; price: number; business?: string | { _id?: string } | null; variants?: Array<{ name: string; value: string }> }>>([])
   const [decodeError, setDecodeError] = useState<string | null>(null)
@@ -52,7 +52,7 @@ const Checkout = () => {
   const [newAddress, setNewAddress] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [paymentPhoneNumber, setPaymentPhoneNumber] = useState('');
-  const [patchProfile, { isLoading: isUpdatingPhone }] = usePatchProfileMutation();
+  const [patchProfile,] = usePatchProfileMutation();
   const { data: addrRes } = useGetAllShippingAddressesQuery();
   const [createAddress] = useCreateShippingAddressMutation();
   const [createOrder, { isLoading: isPlacingOrder }] = useCreateOrderMutation();

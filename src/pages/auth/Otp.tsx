@@ -13,13 +13,13 @@ interface FormErrors {
 }
 
 const Otp = () => {
-  const [formData, setFormData] = useState<FormData>({  
+  const [formData, setFormData] = useState<FormData>({
     otp: ''
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-const navigate=useNavigate()
-const [verify,{isLoading}]=useVerifyOtpMutation()
+  const navigate = useNavigate()
+  const [verify,] = useVerifyOtpMutation()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     // Restrict input to only 6 digits
@@ -51,7 +51,7 @@ const [verify,{isLoading}]=useVerifyOtpMutation()
     e.preventDefault();
     setIsSubmitted(true);
     if (validateForm()) {
-      const promise=verify({code:formData.otp,email:localStorage.getItem("email")}).unwrap()
+      const promise = verify({ code: formData.otp, email: localStorage.getItem("email") }).unwrap()
       toast.promise(
         promise,
         {
@@ -62,12 +62,12 @@ const [verify,{isLoading}]=useVerifyOtpMutation()
       )
       promise.then((res) => {
         const from = localStorage.getItem("from")
-        if(from=="signUp"){
+        if (from == "signUp") {
           localStorage.setItem('token', JSON.stringify(res?.data?.token))
           localStorage.removeItem("from")
           localStorage.removeItem("email")
           navigate("/")
-        }else{
+        } else {
           navigate("/reset")
         }
       })

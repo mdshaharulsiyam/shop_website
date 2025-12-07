@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Upload, Card, Row, Col } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import type { UploadFile } from "antd/es/upload/interface";
 import { useGlobalContext } from "@/providers/ContextProvider";
 import { usePatchNewPasswordMutation, usePatchProfileMutation } from "@/Redux/apis/authSlice";
 import { useUpdateBusinessMutation } from "@/Redux/apis/businessApis";
-import toast from "react-hot-toast";
 import { imageUrl } from "@/Redux/baseApi";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Form, Input, Row, Upload } from "antd";
+import type { UploadFile } from "antd/es/upload/interface";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useGlobalContext();
-  const [update, { isLoading }] = usePatchProfileMutation()
-  const [updatePassword, { isLoading: isLoadingPassword }] = usePatchNewPasswordMutation()
+  const [update,] = usePatchProfileMutation()
+  const [updatePassword,] = usePatchNewPasswordMutation()
   const [form] = Form.useForm();
-  console.log(user)
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [businessForm] = Form.useForm();
   const [logoFile, setLogoFile] = useState<any[]>([]);
@@ -324,144 +323,144 @@ const Profile = () => {
       {/* 🏢 Business Information Section */}
       {
         user?.business?._id && <Row gutter={[24, 24]} className="mt-6">
-        <Col span={24}>
-          <Card
-            title="Business Information"
-            className="rounded-2xl shadow-sm border border-gray-200"
-          >
-            <Form
-              form={businessForm}
-              layout="vertical"
-              onFinish={handleBusinessUpdate}
-              className="space-y-6"
+          <Col span={24}>
+            <Card
+              title="Business Information"
+              className="rounded-2xl shadow-sm border border-gray-200"
             >
-              <Row gutter={[0, 16]}>
-                <Col span={24} md={12} className="pr-4">
-                  <Form.Item
-                    label="Business Name"
-                    name="name"
-                    rules={[{ required: true, message: "Please enter business name" }]}
+              <Form
+                form={businessForm}
+                layout="vertical"
+                onFinish={handleBusinessUpdate}
+                className="space-y-6"
+              >
+                <Row gutter={[0, 16]}>
+                  <Col span={24} md={12} className="pr-4">
+                    <Form.Item
+                      label="Business Name"
+                      name="name"
+                      rules={[{ required: true, message: "Please enter business name" }]}
+                    >
+                      <Input placeholder="e.g. MultiMart, FlexMart" />
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={24} md={12}>
+                    <Form.Item
+                      label="Business Address"
+                      name="address"
+                      rules={[{ required: true, message: "Please enter business address" }]}
+                    >
+                      <Input placeholder="Enter business address" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                {/* Logo and Banner in one row */}
+                <Row gutter={[24, 24]}>
+                  <Col xs={24} md={12}>
+                    <Form.Item label="Business Logo" name="logo">
+                      <Upload
+                        beforeUpload={() => false}
+                        listType="picture-card"
+                        fileList={logoFile}
+                        maxCount={1}
+                        onChange={handleBusinessFileChange(setLogoFile)}
+                        className="w-full"
+                      >
+                        {logoFile.length === 0 && (
+                          <div className="flex flex-col items-center w-full">
+                            <UploadOutlined className="text-2xl" />
+                            <span className="text-sm mt-2 text-gray-500">
+                              {user?.business?.logo ? 'Change Logo' : 'Upload Logo'}
+                            </span>
+                          </div>
+                        )}
+                      </Upload>
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item label="Business Banner" name="banner">
+                      <Upload
+                        beforeUpload={() => false}
+                        listType="picture-card"
+                        fileList={bannerFile}
+                        maxCount={1}
+                        onChange={handleBusinessFileChange(setBannerFile)}
+                        className="w-full"
+                      >
+                        {bannerFile.length === 0 && (
+                          <div className="flex flex-col items-center w-full">
+                            <UploadOutlined className="text-2xl" />
+                            <span className="text-sm mt-2 text-gray-500">
+                              {user?.business?.banner ? 'Change Banner' : 'Upload Banner'}
+                            </span>
+                          </div>
+                        )}
+                      </Upload>
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                {/* Business Documents in full width row */}
+                <Row>
+                  <Col span={24}>
+                    <Form.Item label="Business Documents" name="business_documents">
+                      <Upload
+                        beforeUpload={() => false}
+                        listType="text"
+                        multiple
+                        fileList={documentFiles}
+                        onChange={handleBusinessFileChange(setDocumentFiles)}
+                        onRemove={(file) => {
+                          // prevent deletion of existing server files
+                          if ((file as any)?.url && !(file as any)?.originFileObj) {
+                            return false;
+                          }
+                          // allow removal of newly added, not yet uploaded files
+                          setDocumentFiles((prev) => prev.filter((f) => f.uid !== file.uid));
+                          return true;
+                        }}
+                        className="w-full"
+                        showUploadList={{
+                          showRemoveIcon: true,
+                          showPreviewIcon: true,
+                        }}
+                      >
+                        {documentFiles.length === 0 ? (
+                          <div className="flex flex-col items-center w-full p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                            <UploadOutlined className="text-2xl" />
+                            <span className="text-sm mt-2 text-gray-500">
+                              {user?.business?.business_documents?.length ? 'Add More Documents' : 'Upload Documents'}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="p-2">
+                            <Button icon={<UploadOutlined />}>Add More Documents</Button>
+                          </div>
+                        )}
+                      </Upload>
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <div className="text-center mt-6">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="bg-blue-600 hover:bg-blue-700 px-10 py-2 rounded-lg"
+                    loading={false}
                   >
-                    <Input placeholder="e.g. MultiMart, FlexMart" />
-                  </Form.Item>
-                </Col>
-
-                <Col span={24} md={12}>
-                  <Form.Item
-                    label="Business Address"
-                    name="address"
-                    rules={[{ required: true, message: "Please enter business address" }]}
-                  >
-                    <Input placeholder="Enter business address" />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              {/* Logo and Banner in one row */}
-              <Row gutter={[24, 24]}>
-                <Col xs={24} md={12}>
-                  <Form.Item label="Business Logo" name="logo">
-                    <Upload
-                      beforeUpload={() => false}
-                      listType="picture-card"
-                      fileList={logoFile}
-                      maxCount={1}
-                      onChange={handleBusinessFileChange(setLogoFile)}
-                      className="w-full"
-                    >
-                      {logoFile.length === 0 && (
-                        <div className="flex flex-col items-center w-full">
-                          <UploadOutlined className="text-2xl" />
-                          <span className="text-sm mt-2 text-gray-500">
-                            {user?.business?.logo ? 'Change Logo' : 'Upload Logo'}
-                          </span>
-                        </div>
-                      )}
-                    </Upload>
-                  </Form.Item>
-                </Col>
-
-                <Col xs={24} md={12}>
-                  <Form.Item label="Business Banner" name="banner">
-                    <Upload
-                      beforeUpload={() => false}
-                      listType="picture-card"
-                      fileList={bannerFile}
-                      maxCount={1}
-                      onChange={handleBusinessFileChange(setBannerFile)}
-                      className="w-full"
-                    >
-                      {bannerFile.length === 0 && (
-                        <div className="flex flex-col items-center w-full">
-                          <UploadOutlined className="text-2xl" />
-                          <span className="text-sm mt-2 text-gray-500">
-                            {user?.business?.banner ? 'Change Banner' : 'Upload Banner'}
-                          </span>
-                        </div>
-                      )}
-                    </Upload>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              {/* Business Documents in full width row */}
-              <Row>
-                <Col span={24}>
-                  <Form.Item label="Business Documents" name="business_documents">
-                    <Upload
-                      beforeUpload={() => false}
-                      listType="text"
-                      multiple
-                      fileList={documentFiles}
-                      onChange={handleBusinessFileChange(setDocumentFiles)}
-                      onRemove={(file) => {
-                        // prevent deletion of existing server files
-                        if ((file as any)?.url && !(file as any)?.originFileObj) {
-                          return false;
-                        }
-                        // allow removal of newly added, not yet uploaded files
-                        setDocumentFiles((prev) => prev.filter((f) => f.uid !== file.uid));
-                        return true;
-                      }}
-                      className="w-full"
-                      showUploadList={{
-                        showRemoveIcon: true,
-                        showPreviewIcon: true,
-                      }}
-                    >
-                      {documentFiles.length === 0 ? (
-                        <div className="flex flex-col items-center w-full p-4 border-2 border-dashed border-gray-300 rounded-lg">
-                          <UploadOutlined className="text-2xl" />
-                          <span className="text-sm mt-2 text-gray-500">
-                            {user?.business?.business_documents?.length ? 'Add More Documents' : 'Upload Documents'}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="p-2">
-                          <Button icon={<UploadOutlined />}>Add More Documents</Button>
-                        </div>
-                      )}
-                    </Upload>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <div className="text-center mt-6">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="bg-blue-600 hover:bg-blue-700 px-10 py-2 rounded-lg"
-                  loading={false}
-                >
-                  Update Business Information
-                </Button>
-              </div>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+                    Update Business Information
+                  </Button>
+                </div>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
       }
-     
+
     </div>
   );
 };

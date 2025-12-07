@@ -8,16 +8,19 @@ import {
   Input,
   message,
   Row,
+  Spin,
   Typography,
   Upload,
 } from "antd";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
 
 const RegisterSeller = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [logoFile, setLogoFile] = useState<any[]>([]);
   const [bannerFile, setBannerFile] = useState<any[]>([]);
@@ -58,6 +61,7 @@ const RegisterSeller = () => {
       setLogoFile([]);
       setBannerFile([]);
       setDocumentFiles([]);
+      navigate("/profile");
     } catch (err) {
       console.error(err);
       message.error("Failed to register business. Try again!");
@@ -67,7 +71,12 @@ const RegisterSeller = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen  p-6">
+    <div className="flex justify-center items-center min-h-screen  p-6 relative">
+      {(loading || isLoadingRegister) && (
+        <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-10 flex items-center justify-center">
+          <Spin size="large" tip="Submitting..." />
+        </div>
+      )}
       <div className="w-full max-w-2xl">
         <Card
           className="rounded-2xl shadow-md border border-gray-200 bg-white p-6"

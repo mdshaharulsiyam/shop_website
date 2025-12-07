@@ -4,7 +4,7 @@ import { dashboard_link } from '@/Redux/baseApi'
 import type { IProfilePopup } from '@/types/propsTypes'
 import { AnimatePresence, motion } from 'framer-motion'
 import { LogOut, Package, User, UserCircle } from 'lucide-react'
-import { FaShippingFast } from 'react-icons/fa'
+import { FaDashcube, FaShippingFast } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) => {
   const { user } = useGlobalContext()
@@ -51,8 +51,8 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
                 target='_blank'
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
               >
-                <FaShippingFast className="h-4 w-4 mr-3" />
-                My Order
+                <FaDashcube className="h-4 w-4 mr-3" />
+                Shop Dashboard
               </a> : <Link
                 to="/register-seller"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
