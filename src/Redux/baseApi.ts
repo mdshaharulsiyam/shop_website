@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-export const server = "https://api.akdala.com"// "http://localhost:5004"
+export const server = "http://localhost:5004"
+// export const server = "https://api.akdala.com"// "http://localhost:5004"
 export const dashboard_link = "https://admin.akdala.com"//http://10.10.20.40:5005/ //http://192.168.1.108:5005
 const baseApis = createApi({
   reducerPath: 'api',
