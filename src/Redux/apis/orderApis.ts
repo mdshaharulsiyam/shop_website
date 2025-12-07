@@ -10,7 +10,7 @@ const orderApi = baseApis.injectEndpoints({
     }),
     getAllOrders: builder.query<
       { success?: boolean; message?: string; data?: any[]; result?: any[]; pagination?: any },
-      { page?: number; limit?: number; delivery_status?: string; search?: string } | void
+      { page?: number; limit?: number; delivery_status?: string; search?: string; myOrder?: boolean } | void
     >({
       query: (params) => ({
         url: '/order/get-all',

@@ -4,7 +4,7 @@ import type { IOrderTable } from '@/types/propsTypes'
 import { Pagination, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 
-const OrderTable = ({ status }: IOrderTable) => {
+const OrderTable = ({ status, myOrder = false }: IOrderTable) => {
   const PAGE_SIZE = 8
   const [page, setPage] = useState(1)
 
@@ -12,7 +12,7 @@ const OrderTable = ({ status }: IOrderTable) => {
     setPage(1)
   }, [status])
 
-  const { data: res, isFetching } = useGetAllOrdersQuery({ delivery_status: status, page, limit: PAGE_SIZE })
+  const { data: res, isFetching } = useGetAllOrdersQuery({ delivery_status: status, page, limit: PAGE_SIZE, myOrder })
   const orders = (res?.data || res?.result || []) as any[]
 
   if (isFetching) {

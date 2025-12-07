@@ -144,12 +144,12 @@ const Checkout = () => {
       toast.error('Please provide transaction ID and payment phone')
       return
     }
-    const ordersPayload = buildOrderPayloads()
-    if (!ordersPayload.length) {
-      toast.error('Unable to prepare orders')
+    const { payloads, error } = buildOrderPayloads()
+    if (error || !payloads.length) {
+      toast.error(error || 'Unable to prepare orders')
       return
     }
-    const body = ordersPayload
+    const body = payloads
     try {
       const promise = createOrder(body as any).unwrap()
       toast.promise(promise, {
@@ -192,10 +192,20 @@ const Checkout = () => {
   const businessGroupCount = groupedByBusiness.length || (items.length ? 1 : 0)
 
   const buildOrderPayloads = () => {
-    if (!groupedByBusiness.length) return []
-    return groupedByBusiness.map((group) => {
+    if (!groupedByBusiness.length) {
+      return { payloads: [], error: 'No business groups found' }
+    }
+
+    const payloads = groupedByBusiness.map((group) => {
+      const hasBusinessValue = !!group.business && (typeof group.business === 'string' || !!group.business?._id)
+      const businessId = hasBusinessValue
+        ? (typeof group.business === 'string'
+          ? group.business
+          : (group.business?._id as string))
+        : null
       const groupTotal = group.items.reduce((sum, it) => sum + it.price * it.quantity, 0)
       return {
+        business: businessId,
         items: group.items.map((x) => ({
           product: (x._id || x.id) as string,
           quantity: x.quantity,
@@ -208,6 +218,8 @@ const Checkout = () => {
         payement_phone: paymentPhoneNumber,
       }
     })
+
+    return { payloads, error: null as string | null }
   }
 
   const DELIVERY_FEE_DHAKA = 80

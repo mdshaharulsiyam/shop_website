@@ -27,6 +27,7 @@ export interface IOrderCard {
 }
 export interface IOrderTable {
   status: string;
+  myOrder?: boolean;
 }
 export interface IIconButton {
   handler: () => void,
