@@ -84,8 +84,8 @@ const OrderTable = ({ status, myOrder = false }: IOrderTable) => {
                           <p className='font-medium text-gray-900'>{product?.name || 'Product'}</p>
                           <p className='text-sm text-gray-500'>Qty: <span className='font-semibold text-gray-900'>{qty}</span></p>
                         </div>
-                        <p className='text-sm text-gray-600'>Unit Price: ${unitPrice.toFixed(2)}</p>
-                        <p className='text-sm text-gray-900 font-semibold'>Subtotal: ${(unitPrice * qty).toFixed(2)}</p>
+                        <p className='text-sm text-gray-600'>Unit Price: ৳{unitPrice.toFixed(2)}</p>
+                        <p className='text-sm text-gray-900 font-semibold'>Subtotal: ৳{(unitPrice * qty).toFixed(2)}</p>
                         {Array.isArray(it?.variants) && it.variants.length > 0 && renderItemVariants(it.variants)}
                       </div>
                     </div>

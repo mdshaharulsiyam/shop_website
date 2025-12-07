@@ -1,9 +1,9 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
-import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 import { useGetAllProductQuery } from '@/Redux/apis/productSlice'
 import { imageUrl } from '@/Redux/baseApi'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 
 interface SimilarProductProps {
   subCategoryId?: string
@@ -13,7 +13,7 @@ interface SimilarProductProps {
 const SimilarProduct = ({ subCategoryId, currentProductId }: SimilarProductProps) => {
   const { themeColor } = useGlobalContext()
   const navigate = useNavigate()
-  
+
   // Fetch products by subcategory
   const { data: productsData } = useGetAllProductQuery(
     subCategoryId ? { sub_category: subCategoryId, limit: 10 } : undefined,
@@ -54,20 +54,20 @@ const SimilarProduct = ({ subCategoryId, currentProductId }: SimilarProductProps
           {
             products.map((item: any, i: any) => (
               <CarouselItem key={i} className='md:basis-1/3 lg:basis-1/4 xl:basis-1/5'>
-                <div 
+                <div
                   style={{
                     backgroundColor: themeColor.white,
-                  }} 
-                  className="flex items-center w-full p-3 rounded-2xl gap-3 cursor-pointer hover:shadow-lg transition-shadow" 
+                  }}
+                  className="flex items-center w-full p-3 rounded-2xl gap-3 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => navigate(`/details/${item._id}`)}
                 >
                   <img className="w-[70px] h-[70px] object-cover rounded-lg" src={item.image_url} alt={item.product_name} />
                   <div className="flex items-start justify-start flex-col mt-1">
                     <h3 className="mt-2 text-sm font-semibold line-clamp-2">{item.product_name}</h3>
                     <div className='flex justify-start items-center gap-3'>
-                      <span className="text-sm font-medium">${item.current_price.toFixed(2)}</span>
+                      <span className="text-sm font-medium">৳{item.current_price.toFixed(2)}</span>
                       {item.current_price < item.original_price && (
-                        <span className="line-through text-sm text-gray-500">${item.original_price.toFixed(2)}</span>
+                        <span className="line-through text-sm text-gray-500">৳{item.original_price.toFixed(2)}</span>
                       )}
                     </div>
                   </div>

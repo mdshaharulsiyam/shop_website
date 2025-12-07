@@ -167,7 +167,7 @@ const Description = ({ data }: IDetailsDescType) => {
         <div className="flex items-end space-x-2">
           <span className="text-3xl font-bold " style={{
             color: themeColor.black
-          }}>${price?.toFixed(2)}</span>
+          }}>৳{price?.toFixed(2)}</span>
           <span style={{
             color: themeColor.gray
           }} className="line-through text-xl">${price?.toFixed(2)}</span>
@@ -177,7 +177,7 @@ const Description = ({ data }: IDetailsDescType) => {
         </div>
         <p className="mt-1 text-sm " style={{
           color: themeColor.gray
-        }}>M.R.P.: ${price?.toFixed(2)}</p>
+        }}>M.R.P.: ৳{price?.toFixed(2)}</p>
       </div>
 
       <div style={{
@@ -335,7 +335,7 @@ const Description = ({ data }: IDetailsDescType) => {
             <div className="text-right">
               <p className="text-sm" style={{ color: themeColor.gray }}>Total</p>
               <p className="text-lg font-bold">
-                ${(
+                ৳{(
                   (typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100))?.toFixed(2)) : price)
                   * qty
                 )?.toFixed(2)}

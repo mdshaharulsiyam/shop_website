@@ -103,33 +103,47 @@ const Checkout = () => {
   };
 
   const handleAddressSave = async () => {
-    if (!newAddress) return;
-    if (addresses.includes(newAddress)) {
-      toast.error('Address already added')
-      return;
+    const trimmedAddress = newAddress.trim()
+    if (!trimmedAddress) {
+      toast.error('Please enter a delivery address')
+      return false
     }
-    // Optimistic insert
-    setAddresses((prev) => [...prev, newAddress])
-    setSelectedAddress(newAddress)
-    setNewAddress('')
-    closeAddressModal()
+    if (addresses.some((addr) => addr.toLowerCase() === trimmedAddress.toLowerCase())) {
+      toast.error('Address already added')
+      return false
+    }
     try {
-      const res = await createAddress({ address: newAddress }).unwrap()
+      const res = await createAddress({ address: trimmedAddress }).unwrap()
       if (!res?.success) {
-        // rollback
-        setAddresses((prev) => prev.filter((a) => a !== newAddress))
-        if (selectedAddress === newAddress) setSelectedAddress(prev => prev && prev !== newAddress ? prev : (addresses[0] || ''))
         toast.error(res?.message || 'Failed to add address')
-      } else {
-        toast.success(res?.message || 'Address added')
+        return false
       }
+      setAddresses((prev) => [...prev, trimmedAddress])
+      setSelectedAddress(trimmedAddress)
+      setNewAddress('')
+      toast.success(res?.message || 'Address added')
+      return true
     } catch (e: any) {
-      // rollback immediately on failure
-      setAddresses((prev) => prev.filter((a) => a !== newAddress))
-      if (selectedAddress === newAddress) setSelectedAddress(addresses[0] || '')
       toast.error(e?.data?.message || 'Failed to add address')
+      return false
+    } finally {
     }
   };
+
+  const handleAddressModalDone = async () => {
+    if (newAddress.trim()) {
+      const saved = await handleAddressSave()
+      if (saved) {
+        closeAddressModal()
+      }
+      return
+    }
+    if (!selectedAddress) {
+      toast.error('Please select or add an address')
+      return
+    }
+    closeAddressModal()
+  }
 
   const handleConfirmOrder = async () => {
     if (!items.length) {
@@ -304,7 +318,7 @@ const Checkout = () => {
         <div className='space-y-4'>
           <div className='flex items-center justify-between text-xl'>
             <span>Total</span>
-            <span className='font-bold'>${total.toFixed(2)}</span>
+            <span className='font-bold'>৳{total.toFixed(2)}</span>
           </div>
           <p className='text-gray-700'>
             Please send the delivery charge ({businessGroupCount ? `${totalDhakaDelivery}/- BDT within Dhaka or ${totalOutsideDelivery}/- BDT outside Dhaka` : 'per the delivery rules'}) to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
@@ -394,7 +408,7 @@ const Checkout = () => {
               </div>
             </div>
             <div className='flex justify-end space-x-2 mt-4'>
-              <button onClick={closeAddressModal} className='px-4 py-2 bg-gray-300 rounded-lg'>Done</button>
+              <button onClick={handleAddressModalDone} className='px-4 py-2 bg-gray-300 rounded-lg'>Done</button>
             </div>
           </div>
         </div>

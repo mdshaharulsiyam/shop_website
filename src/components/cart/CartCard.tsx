@@ -19,7 +19,7 @@ const CartCard = ({ item, setOpen, removeHandler }: ICartCard) => {
         <img src={item?.image} alt={item.name} className="w-16 h-16 object-cover rounded-2xl" />
         <div className="flex-1">
           <h3 className="text-sm font-semibold">{item?.name}</h3>
-          <p className="text-sm text-gray-500">${item?.price.toFixed(2)} {item?.quantity ? `x ${item.quantity}` : ''}</p>
+          <p className="text-sm text-gray-500">৳{item?.price.toFixed(2)} {item?.quantity ? `x ${item.quantity}` : ''}</p>
           {Array.isArray(item?.variants) && item.variants.length > 0 && (
             <div className='flex flex-wrap gap-2 mt-1'>
               {item.variants.map((v) => {

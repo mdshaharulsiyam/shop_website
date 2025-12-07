@@ -188,10 +188,10 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
         <h3 className="font-medium text-gray-900 line-clamp-2">{product.name}</h3>
 
         <div className="flex items-center gap-2">
-          <span className="font-bold text-gray-900">${product.salePrice?.toFixed(2)}</span>
+          <span className="font-bold text-gray-900">৳{product.salePrice?.toFixed(2)}</span>
           {product.originalPrice !== product.salePrice && (
             <span className="text-sm text-gray-400 line-through">
-              ${product.originalPrice?.toFixed(2)}
+              ৳{product.originalPrice?.toFixed(2)}
             </span>
           )}
         </div>
