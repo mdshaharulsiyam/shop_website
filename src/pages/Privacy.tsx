@@ -1,6 +1,7 @@
 import { useGetSettingByNameQuery } from '@/Redux/apis/settingApis';
 import { Shield } from 'lucide-react';
 import { Skeleton } from 'antd';
+import SEO from '@/components/SEO';
 
 const Privacy = () => {
   const { data, isLoading } = useGetSettingByNameQuery('privacy');
@@ -23,7 +24,12 @@ const Privacy = () => {
   }
 
   return (
-    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <SEO 
+        title="Privacy Policy | How We Protect Your Data"
+        description="Read our Privacy Policy to understand how we collect, use, and protect your personal information. Learn about your privacy rights and how we handle your data."
+        keywords="privacy policy, data protection, personal information, data privacy, GDPR, CCPA, privacy rights, data security, information collection, user data"
+      />
       <div className="container mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

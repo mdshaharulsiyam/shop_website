@@ -1,6 +1,7 @@
 import { useGetSettingByNameQuery } from '@/Redux/apis/settingApis';
 import { FileText } from 'lucide-react';
 import { Skeleton } from 'antd';
+import SEO from '@/components/SEO';
 
 const Terms = () => {
   const { data, isLoading } = useGetSettingByNameQuery('terms');
@@ -24,6 +25,11 @@ const Terms = () => {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <SEO 
+        title="Terms & Conditions | Our Website Terms of Use"
+        description="Review our Terms & Conditions to understand the rules and guidelines for using our website and services. Learn about user responsibilities, intellectual property, and more."
+        keywords="terms and conditions, terms of use, website terms, user agreement, legal terms, service terms, online terms, terms of service, website policies"
+      />
       <div className="container mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

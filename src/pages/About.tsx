@@ -1,6 +1,7 @@
 import { useGetSettingByNameQuery } from '@/Redux/apis/settingApis';
 import { Info } from 'lucide-react';
 import { Skeleton } from 'antd';
+import SEO from '@/components/SEO';
 
 const About = () => {
   const { data, isLoading } = useGetSettingByNameQuery('about');
@@ -23,7 +24,13 @@ const About = () => {
   }
 
   return (
-    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
+    <>
+      <SEO 
+        title="About Us | Learn About Our Company & Mission"
+        description="Discover our company's story, values, and mission. Learn what drives us and how we're making a difference in the e-commerce industry."
+        keywords="about us, company story, our mission, our values, e-commerce, online shopping, our team, company history"
+      />
+      <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -59,6 +66,7 @@ const About = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

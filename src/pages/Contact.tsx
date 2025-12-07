@@ -2,6 +2,7 @@ import { Button, Card, Form, Input, Typography, message as antdMessage } from "a
 import { useCreateContactMutation } from "@/Redux/apis/contactApis";
 import { useEffect } from "react";
 import { Mail, Phone, User, MessageSquare, Send } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -49,13 +50,20 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-3xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-4">
-            <div className="bg-blue-100 p-4 rounded-full">
-              <MessageSquare className="w-12 h-12 text-blue-600" />
+    <>
+      <SEO 
+        title="Contact Us | Get in Touch with Our Team"
+        description="Have questions or feedback? Contact our friendly team. We're here to help and would love to hear from you. Reach out via phone, email, or our contact form."
+        keywords="contact us, customer support, get in touch, help center, contact form, support, customer service, email us, call us"
+      />
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-3xl">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-4">
+              <div className="bg-blue-100 p-4 rounded-full">
+                <MessageSquare className="w-12 h-12 text-blue-600" />
+              </div>
             </div>
           </div>
           <Title level={1} className="text-4xl font-bold mb-4">Contact Us</Title>
@@ -158,7 +166,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import { HelpCircle } from 'lucide-react';
 import { Collapse, Skeleton } from 'antd';
 import type { CollapseProps } from 'antd';
 import styles from './FAQ.module.css';
+import SEO from '@/components/SEO';
 
 interface FAQItem {
   _id: string;
@@ -49,7 +50,12 @@ const FAQ = () => {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <SEO 
+        title="Frequently Asked Questions | Find Answers to Common Questions"
+        description="Get answers to common questions about our products, services, shipping, returns, and more. Browse our FAQ section for quick solutions to your queries."
+        keywords="FAQ, frequently asked questions, help center, customer support, common questions, product information, shipping info, return policy, order status, account help"
+      />
       <div className="container mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

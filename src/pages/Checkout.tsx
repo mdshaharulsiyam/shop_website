@@ -9,6 +9,7 @@ import { Edit3, PlusCircle } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
+import SEO from '@/components/SEO';
 
 const Checkout = () => {
   const { user } = useGlobalContext()
@@ -242,7 +243,14 @@ const Checkout = () => {
   const totalOutsideDelivery = businessGroupCount * DELIVERY_FEE_OUTSIDE
 
   return (
-    <div className='py-6 container mx-auto'>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <SEO 
+        title="Secure Checkout | Complete Your Purchase"
+        description="Complete your purchase securely with our easy checkout process. Review your items, enter shipping details, and choose your preferred payment method."
+        keywords="checkout, secure checkout, complete purchase, payment, shipping, order review, credit card, online payment, shopping cart"
+        noIndex={true}
+        noFollow={true}
+      />
       <p className='text-2xl mb-2'>Products</p>
       {decodeError && (
         <p className='mb-4 text-red-600'>{decodeError}</p>
