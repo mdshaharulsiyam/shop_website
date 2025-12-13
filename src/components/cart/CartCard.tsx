@@ -22,7 +22,7 @@ const CartCard = ({ item, setOpen, removeHandler }: ICartCard) => {
           <p className="text-sm text-gray-500">৳{item?.price.toFixed(2)} {item?.quantity ? `x ${item.quantity}` : ''}</p>
           {Array.isArray(item?.variants) && item.variants.length > 0 && (
             <div className='flex flex-wrap gap-2 mt-1'>
-              {item.variants.map((v) => {
+              {item?.variants?.map((v) => {
                 const isColor = v.name?.toLowerCase() === 'colors';
                 return (
                   <div key={`${v.name}-${v.value}`} className='flex items-center gap-1'>
