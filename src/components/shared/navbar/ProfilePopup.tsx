@@ -46,14 +46,14 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
               My Order
             </Link>
             {
-              user?.business?._id ? <a
+              user?.business?._id ? user?.business?.is_approve ? <a
                 href={dashboard_link}
                 target='_blank'
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
               >
                 <FaDashcube className="h-4 w-4 mr-3" />
                 Shop Dashboard
-              </a> : <Link
+              </a> : <p className="flex items-center px-4 py-2 text-sm text-gray-500">   <FaDashcube className="h-4 w-4 mr-3" /> Pending Approval</p> : <Link
                 to="/register-seller"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
               >
@@ -66,7 +66,8 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
             <button
               onClick={() => {
                 localStorage.removeItem('token')
-                navigate('/login')
+                // navigate('/login')
+                window.location.href = '/login';
               }}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
