@@ -5,11 +5,9 @@ import type { IProfilePopup } from '@/types/propsTypes'
 import { AnimatePresence, motion } from 'framer-motion'
 import { LogOut, Package, User, UserCircle } from 'lucide-react'
 import { FaDashcube, FaShippingFast } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) => {
   const { user } = useGlobalContext()
-  const navigate = useNavigate()
-
   return (
     <div className="relative cursor-pointer">
       <Button
