@@ -20,7 +20,7 @@ const Profile = () => {
   const [bannerFile, setBannerFile] = useState<any[]>([]);
   const [documentFiles, setDocumentFiles] = useState<any[]>([]);
   const [updateBusiness] = useUpdateBusinessMutation();
-
+  console.log(user?.business?.is_approve)
   useEffect(() => {
     const business = user?.business as any;
     if (business) {
