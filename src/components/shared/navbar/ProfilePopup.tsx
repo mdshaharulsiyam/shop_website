@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { useGlobalContext } from '@/providers/ContextProvider'
+import { useGetWebSettingsQuery } from '@/Redux/apis/settingApis'
 import { dashboard_link } from '@/Redux/baseApi'
 import type { IProfilePopup } from '@/types/propsTypes'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -8,6 +9,8 @@ import { FaDashcube, FaShippingFast } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) => {
   const { user } = useGlobalContext()
+  const { data: webSettings, } = useGetWebSettingsQuery(undefined);
+  console.log('Web settings:', webSettings);
   return (
     <div className="relative cursor-pointer">
       <Button
@@ -43,6 +46,7 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
               <FaShippingFast className="h-4 w-4 mr-3" />
               My Order
             </Link>
+
             {
               user?.business?._id ? user?.business?.is_approve ? <a
                 href={dashboard_link}
@@ -51,13 +55,17 @@ const ProfilePopup = ({ setShowProfileMenu, showProfileMenu }: IProfilePopup) =>
               >
                 <FaDashcube className="h-4 w-4 mr-3" />
                 Shop Dashboard
-              </a> : <p className="flex items-center px-4 py-2 text-sm text-gray-500">   <FaDashcube className="h-4 w-4 mr-3" /> Pending Approval</p> : <Link
-                to="/register-seller"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                <Package className="h-4 w-4 mr-3" />
-                Sell Product
-              </Link>
+              </a> : <p className="flex items-center px-4 py-2 text-sm text-gray-500">   <FaDashcube className="h-4 w-4 mr-3" /> Pending Approval</p> :
+                webSettings?.data?.vendor_request ?
+                  <Link
+                    to="/register-seller"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <Package className="h-4 w-4 mr-3" />
+                    Sell Product
+                  </Link>
+                  :
+                  <></>
             }
 
             <hr className="my-1" />
