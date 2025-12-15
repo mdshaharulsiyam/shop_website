@@ -10,8 +10,15 @@ const settingApis = baseApis.injectEndpoints({
       }),
       providesTags: ['settings'],
     }),
+    getWebSettings: builder.query({
+      query: () => ({
+        url: `web-setting/get`,
+        method: 'GET',
+      }),
+      providesTags: ['web_settings'],
+    }),
   }),
 });
 
-export const { useGetSettingByNameQuery } = settingApis;
+export const { useGetSettingByNameQuery, useGetWebSettingsQuery } = settingApis;
 export default settingApis;

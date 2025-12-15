@@ -24,7 +24,8 @@ const baseApis = createApi({
     "Message",
     "cart",
     "shipping_address",
-    "banner"
+    "banner",
+    "web_settings",
   ],
   endpoints: () => ({}),
 });
