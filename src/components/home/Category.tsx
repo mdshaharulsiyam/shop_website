@@ -18,7 +18,7 @@ const Category = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
   const { data: categoryData } = useGetProductsGroupByLabelQuery(undefined);
-
+  console.log(categoryData)
   const categorySlides: ICategory[][] = categoryData?.data.reduce((acc: ICategory[][], group: IGroup, index: number) => {
     const slideIndex = Math.floor(index / 5);
     if (!acc[slideIndex]) {
@@ -27,7 +27,15 @@ const Category = () => {
     acc[slideIndex].push({
       title: group.label,
       items: group.products.length,
-      images: group.products.slice(0, 3).map((p: IProductFromApi) => imageUrl(p.img[0])),
+      images: group.products.slice(0, 3).map((p: IProductFromApi) => {
+        return {
+          img: imageUrl(p.img[0]),
+          name: p.name,
+          price: p.price,
+          discount: p.discount,
+          _id: p._id,
+        }
+      }),
       discount: '' // Added placeholder for discount
     });
     return acc;

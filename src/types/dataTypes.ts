@@ -14,7 +14,13 @@ export interface ICategory {
   title: string,
   discount: string,
   items: number,
-  images: string[]
+  images: {
+    img: string,
+    name: string,
+    price: number,
+    discount: number,
+    _id: string
+  }[]
 }
 export interface IProduct {
   id: number,
@@ -72,11 +78,11 @@ export interface IProfile {
     "banner": string,
     "address": string,
     "location": {
-        "type": string,
-        "coordinates": [
-            number,
-            number
-        ]
+      "type": string,
+      "coordinates": [
+        number,
+        number
+      ]
     },
     "block": boolean,
     "is_approve": boolean,
@@ -85,5 +91,5 @@ export interface IProfile {
     "business_sub_admins": string[],
     "business_documents": string[],
     "__v": number
-}
+  }
 }

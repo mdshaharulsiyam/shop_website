@@ -1,9 +1,11 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
 import type { ICategory } from '@/types/dataTypes'
 import { hexToRGBA2, hexToRGBA5, hexToRGBA7 } from '@/utils/hexToRGBA'
+import { useNavigate } from 'react-router-dom'
 
 const CategoryTable = ({ category }: { category: ICategory }) => {
   const { themeColor } = useGlobalContext()
+  const navigate = useNavigate()
   return (
     <div
       style={{
@@ -36,8 +38,8 @@ const CategoryTable = ({ category }: { category: ICategory }) => {
           <div style={{
             backgroundColor: hexToRGBA2(themeColor.black)
           }} key={imgIndex} className="aspect-square rounded-lg overflow-hidden">
-            <img
-              src={image || "/placeholder.svg"}
+            <img onClick={() => navigate(`/details/${image?._id}`)}
+              src={image?.img || "/placeholder.svg"}
               alt={`${category.title} ${imgIndex + 1}`}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />
