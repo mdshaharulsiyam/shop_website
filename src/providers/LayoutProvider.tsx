@@ -56,12 +56,13 @@ const LayoutProvider = () => {
             {/* Mobile overlay */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-30 bg-opacity-50 lg:hidden"
+              className="fixed inset-0 z-30 lg:hidden"
               style={{
-                backgroundColor: themeColor.black
+                backgroundColor: themeColor.black,
+                pointerEvents: 'auto',
               }}
               onClick={toggleSideBar}
             />
