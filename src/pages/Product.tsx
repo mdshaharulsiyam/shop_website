@@ -1,3 +1,4 @@
+
 import Products from '@/components/product/Products'
 import Search from '@/components/product/Search'
 import { useGlobalContext } from '@/providers/ContextProvider'

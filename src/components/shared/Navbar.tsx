@@ -6,8 +6,9 @@ import { useGlobalContext } from '@/providers/ContextProvider'
 import { useGetCategoriesWithSubQuery } from '@/Redux/apis/categorySlice'
 import { hexToRGBA2 } from '@/utils/hexToRGBA'
 import { motion } from "framer-motion"
-import { Menu, PanelsTopLeft, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { useState } from "react"
+import { RiMenuFold2Fill } from "react-icons/ri"
 import { Link } from 'react-router-dom'
 import DropdownMenu from '../dropdown/DropdownMenu'
 import DropdownMenuTitle from '../dropdown/DropdownMenuTitle'
@@ -69,7 +70,7 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
           {/* Sidebar toggle */}
           <Button className='cursor-pointer' variant="ghost" size="icon" onClick={toggleSideBar}>
             <motion.div animate={{ rotate: showSideBar ? 0 : 0 }} transition={{ duration: 0.2 }}>
-              <PanelsTopLeft size={24} color="currentColor" />
+              <RiMenuFold2Fill size={24} color="currentColor" />
             </motion.div>
           </Button>
 
