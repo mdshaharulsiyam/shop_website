@@ -2,6 +2,7 @@ import OrderCard from '@/components/order/OrderCard'
 import { useGlobalContext } from '@/providers/ContextProvider'
 import { usePatchProfileMutation } from '@/Redux/apis/authSlice'
 import { useCreateOrderMutation } from '@/Redux/apis/orderApis'
+import { useGetWebSettingsQuery } from '@/Redux/apis/settingApis'
 import { useCreateShippingAddressMutation, useGetAllShippingAddressesQuery } from '@/Redux/apis/shippingAddressApis'
 import { imageUrl } from '@/Redux/baseApi'
 import { verifyJWT } from '@/utils/jwt'
@@ -56,6 +57,7 @@ const Checkout = () => {
   const { data: addrRes } = useGetAllShippingAddressesQuery();
   const [createAddress] = useCreateShippingAddressMutation();
   const [createOrder, { isLoading: isPlacingOrder }] = useCreateOrderMutation();
+  const { data: webSettings, isFetching: webSettingsFetching } = useGetWebSettingsQuery(undefined);
 
   useEffect(() => {
     // Initialize phone number from user if available
@@ -288,29 +290,40 @@ const Checkout = () => {
       <div className='mt-8 bg-white p-6 rounded-xl shadow-lg'>
         <p className='text-3xl font-bold mb-4'>Delivery and Return Policy</p>
         <div className='space-y-4 text-gray-700'>
-          <div>
-            <p className='text-xl font-semibold'>🚚 Delivery Method:</p>
-            <ul className='list-disc list-inside ml-4'>
-              <li><span className='font-medium'>Within Dhaka:</span> Home delivery. Pay after receiving the product.</li>
-              <li><span className='font-medium'>Outside Dhaka:</span> Home delivery is available in all districts, upazilas, and union levels across the country. Pay after receiving the product.</li>
-            </ul>
-          </div>
-          <div>
-            <p className='text-xl font-semibold'>💰 Delivery Charge:</p>
-            <ul className='list-disc list-inside ml-4'>
-              <li><span className='font-medium'>Within Dhaka:</span> {DELIVERY_FEE_DHAKA}/- BDT</li>
-              <li><span className='font-medium'>Outside Dhaka:</span> {DELIVERY_FEE_OUTSIDE}/- BDT</li>
-            </ul>
-            {businessGroupCount > 1 && (
-              <p className='text-sm text-gray-600 mt-2'>
-                You have products from {businessGroupCount} different businesses. Delivery charge applies per business, so pay {totalDhakaDelivery}/- BDT within Dhaka or {totalOutsideDelivery}/- BDT outside Dhaka.
-              </p>
-            )}
-          </div>
-          <div>
-            <p className='text-xl font-semibold'>🚚 Return Policy:</p>
-            <p>Please inspect and check the product in front of the delivery person. If you don't like the product or if there is any issue, please call our helpline to report the problem. Otherwise, you must video the unboxing of the product and send it to us. If there's an issue, we will exchange the product, but you will have to pay the delivery charge again to receive the new product.</p>
-          </div>
+          {webSettingsFetching ? (
+            <p className='text-gray-500 animate-pulse'>Loading delivery and return policy...</p>
+          ) : webSettings?.data?.delivery_and_returns ? (
+            <div
+              className='prose max-w-none text-gray-700'
+              dangerouslySetInnerHTML={{ __html: webSettings.data.delivery_and_returns }}
+            />
+          ) : (
+            <>
+              <div>
+                <p className='text-xl font-semibold'>🚚 Delivery Method:</p>
+                <ul className='list-disc list-inside ml-4'>
+                  <li><span className='font-medium'>Within Dhaka:</span> Home delivery. Pay after receiving the product.</li>
+                  <li><span className='font-medium'>Outside Dhaka:</span> Home delivery is available in all districts, upazilas, and union levels across the country. Pay after receiving the product.</li>
+                </ul>
+              </div>
+              <div>
+                <p className='text-xl font-semibold'>💰 Delivery Charge:</p>
+                <ul className='list-disc list-inside ml-4'>
+                  <li><span className='font-medium'>Within Dhaka:</span> {DELIVERY_FEE_DHAKA}/- BDT</li>
+                  <li><span className='font-medium'>Outside Dhaka:</span> {DELIVERY_FEE_OUTSIDE}/- BDT</li>
+                </ul>
+                {businessGroupCount > 1 && (
+                  <p className='text-sm text-gray-600 mt-2'>
+                    You have products from {businessGroupCount} different businesses. Delivery charge applies per business, so pay {totalDhakaDelivery}/- BDT within Dhaka or {totalOutsideDelivery}/- BDT outside Dhaka.
+                  </p>
+                )}
+              </div>
+              <div>
+                <p className='text-xl font-semibold'>🚚 Return Policy:</p>
+                <p>Please inspect and check the product in front of the delivery person. If you don't like the product or if there is any issue, please call our helpline to report the problem. Otherwise, you must video the unboxing of the product and send it to us. If there's an issue, we will exchange the product, but you will have to pay the delivery charge again to receive the new product.</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className='mt-8 bg-white p-6 rounded-xl shadow-lg'>
@@ -320,9 +333,18 @@ const Checkout = () => {
             <span>Total</span>
             <span className='font-bold'>৳{total.toFixed(2)}</span>
           </div>
-          <p className='text-gray-700'>
-            Please send the delivery charge ({businessGroupCount ? `${totalDhakaDelivery}/- BDT within Dhaka or ${totalOutsideDelivery}/- BDT outside Dhaka` : 'per the delivery rules'}) to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
-          </p>
+          {webSettingsFetching ? (
+            <p className='text-gray-500 animate-pulse'>Loading confirmation instructions...</p>
+          ) : webSettings?.data?.confirm_order_text ? (
+            <div
+              className='prose max-w-none text-gray-700'
+              dangerouslySetInnerHTML={{ __html: webSettings.data.confirm_order_text }}
+            />
+          ) : (
+            <p className='text-gray-700'>
+              Please send the delivery charge ({businessGroupCount ? `${totalDhakaDelivery}/- BDT within Dhaka or ${totalOutsideDelivery}/- BDT outside Dhaka` : 'per the delivery rules'}) to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
+            </p>
+          )}
           <div>
             <label htmlFor='transactionId' className='block text-lg font-semibold mb-2'>Transaction ID</label>
             <input

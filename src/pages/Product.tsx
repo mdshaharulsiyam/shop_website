@@ -59,11 +59,15 @@ const Product = () => {
 
   // Initialize and reset filters from URL params (?category=...&subCategory=...)
   useEffect(() => {
+    const q = searchParams.get('search') ?? ''
     const c = searchParams.get('category') || undefined
     const s = searchParams.get('subCategory') || undefined
-    // Always sync to URL params (can be undefined)
+
+    setSearch(q)
+    setDebouncedSearch(q)
     setCategory(c)
     setSubCategory(s)
+
     // Reset other filters when navigation changes params
     setPriceRange([0, 100000])
     setSort(undefined)
