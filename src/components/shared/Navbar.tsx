@@ -141,32 +141,30 @@ const Navbar = ({ toggleSideBar, showSideBar }: NavbarProps) => {
 
           <SearchIcon />
 
-          {
-            user?._id ? <>
+          {/* Mobile menu toggle - always visible */}
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+            <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
+              {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </motion.div>
+          </Button>
 
-              {/* Profile dropdown */}
-              <ProfilePopup
-                setShowProfileMenu={setShowProfileMenu}
-                showProfileMenu={showProfileMenu}
-              />
-              {/* <BadgesButton
-            count={3}
-            icon={<Heart className="h-5 w-5" />}
-            handler={() => console.log('Heart button clicked')}
-          /> */}
-              <CartButton />
-              <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
-                <motion.div animate={{ rotate: showMobileMenu ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </motion.div>
-              </Button>
-            </> : <Link
-              to={`/login`}
-            >
-              <Button className="cursor-pointer">
-                Login
-              </Button>
-            </Link>
+          {
+            user?._id ? (
+              <>
+                {/* Profile dropdown */}
+                <ProfilePopup
+                  setShowProfileMenu={setShowProfileMenu}
+                  showProfileMenu={showProfileMenu}
+                />
+                <CartButton />
+              </>
+            ) : (
+              <Link to="/login">
+                <Button className="cursor-pointer">
+                  Login
+                </Button>
+              </Link>
+            )
           }
         </div>
       </div>

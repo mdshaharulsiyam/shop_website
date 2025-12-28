@@ -1,12 +1,12 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
+import type { IMapTitleMenu } from '@/types/propsTypes'
 import { motion } from 'framer-motion'
 import MenuLink from '../Links/MenuLink'
-import type { IMapTitleMenu } from '@/types/propsTypes'
 const MapTitleMenu = ({ data }: IMapTitleMenu) => {
   const { themeColor } = useGlobalContext()
   return (
     <>
-      {data.map((category, index) => (
+      {data?.map((category, index) => (
         <motion.div
           key={category?.name}
           initial={{ opacity: 0, y: 20 }}
@@ -20,7 +20,7 @@ const MapTitleMenu = ({ data }: IMapTitleMenu) => {
             style={{ color: themeColor.black }}
           />
           <ul className="space-y-2">
-            {category.subCategories.map((subCategory) => (
+            {category?.subCategories?.map((subCategory) => (
               <MenuLink key={subCategory?.name}
                 href={`/products?category=${encodeURIComponent(category?._id as any)}&subCategory=${encodeURIComponent(subCategory?._id as any)}`}
                 title={subCategory?.name}
