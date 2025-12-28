@@ -1,10 +1,10 @@
 import { useGlobalContext } from '@/providers/ContextProvider'
+import type { IDropdownMenuTitle } from '@/types/propsTypes'
 import { hexToRGBA2 } from '@/utils/hexToRGBA'
-import { ChevronDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 import MenuLink from '../Links/MenuLink'
 import MapTitleMenu from '../shared/MapTitleMenu'
-import type { IDropdownMenuTitle } from '@/types/propsTypes'
 
 const DropdownMenuTitle = ({ setShowMenu, showMenu, data, title }: IDropdownMenuTitle) => {
   const { themeColor } = useGlobalContext()
@@ -31,13 +31,41 @@ const DropdownMenuTitle = ({ setShowMenu, showMenu, data, title }: IDropdownMenu
             transition={{ duration: 0.3 }}
             style={{
               backgroundColor: themeColor.white,
-              borderColor: hexToRGBA2(themeColor.black)
+              borderColor: hexToRGBA2(themeColor.black),
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              scrollbarWidth: 'thin',
+              width: '100%',
+              left: 0,
+              right: 0,
+              margin: '0 auto',
+              maxWidth: '1440px',
+              boxSizing: 'border-box',
+              scrollbarColor: `${themeColor.black} ${themeColor.black}80`,
             }}
-            className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-96  rounded-lg shadow-xl border  p-6"
+            className="fixed mt-2 rounded-lg shadow-xl border p-6 z-50"
           >
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               <MapTitleMenu data={data} />
             </div>
+            {/* Custom scrollbar styling */}
+            <style>{`
+              .fixed::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+              }
+              .fixed::-webkit-scrollbar-track {
+                background: ${themeColor.black}19;
+                border-radius: 10px;
+              }
+              .fixed::-webkit-scrollbar-thumb {
+                background: ${themeColor.black};
+                border-radius: 10px;
+              }
+              .fixed::-webkit-scrollbar-thumb:hover {
+                opacity: 0.8;
+              }
+            `}</style>
           </motion.div>
         )}
       </AnimatePresence>

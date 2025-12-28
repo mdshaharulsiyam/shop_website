@@ -17,13 +17,20 @@ const MobileMenu = ({ showMobileMenu, setShowCategoriesMenu, showCategoriesMenu,
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
           style={{
-            borderColor: hexToRGBA2(themeColor.black)
+            borderColor: hexToRGBA2(themeColor.black),
+            position: 'relative',
           }}
-          className="lg:hidden mt-4 pb-4 border-t  pt-4"
+          className="lg:hidden border-t"
         >
-          <div className="space-y-4">
+          <div
+            className="space-y-4 p-4 overflow-y-auto"
+            style={{
+              maxHeight: '70vh',
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${themeColor.black} ${themeColor.black}20`,
+            }}
+          >
             {
               navbarData?.map((item, index) => {
                 if (item?.type === "link") {
@@ -145,6 +152,31 @@ const MobileMenu = ({ showMobileMenu, setShowCategoriesMenu, showCategoriesMenu,
               })
             }
           </div>
+          {/* Fade effect at the bottom */}
+          <div
+            className="w-full h-8 sticky bottom-0 left-0 right-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(to top, ${themeColor.white} 0%, transparent 100%)`,
+              marginTop: '-2rem',
+            }}
+          />
+          {/* Custom scrollbar styling */}
+          <style>{`
+            [style*="max-height: 70vh"]::-webkit-scrollbar {
+              width: 4px;
+            }
+            [style*="max-height: 70vh"]::-webkit-scrollbar-track {
+              background: ${themeColor.black}10;
+              border-radius: 2px;
+            }
+            [style*="max-height: 70vh"]::-webkit-scrollbar-thumb {
+              background: ${themeColor.black}50;
+              border-radius: 2px;
+            }
+            [style*="max-height: 70vh"]::-webkit-scrollbar-thumb:hover {
+              background: ${themeColor.black}70;
+            }
+          `}</style>
         </motion.div>
       )}
     </AnimatePresence>
