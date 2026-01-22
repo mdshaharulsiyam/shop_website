@@ -18,7 +18,6 @@ const Category = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
   const { data: categoryData } = useGetProductsGroupByLabelQuery(undefined);
-  console.log(categoryData)
   const categorySlides: ICategory[][] = categoryData?.data.reduce((acc: ICategory[][], group: IGroup, index: number) => {
     const slideIndex = Math.floor(index / 5);
     if (!acc[slideIndex]) {

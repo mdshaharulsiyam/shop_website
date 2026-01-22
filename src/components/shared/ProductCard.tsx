@@ -141,7 +141,7 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
         <img
           src={product.image || "/placeholder.svg"}
           alt={product.name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full object-cover group-hover:scale-105 aspect-[0.9] transition-transform duration-300"
         />
 
         {/* Action Buttons */}
