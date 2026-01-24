@@ -51,7 +51,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState<string[]>([]);
   const [selectedAddress, setSelectedAddress] = useState(addresses[0]);
   const [newAddress, setNewAddress] = useState('');
-  const [transactionId, setTransactionId] = useState('');
+  const [transactionId, setTransactionId] = useState('N/A');
   const [paymentPhoneNumber, setPaymentPhoneNumber] = useState('');
   const [patchProfile,] = usePatchProfileMutation();
   const { data: addrRes } = useGetAllShippingAddressesQuery();
@@ -345,7 +345,7 @@ const Checkout = () => {
               Please send the delivery charge ({businessGroupCount ? `${totalDhakaDelivery}/- BDT within Dhaka or ${totalOutsideDelivery}/- BDT outside Dhaka` : 'per the delivery rules'}) to <span className='font-bold text-blue-600'>01566026301</span> and then insert the transaction ID and your payment phone number below to confirm your order.
             </p>
           )}
-          <div>
+          {/* <div>
             <label htmlFor='transactionId' className='block text-lg font-semibold mb-2'>Transaction ID</label>
             <input
               type='text'
@@ -355,7 +355,7 @@ const Checkout = () => {
               placeholder='Enter transaction ID'
               className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
-          </div>
+          </div> */}
           <div>
             <label htmlFor='paymentPhoneNumber' className='block text-lg font-semibold mb-2'>Payment Phone Number</label>
             <input
