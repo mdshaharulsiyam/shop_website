@@ -51,7 +51,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState<string[]>([]);
   const [selectedAddress, setSelectedAddress] = useState(addresses[0]);
   const [newAddress, setNewAddress] = useState('');
-  const [transactionId, setTransactionId] = useState('N/A');
+  const [transactionId,] = useState('N/A');
   const [paymentPhoneNumber, setPaymentPhoneNumber] = useState('');
   const [patchProfile,] = usePatchProfileMutation();
   const { data: addrRes } = useGetAllShippingAddressesQuery();
