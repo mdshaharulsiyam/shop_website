@@ -280,7 +280,7 @@ const Description = ({ data }: IDetailsDescType) => {
             </div>
             <div className="text-right">
               <p className="text-sm" style={{ color: themeColor.gray }}>Unit price</p>
-              <p className="text-lg font-bold">${(typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100))?.toFixed(2)) : price)?.toFixed(2)}</p>
+              <p className="text-lg font-bold">৳{(typeof discount === 'number' && discount > 0 ? Number((price * (1 - discount / 100))?.toFixed(2)) : price)?.toFixed(2)}</p>
             </div>
           </div>
           <Divider style={{ margin: '8px 0' }} />

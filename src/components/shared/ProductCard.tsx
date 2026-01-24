@@ -251,7 +251,7 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
               <div className="text-right">
                 <p className="text-sm" style={{ color: themeColor.gray }}>Unit price</p>
                 <p className="text-lg font-bold">
-                  ${(productDetails.discount > 0
+                  ৳{(productDetails.discount > 0
                     ? Number((productDetails.price * (1 - productDetails.discount / 100)).toFixed(2))
                     : productDetails.price
                   ).toFixed(2)}
@@ -318,7 +318,7 @@ const ProductCard = ({ product, index, isVisible }: IProductCard) => {
               <div className="text-right">
                 <p className="text-sm" style={{ color: themeColor.gray }}>Total</p>
                 <p className="text-lg font-bold">
-                  ${(
+                  ৳{(
                     (productDetails.discount > 0
                       ? Number((productDetails.price * (1 - productDetails.discount / 100)).toFixed(2))
                       : productDetails.price
